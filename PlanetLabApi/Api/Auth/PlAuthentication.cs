@@ -40,10 +40,21 @@ namespace PlanetLabApi.Api.Auth
 		/// <summary>
 		/// Creates a new authentication structure using the specified username and password.
 		/// </summary>
-		/// <param name="username"></param>
-		/// <param name="password"></param>
+		/// <param name="username">The user name.</param>
+		/// <param name="password">The password.</param>
 		public PlAuthentication(string username, string password)
 		{
+			this.Add("AuthMethod", "password");
+			this.Add("Username", username);
+			this.Add("AuthString", password);
+		}
+
+		/// <summary>
+		/// Creates a new authentication structure for anonymous authentication.
+		/// </summary>
+		public PlAuthentication()
+		{
+			this.Add("AuthMethod", "anonymous");
 		}
 	}
 }
