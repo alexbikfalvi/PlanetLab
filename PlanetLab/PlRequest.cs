@@ -17,27 +17,14 @@
  */
 
 using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Windows.Forms;
+using DotNetApi.Web;
 
 namespace PlanetLab
 {
 	/// <summary>
-	/// The main form of the PlanetLab console.
+	/// A class representing an asynchronous request for PlanetLab data.
 	/// </summary>
-	public partial class FormMain : Form
+	public class PlRequest : AsyncWebRequest
 	{
-		/// <summary>
-		/// Form constructor.
-		/// </summary>
-		public FormMain()
-		{
-			InitializeComponent();
-		}
 	}
 }
