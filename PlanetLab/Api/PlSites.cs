@@ -17,43 +17,45 @@
  */
 
 using System;
+using System.Collections.Generic;
 using DotNetApi.Web.XmlRpc;
 
-namespace PlanetLab.Api.Auth
+namespace PlanetLab.Api
 {
-	/// <summary>
-	/// A PlanetLab authentication structure.
-	/// </summary>
-	public class PlAuthentication : XmlRpcStruct
+	public class PlSites
 	{
-		/// <summary>
-		/// Creates a new authentication structure using the specified session key.
-		/// </summary>
-		/// <param name="key">The session key.</param>
-		public PlAuthentication(string key)
-		{
-			this.Add("AuthMethod", "session");
-			this.Add("session", key);
-		}
+		private List<PlSite> sites = new List<PlSite>();
 
 		/// <summary>
-		/// Creates a new authentication structure using the specified username and password.
+		/// Creates an empty PlanetLab sites list.
 		/// </summary>
-		/// <param name="username">The user name.</param>
-		/// <param name="password">The password.</param>
-		public PlAuthentication(string username, string password)
+		public PlSites()
 		{
-			this.Add("AuthMethod", "password");
-			this.Add("Username", username);
-			this.Add("AuthString", password);
 		}
 
+		// Public properties.
+		
 		/// <summary>
-		/// Creates a new authentication structure for anonymous authentication.
+		/// Gets the collection of PlanetLab sites.
 		/// </summary>
-		public PlAuthentication()
+		public ICollection<PlSite> Sites
 		{
-			this.Add("AuthMethod", "anonymous");
+			get { return this.sites; }
+		}
+
+		// Public methods.
+
+		/// <summary>
+		/// Updates the PlanetLab sites list from the specified array.
+		/// </summary>
+		/// <param name="obj">The XML-RPC array.</param>
+		public void Update(XmlRpcArray obj)
+		{
+			this.sites.Clear();
+			foreach (XmlRpcValue value in obj.Values)
+			{
+				this.sites.Add(new PlSite(value.Value as XmlRpcStruct));
+			}
 		}
 	}
 }

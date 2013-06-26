@@ -39,8 +39,13 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Auth\PlAuthentication.cs" />
+    <Compile Include="Api\Auth\PlAuthentication.cs" />
+    <Compile Include="Api\PlSite.cs" />
+    <Compile Include="Api\PlDateTime.cs" />
+    <Compile Include="Api\PlSites.cs" />
+    <Compile Include="Requests\PlRequest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Requests\PlRequestGetSites.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\DotNetApi\DotNetApi\DotNetApi.csproj">

@@ -17,14 +17,34 @@
  */
 
 using System;
-using DotNetApi.Web;
 
 namespace PlanetLab
 {
 	/// <summary>
-	/// A class representing an asynchronous request for PlanetLab data.
+	/// A PlanetLab date time.
 	/// </summary>
-	public class PlRequest : AsyncWebRequest
+	public struct PlDateTime
 	{
+		private static DateTime unixEpoch = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
+
+		/// <summary>
+		/// Converts the specified UNIX timestamp into a date-time.
+		/// </summary>
+		/// <param name="dateTime">The UNIX timestamp.</param>
+		/// <returns>The date-time.</returns>
+		public static DateTime FromUnixTimestamp(Int64 dateTime)
+		{
+			return PlDateTime.unixEpoch.AddSeconds(dateTime).ToLocalTime();
+		}
+
+		/// <summary>
+		/// Converts the specified date-time into the UNIX timestamp.
+		/// </summary>
+		/// <param name="dateTime">The date-time.</param>
+		/// <returns>The UNIX timestamp.</returns>
+		public static Int64 ToUnixTimestamp(DateTime dateTime)
+		{
+			return (Int64)dateTime.ToUniversalTime().Subtract(PlDateTime.unixEpoch).TotalSeconds;
+		}
 	}
 }
