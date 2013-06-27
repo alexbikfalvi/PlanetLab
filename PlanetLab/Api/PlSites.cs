@@ -18,13 +18,14 @@
 
 using System;
 using System.Collections.Generic;
+using System.Xml.Linq;
 using DotNetApi.Web.XmlRpc;
 
 namespace PlanetLab.Api
 {
-	public class PlSites
+	public class PlSites : List<PlSite>
 	{
-		private List<PlSite> sites = new List<PlSite>();
+		private XmlRpcArray xml = null;
 
 		/// <summary>
 		/// Creates an empty PlanetLab sites list.
@@ -33,29 +34,53 @@ namespace PlanetLab.Api
 		{
 		}
 
-		// Public properties.
-		
-		/// <summary>
-		/// Gets the collection of PlanetLab sites.
-		/// </summary>
-		public ICollection<PlSite> Sites
-		{
-			get { return this.sites; }
-		}
-
 		// Public methods.
 
 		/// <summary>
-		/// Updates the PlanetLab sites list from the specified array.
+		/// Updates the list of PlanetLab sites from the specified array.
 		/// </summary>
 		/// <param name="obj">The XML-RPC array.</param>
 		public void Update(XmlRpcArray obj)
 		{
-			this.sites.Clear();
-			foreach (XmlRpcValue value in obj.Values)
+			// Save the XML-RPC object.
+			this.xml = obj;
+			// Clear the sites list.
+			this.Clear();
+			// If the object is not null.
+			if (null != obj)
 			{
-				this.sites.Add(new PlSite(value.Value as XmlRpcStruct));
+				// Update the sites list.
+				foreach (XmlRpcValue value in obj.Values)
+				{
+					this.Add(new PlSite(value.Value as XmlRpcStruct));
+				}
 			}
+		}
+
+		/// <summary>
+		/// Loads the list of PlanetLab sites from the specified file.
+		/// </summary>
+		/// <param name="fileName">The file name.</param>
+		public void LoadFromFile(string fileName)
+		{
+			// Load the XML document from a file.
+			XDocument document = XDocument.Load(fileName);
+			// Parse the XML into the XML-RPC array object.
+			this.Update(XmlRpcArray.Create(document.Root) as XmlRpcArray);
+		}
+
+		/// <summary>
+		/// Saves the list of PlanetLab sites to the specified file.
+		/// </summary>
+		/// <param name="fileName">The file name.</param>
+		public void SaveToFile(string fileName)
+		{
+			// Create a new XML document for the current XML object.
+			XDocument document = new XDocument();
+			// If the current XML object is not null, add the object.
+			if (null != this.xml) document.Add(this.xml.GetXml());
+			// Save the XML document to the file.
+			document.Save(fileName);
 		}
 	}
 }
