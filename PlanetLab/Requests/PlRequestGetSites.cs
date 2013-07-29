@@ -17,6 +17,7 @@
  */
 
 using System;
+using System.Security;
 using DotNetApi.Web;
 using DotNetApi.Web.XmlRpc;
 using PlanetLab.Api.Auth;
@@ -42,17 +43,36 @@ namespace PlanetLab.Requests
 		/// </summary>
 		/// <param name="username">The PlanetLab username.</param>
 		/// <param name="password">The PlanetLab password.</param>
-		/// <param name="filter">The nodes filter.</param>
 		/// <param name="callback">The callback funcion.</param>
 		/// <param name="state">The user state.</param>
 		/// <returns>The result of the asynchronous operation.</returns>
-		public IAsyncResult Begin(string username, string password, string filter, AsyncWebRequestCallback callback, object state = null)
+		public override IAsyncResult Begin(string username, SecureString password, AsyncWebRequestCallback callback, object state = null)
 		{
 			// Create the parameters.
-			object[] parameters = new object[filter != string.Empty ? 2 : 1];
+			object[] parameters = new object[1];
 
 			parameters[0] = new PlAuthentication(username, password);
-			if (filter != string.Empty) parameters[1] = filter;
+
+			// Call the base class method.
+			return base.Begin(PlRequestGetSites.method, parameters, callback, state);
+		}
+
+		/// <summary>
+		/// Begins an asynchronous request for a PlanetLab method.
+		/// </summary>
+		/// <param name="username">The PlanetLab username.</param>
+		/// <param name="password">The PlanetLab password.</param>
+		/// <param name="id">The PlanetLab site identifier.</param>
+		/// <param name="callback">The callback funcion.</param>
+		/// <param name="state">The user state.</param>
+		/// <returns>The result of the asynchronous operation.</returns>
+		public override IAsyncResult Begin(string username, SecureString password, int id, AsyncWebRequestCallback callback, object state = null)
+		{
+			// Create the parameters.
+			object[] parameters = new object[2];
+
+			parameters[0] = new PlAuthentication(username, password);
+			parameters[1] = id;
 
 			// Call the base class method.
 			return base.Begin(PlRequestGetSites.method, parameters, callback, state);

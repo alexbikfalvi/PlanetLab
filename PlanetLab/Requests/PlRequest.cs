@@ -17,6 +17,7 @@
  */
 
 using System;
+using System.Security;
 using DotNetApi.Web;
 using DotNetApi.Web.XmlRpc;
 
@@ -25,7 +26,7 @@ namespace PlanetLab.Requests
 	/// <summary>
 	/// A class representing an asynchronous request for PlanetLab data.
 	/// </summary>
-	public class PlRequest : AsyncWebRequest
+	public abstract class PlRequest : AsyncWebRequest
 	{
 		/// <summary>
 		/// Conversion class for an asynchronous operation returning a string.
@@ -81,6 +82,27 @@ namespace PlanetLab.Requests
 			// Begin the request.
 			return this.Begin(asyncState);
 		}
+
+		/// <summary>
+		/// Begins an asynchronous request for a PlanetLab method.
+		/// </summary>
+		/// <param name="username">The PlanetLab username.</param>
+		/// <param name="password">The PlanetLab password.</param>
+		/// <param name="callback">The callback funcion.</param>
+		/// <param name="state">The user state.</param>
+		/// <returns>The result of the asynchronous operation.</returns>
+		public abstract IAsyncResult Begin(string username, SecureString password, AsyncWebRequestCallback callback, object state = null);
+
+		/// <summary>
+		/// Begins an asynchronous request for a PlanetLab method.
+		/// </summary>
+		/// <param name="username">The PlanetLab username.</param>
+		/// <param name="password">The PlanetLab password.</param>
+		/// <param name="id">The PlanetLab site identifier.</param>
+		/// <param name="callback">The callback funcion.</param>
+		/// <param name="state">The user state.</param>
+		/// <returns>The result of the asynchronous operation.</returns>
+		public abstract IAsyncResult Begin(string username, SecureString password, int id, AsyncWebRequestCallback callback, object state = null);
 
 		/// <summary>
 		/// Ends the asynchronus request.

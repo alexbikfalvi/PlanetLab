@@ -17,6 +17,8 @@
  */
 
 using System;
+using System.Security;
+using DotNetApi.Security;
 using DotNetApi.Web.XmlRpc;
 
 namespace PlanetLab.Api.Auth
@@ -41,11 +43,11 @@ namespace PlanetLab.Api.Auth
 		/// </summary>
 		/// <param name="username">The user name.</param>
 		/// <param name="password">The password.</param>
-		public PlAuthentication(string username, string password)
+		public PlAuthentication(string username, SecureString password)
 		{
 			this.Add("AuthMethod", "password");
 			this.Add("Username", username);
-			this.Add("AuthString", password);
+			this.Add("AuthString", password.ConvertToUnsecureString());
 		}
 
 		/// <summary>

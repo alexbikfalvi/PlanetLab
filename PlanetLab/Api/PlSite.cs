@@ -35,7 +35,7 @@ namespace PlanetLab.Api
 		private int? peerSiteId;
 
 		private bool? isPublic;
-		private bool? enabled;
+		private bool? isEnabled;
 		private int? maxSlices;
 		private int? maxSlivers;
 		
@@ -72,7 +72,7 @@ namespace PlanetLab.Api
 			this.peerSiteId = obj["peer_site_id"].Value.Value.AsInt;
 
 			this.isPublic = obj["is_public"].Value.Value.AsBoolean;
-			this.enabled = obj["enabled"].Value.Value.AsBoolean;
+			this.isEnabled = obj["enabled"].Value.Value.AsBoolean;
 			this.maxSlices = obj["max_slices"].Value.Value.AsInt;
 			this.maxSlivers = obj["max_slivers"].Value.Value.AsInt;
 
@@ -125,7 +125,7 @@ namespace PlanetLab.Api
 		/// <summary>
 		/// The site has been enabled.
 		/// </summary>
-		public bool? Enabled { get { return this.enabled; } }
+		public bool? IsEnabled { get { return this.isEnabled; } }
 		/// <summary>
 		/// The maximum number of slices the site can create.
 		/// </summary>
@@ -178,7 +178,7 @@ namespace PlanetLab.Api
 		public int[] SiteTagIds { get { return this.siteTagIds; } }
 
 		/// <summary>
-		/// The site latitute.
+		/// The site latitude.
 		/// </summary>
 		public double? Latitude { get { return this.latitude; } }
 		/// <summary>

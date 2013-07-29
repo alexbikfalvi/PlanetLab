@@ -34,6 +34,21 @@ namespace PlanetLab.Api
 		{
 		}
 
+		/// <summary>
+		/// Creates a PlanetLab sites list from the specified XML-RPC array.
+		/// </summary>
+		/// <param name="obj">The XML-RPC array.</param>
+		/// <returns>A PlanetLab sites list.</returns>
+		public static PlSites Create(XmlRpcArray obj)
+		{
+			// Create the object.
+			PlSites sites = new PlSites();
+			// Update the sites object.
+			sites.Update(obj);
+			// Return the object.
+			return sites;
+		}
+
 		// Public methods.
 
 		/// <summary>
