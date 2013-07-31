@@ -20,6 +20,7 @@ using System;
 using System.Security;
 using DotNetApi.Web;
 using DotNetApi.Web.XmlRpc;
+using PlanetLab.Api.Auth;
 
 namespace PlanetLab.Requests
 {
@@ -117,6 +118,50 @@ namespace PlanetLab.Requests
 
 			// Determine the encoding of the received response
 			return this.End<XmlRpcResponse>(result, this.funcConvert);
+		}
+
+		// Protected methods.
+
+		/// <summary>
+		/// Begins an asynchronous request for a PlanetLab method.
+		/// </summary>
+		/// <param name="method">The PlanetLab method.</param>
+		/// <param name="username">The PlanetLab username.</param>
+		/// <param name="password">The PlanetLab password.</param>
+		/// <param name="callback">The callback funcion.</param>
+		/// <param name="state">The user state.</param>
+		/// <returns>The result of the asynchronous operation.</returns>
+		protected IAsyncResult Begin(string method, string username, SecureString password, AsyncWebRequestCallback callback, object state = null)
+		{
+			// Create the parameters.
+			object[] parameters = new object[1];
+
+			parameters[0] = new PlAuthentication(username, password);
+
+			// Call the base class method.
+			return this.Begin(method, parameters, callback, state);
+		}
+
+		/// <summary>
+		/// Begins an asynchronous request for a PlanetLab method.
+		/// </summary>
+		/// <param name="method">The PlanetLab method.</param>
+		/// <param name="username">The PlanetLab username.</param>
+		/// <param name="password">The PlanetLab password.</param>
+		/// <param name="id">The PlanetLab site identifier.</param>
+		/// <param name="callback">The callback funcion.</param>
+		/// <param name="state">The user state.</param>
+		/// <returns>The result of the asynchronous operation.</returns>
+		protected IAsyncResult Begin(string method, string username, SecureString password, int id, AsyncWebRequestCallback callback, object state = null)
+		{
+			// Create the parameters.
+			object[] parameters = new object[2];
+
+			parameters[0] = new PlAuthentication(username, password);
+			parameters[1] = id;
+
+			// Call the base class method.
+			return this.Begin(method, parameters, callback, state);
 		}
 	}
 }

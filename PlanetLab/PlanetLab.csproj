@@ -40,12 +40,15 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Api\Auth\PlAuthentication.cs" />
+    <Compile Include="Api\PlNode.cs" />
+    <Compile Include="Api\PlNodes.cs" />
     <Compile Include="Api\PlSite.cs" />
     <Compile Include="Api\PlDateTime.cs" />
     <Compile Include="Api\PlSites.cs" />
     <Compile Include="PlUtil.cs" />
     <Compile Include="Requests\PlRequest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Requests\PlRequestGetNodes.cs" />
     <Compile Include="Requests\PlRequestGetSites.cs" />
   </ItemGroup>
   <ItemGroup>

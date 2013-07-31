@@ -26,14 +26,14 @@ namespace PlanetLab.Requests
 	/// <summary>
 	/// A class representing an asynchronous request for PlanetLab data.
 	/// </summary>
-	public class PlRequestGetSites : PlRequest
+	public class PlRequestGetNodes : PlRequest
 	{
-		private const string method = "GetSites";
+		private const string method = "GetNodes";
 
 		/// <summary>
 		/// Creates an asynchronous PlanetLab request with the specified settings.
 		/// </summary>
-		public PlRequestGetSites() { }
+		public PlRequestGetNodes() { }
 
 		// Public methods.
 
@@ -47,7 +47,7 @@ namespace PlanetLab.Requests
 		/// <returns>The result of the asynchronous operation.</returns>
 		public override IAsyncResult Begin(string username, SecureString password, AsyncWebRequestCallback callback, object state = null)
 		{
-			return base.Begin(PlRequestGetSites.method, username, password, callback, state);
+			return base.Begin(PlRequestGetNodes.method, username, password, callback, state);
 		}
 
 		/// <summary>
@@ -61,7 +61,7 @@ namespace PlanetLab.Requests
 		/// <returns>The result of the asynchronous operation.</returns>
 		public override IAsyncResult Begin(string username, SecureString password, int id, AsyncWebRequestCallback callback, object state = null)
 		{
-			return base.Begin(PlRequestGetSites.method, username, password, id, callback, state);
+			return base.Begin(PlRequestGetNodes.method, username, password, id, callback, state);
 		}
 	}
 }

@@ -26,34 +26,6 @@ namespace PlanetLab.Api
 	/// </summary>
 	public class PlSite
 	{
-		private DateTime? lastUpdated;
-		private DateTime? dateCreated;
-
-		private int? siteId;
-		private int? peerId;
-		private int? extConsortiumId;
-		private int? peerSiteId;
-
-		private bool? isPublic;
-		private bool? isEnabled;
-		private int? maxSlices;
-		private int? maxSlivers;
-		
-		private string abbreviatedName;
-		private string name;
-		private string url;
-		private string loginBase;
-
-		private int[] nodeIds;
-		private int[] pcuIds;
-		private int[] personIds;
-		private int[] sliceIds;
-		private int[] addressIds;
-		private int[] siteTagIds;
-
-		private double? latitude;
-		private double? longitude;
-
 		/// <summary>
 		/// Creates a new PlanetLab site object from the specified object.
 		/// </summary>
@@ -63,127 +35,127 @@ namespace PlanetLab.Api
 			int? lastUpdated = obj["last_updated"].Value.Value.AsInt;
 			int? dateCreated = obj["date_created"].Value.Value.AsInt;
 
-			this.lastUpdated = lastUpdated.HasValue ? (DateTime?)PlDateTime.FromUnixTimestamp(lastUpdated.Value) : null;
-			this.dateCreated = dateCreated.HasValue ? (DateTime?)PlDateTime.FromUnixTimestamp(dateCreated.Value) : null;
+			this.LastUpdated = lastUpdated.HasValue ? (DateTime?)PlDateTime.FromUnixTimestamp(lastUpdated.Value) : null;
+			this.DateCreated = dateCreated.HasValue ? (DateTime?)PlDateTime.FromUnixTimestamp(dateCreated.Value) : null;
 
-			this.siteId = obj["site_id"].Value.Value.AsInt;
-			this.peerId = obj["peer_id"].Value.Value.AsInt;
-			this.extConsortiumId = obj["ext_consortium_id"].Value.Value.AsInt;
-			this.peerSiteId = obj["peer_site_id"].Value.Value.AsInt;
+			this.SiteId = obj["site_id"].Value.Value.AsInt;
+			this.PeerId = obj["peer_id"].Value.Value.AsInt;
+			this.ExtConsortiumId = obj["ext_consortium_id"].Value.Value.AsInt;
+			this.PeerSiteId = obj["peer_site_id"].Value.Value.AsInt;
 
-			this.isPublic = obj["is_public"].Value.Value.AsBoolean;
-			this.isEnabled = obj["enabled"].Value.Value.AsBoolean;
-			this.maxSlices = obj["max_slices"].Value.Value.AsInt;
-			this.maxSlivers = obj["max_slivers"].Value.Value.AsInt;
+			this.IsPublic = obj["is_public"].Value.Value.AsBoolean;
+			this.IsEnabled = obj["enabled"].Value.Value.AsBoolean;
+			this.MaxSlices = obj["max_slices"].Value.Value.AsInt;
+			this.MaxSlivers = obj["max_slivers"].Value.Value.AsInt;
 
-			this.abbreviatedName = obj["abbreviated_name"].Value.Value.AsString;
-			this.name = obj["name"].Value.Value.AsString;
-			this.url = obj["url"].Value.Value.AsString;
-			this.loginBase = obj["login_base"].Value.Value.AsString;
+			this.AbbreviatedName = obj["abbreviated_name"].Value.Value.AsString;
+			this.Name = obj["name"].Value.Value.AsString;
+			this.Url = obj["url"].Value.Value.AsString;
+			this.LoginBase = obj["login_base"].Value.Value.AsString;
 
-			this.latitude = obj["latitude"].Value.Value.AsDouble;
-			this.longitude = obj["longitude"].Value.Value.AsDouble;
+			this.Latitude = obj["latitude"].Value.Value.AsDouble;
+			this.Longitude = obj["longitude"].Value.Value.AsDouble;
 
-			this.nodeIds = (obj["node_ids"].Value.Value as XmlRpcArray).GetArray<int>();
-			this.pcuIds = (obj["pcu_ids"].Value.Value as XmlRpcArray).GetArray<int>();
-			this.personIds = (obj["person_ids"].Value.Value as XmlRpcArray).GetArray<int>();
-			this.sliceIds = (obj["slice_ids"].Value.Value as XmlRpcArray).GetArray<int>();
-			this.addressIds = (obj["address_ids"].Value.Value as XmlRpcArray).GetArray<int>();
-			this.siteTagIds = (obj["site_tag_ids"].Value.Value as XmlRpcArray).GetArray<int>();
+			this.NodeIds = obj["node_ids"].Value.Value.AsArray<int>();
+			this.PcuIds = obj["pcu_ids"].Value.Value.AsArray<int>();
+			this.PersonIds = obj["person_ids"].Value.Value.AsArray<int>();
+			this.SliceIds = obj["slice_ids"].Value.Value.AsArray<int>();
+			this.AddressIds = obj["address_ids"].Value.Value.AsArray<int>();
+			this.SiteTagIds = obj["site_tag_ids"].Value.Value.AsArray<int>();
 		}
 
 		/// <summary>
 		/// The date when the site entry was last updated.
 		/// </summary>
-		public DateTime? LastUpdated { get { return this.lastUpdated; } }
+		public DateTime? LastUpdated { get; private set; }
 		/// <summary>
 		/// The date when the site was created.
 		/// </summary>
-		public DateTime? DateCreated { get { return this.dateCreated; } }
+		public DateTime? DateCreated { get; private set; }
 
 		/// <summary>
 		/// The site identifier.
 		/// </summary>
-		public int? SiteId { get { return this.siteId; } }
+		public int? SiteId { get; private set; }
 		/// <summary>
 		/// The peer identifier.
 		/// </summary>
-		public int? PeerId { get { return this.peerId; } }
+		public int? PeerId { get; private set; }
 		/// <summary>
 		/// The external consortium identifier.
 		/// </summary>
-		public int? ExtConsortiumId { get { return this.extConsortiumId; } }
+		public int? ExtConsortiumId { get; private set; }
 		/// <summary>
 		/// The peer site identifier.
 		/// </summary>
-		public int? PeerSiteId { get { return this.peerSiteId; } }
+		public int? PeerSiteId { get; private set; }
 
 		/// <summary>
 		/// Publicly viewable site.
 		/// </summary>
-		public bool? IsPublic { get { return this.isPublic; } }
+		public bool? IsPublic { get; private set; }
 		/// <summary>
 		/// The site has been enabled.
 		/// </summary>
-		public bool? IsEnabled { get { return this.isEnabled; } }
+		public bool? IsEnabled { get; private set; }
 		/// <summary>
 		/// The maximum number of slices the site can create.
 		/// </summary>
-		public int? MaxSlices { get { return this.maxSlices; } }
+		public int? MaxSlices { get; private set; }
 		/// <summary>
 		/// The maximum number of slivers the site can create.
 		/// </summary>
-		public int? MaxSlivers { get { return this.maxSlivers; } }
+		public int? MaxSlivers { get; private set; }
 
 		/// <summary>
 		/// The site abbreviated name.
 		/// </summary>
-		public string AbbreviatedName { get { return this.abbreviatedName; } }
+		public string AbbreviatedName { get; private set; }
 		/// <summary>
 		/// The site name.
 		/// </summary>
-		public string Name { get { return this.name; } }
+		public string Name { get; private set; }
 		/// <summary>
 		/// The site URL.
 		/// </summary>
-		public string Url { get { return this.url; } }
+		public string Url { get; private set; }
 		/// <summary>
 		/// The site slice prefix.
 		/// </summary>
-		public string LoginBase { get { return this.loginBase; } }
+		public string LoginBase { get; private set; }
 
 		/// <summary>
 		/// The list of site node identifiers.
 		/// </summary>
-		public int[] NodeIds { get { return this.nodeIds; } }
+		public int[] NodeIds { get; private set; }
 		/// <summary>
 		/// The list of site PCU identifiers.
 		/// </summary>
-		public int[] PcuIds { get { return this.pcuIds; } }
+		public int[] PcuIds { get; private set; }
 		/// <summary>
 		/// The list of site person identifiers.
 		/// </summary>
-		public int[] PersonIds { get { return this.personIds; } }
+		public int[] PersonIds { get; private set; }
 		/// <summary>
 		/// The list of site slice identifiers.
 		/// </summary>
-		public int[] SliceIds { get { return this.sliceIds; } }
+		public int[] SliceIds { get; private set; }
 		/// <summary>
 		/// The list of site address identifiers.
 		/// </summary>
-		public int[] AddressIds { get { return this.addressIds; } }
+		public int[] AddressIds { get; private set; }
 		/// <summary>
 		/// The list of site tag identifiers.
 		/// </summary>
-		public int[] SiteTagIds { get { return this.siteTagIds; } }
+		public int[] SiteTagIds { get; private set; }
 
 		/// <summary>
 		/// The site latitude.
 		/// </summary>
-		public double? Latitude { get { return this.latitude; } }
+		public double? Latitude { get; private set; }
 		/// <summary>
 		/// The site longitude.
 		/// </summary>
-		public double? Longitude { get { return this.longitude; } }
+		public double? Longitude { get; private set; }
 	}
 }
