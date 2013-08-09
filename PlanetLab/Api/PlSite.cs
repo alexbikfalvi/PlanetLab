@@ -26,43 +26,93 @@ namespace PlanetLab.Api
 	/// </summary>
 	public class PlSite
 	{
+		public enum Fields
+		{
+			[PlName("last_updated")]
+			LastUpdated,
+			[PlName("date_created")]
+			DateCreated,
+			[PlName("site_id")]
+			SiteId,
+			[PlName("peer_id")]
+			PeerId,
+			[PlName("ext_consortium_id")]
+			ExtConsortiumId,
+			[PlName("peer_site_id")]
+			PeerSiteId,
+			[PlName("is_public")]
+			IsPublic,
+			[PlName("enabled")]
+			IsEnabled,
+			[PlName("max_slices")]
+			MaxSlices,
+			[PlName("max_slivers")]
+			MaxSlivers,
+			[PlName("abbreviated_name")]
+			AbbreviatedName,
+			[PlName("name")]
+			Name,
+			[PlName("url")]
+			Url,
+			[PlName("login_base")]
+			LoginBase,
+			[PlName("latitude")]
+			Latitude,
+			[PlName("longitude")]
+			Longitude,
+			[PlName("node_ids")]
+			NodeIds,
+			[PlName("pcu_ids")]
+			PcuIds,
+			[PlName("person_ids")]
+			PersonIds,
+			[PlName("slice_ids")]
+			SliceIds,
+			[PlName("address_ids")]
+			AddressIds,
+			[PlName("site_tag_ids")]
+			SiteTagIds
+		}
+
 		/// <summary>
 		/// Creates a new PlanetLab site object from the specified object.
 		/// </summary>
 		/// <param name="obj">The XML-RPC object.</param>
 		public PlSite(XmlRpcStruct obj)
 		{
-			int? lastUpdated = obj["last_updated"].Value.Value.AsInt;
-			int? dateCreated = obj["date_created"].Value.Value.AsInt;
+			int? lastUpdated = obj[Fields.LastUpdated.GetName()].Value.Value.AsInt;
+			int? dateCreated = obj[Fields.DateCreated.GetName()].Value.Value.AsInt;
 
 			this.LastUpdated = lastUpdated.HasValue ? (DateTime?)PlDateTime.FromUnixTimestamp(lastUpdated.Value) : null;
 			this.DateCreated = dateCreated.HasValue ? (DateTime?)PlDateTime.FromUnixTimestamp(dateCreated.Value) : null;
 
-			this.SiteId = obj["site_id"].Value.Value.AsInt;
-			this.PeerId = obj["peer_id"].Value.Value.AsInt;
-			this.ExtConsortiumId = obj["ext_consortium_id"].Value.Value.AsInt;
-			this.PeerSiteId = obj["peer_site_id"].Value.Value.AsInt;
+			this.SiteId = obj[Fields.SiteId.GetName()].Value.Value.AsInt;
+			this.PeerId = obj[Fields.PeerId.GetName()].Value.Value.AsInt;
+			this.ExtConsortiumId = obj[Fields.ExtConsortiumId.GetName()].Value.Value.AsInt;
+			this.PeerSiteId = obj[Fields.PeerSiteId.GetName()].Value.Value.AsInt;
 
-			this.IsPublic = obj["is_public"].Value.Value.AsBoolean;
-			this.IsEnabled = obj["enabled"].Value.Value.AsBoolean;
-			this.MaxSlices = obj["max_slices"].Value.Value.AsInt;
-			this.MaxSlivers = obj["max_slivers"].Value.Value.AsInt;
+			this.IsPublic = obj[Fields.IsPublic.GetName()].Value.Value.AsBoolean;
+			this.IsEnabled = obj[Fields.IsEnabled.GetName()].Value.Value.AsBoolean;
+			this.MaxSlices = obj[Fields.MaxSlices.GetName()].Value.Value.AsInt;
+			this.MaxSlivers = obj[Fields.MaxSlivers.GetName()].Value.Value.AsInt;
 
-			this.AbbreviatedName = obj["abbreviated_name"].Value.Value.AsString;
-			this.Name = obj["name"].Value.Value.AsString;
-			this.Url = obj["url"].Value.Value.AsString;
-			this.LoginBase = obj["login_base"].Value.Value.AsString;
+			this.AbbreviatedName = obj[Fields.AbbreviatedName.GetName()].Value.Value.AsString;
+			this.Name = obj[Fields.Name.GetName()].Value.Value.AsString;
+			this.Url = obj[Fields.Url.GetName()].Value.Value.AsString;
+			this.LoginBase = obj[Fields.LoginBase.GetName()].Value.Value.AsString;
 
-			this.Latitude = obj["latitude"].Value.Value.AsDouble;
-			this.Longitude = obj["longitude"].Value.Value.AsDouble;
+			this.Latitude = obj[Fields.Latitude.GetName()].Value.Value.AsDouble;
+			this.Longitude = obj[Fields.Longitude.GetName()].Value.Value.AsDouble;
 
-			this.NodeIds = obj["node_ids"].Value.Value.AsArray<int>();
-			this.PcuIds = obj["pcu_ids"].Value.Value.AsArray<int>();
-			this.PersonIds = obj["person_ids"].Value.Value.AsArray<int>();
-			this.SliceIds = obj["slice_ids"].Value.Value.AsArray<int>();
-			this.AddressIds = obj["address_ids"].Value.Value.AsArray<int>();
-			this.SiteTagIds = obj["site_tag_ids"].Value.Value.AsArray<int>();
+			this.NodeIds = obj[Fields.NodeIds.GetName()].Value.Value.AsArray<int>();
+			this.PcuIds = obj[Fields.PcuIds.GetName()].Value.Value.AsArray<int>();
+			this.PersonIds = obj[Fields.PersonIds.GetName()].Value.Value.AsArray<int>();
+			this.SliceIds = obj[Fields.SliceIds.GetName()].Value.Value.AsArray<int>();
+			this.AddressIds = obj[Fields.AddressIds.GetName()].Value.Value.AsArray<int>();
+			this.SiteTagIds = obj[Fields.SiteTagIds.GetName()].Value.Value.AsArray<int>();
 		}
+
+		// Public properties.
 
 		/// <summary>
 		/// The date when the site entry was last updated.
@@ -157,5 +207,18 @@ namespace PlanetLab.Api
 		/// The site longitude.
 		/// </summary>
 		public double? Longitude { get; private set; }
+
+		// Public methods.
+
+		/// <summary>
+		/// Create a filter for the specified field.
+		/// </summary>
+		/// <param name="field">The field.</param>
+		/// <param name="value">The field value.</param>
+		/// <returns>The filter object.</returns>
+		public static XmlRpcObject GetFilter(Fields field, object value)
+		{
+			return new XmlRpcStruct(field.GetName(), value);
+		}
 	}
 }

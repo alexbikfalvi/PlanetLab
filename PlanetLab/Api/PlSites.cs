@@ -23,6 +23,9 @@ using DotNetApi.Web.XmlRpc;
 
 namespace PlanetLab.Api
 {
+	/// <summary>
+	/// A class representing a list of PlanetLab sites.
+	/// </summary>
 	public class PlSites : List<PlSite>
 	{
 		private XmlRpcArray xml = null;

@@ -17,20 +17,34 @@
  */
 
 using System;
+using System.Reflection;
 
 namespace PlanetLab
 {
 	/// <summary>
 	/// A class of useful methods for PlanetLab.
 	/// </summary>
-	public class PlUtil
+	public static class PlUtil
 	{
+		/// <summary>
+		/// Returns the PlanetLab name for the specified enumration value.
+		/// </summary>
+		/// <param name="value">The enumeration value.</param>
+		/// <returns>The PlanetLab name.</returns>
+		public static string GetName(this Enum value)
+		{
+			Type type = value.GetType();
+			MemberInfo[] member = type.GetMember(value.ToString());
+			object[] attributes = member[0].GetCustomAttributes(typeof(PlNameAttribute), false);
+			return (attributes[0] as PlNameAttribute).Name;
+		}
+
 		/// <summary>
 		/// Converts the specified longitude to a string.
 		/// </summary>
 		/// <param name="longitude">The longitude.</param>
 		/// <returns>The display string.</returns>
-		public static string LongitudeToString(double longitude)
+		public static string LongitudeToString(this double longitude)
 		{
 			double absoluteLongitude = Math.Abs(longitude);
 			
@@ -51,7 +65,7 @@ namespace PlanetLab
 		/// </summary>
 		/// <param name="latitude">The latitude.</param>
 		/// <returns>The display string.</returns>
-		public static string LatitudeToString(double latitude)
+		public static string LatitudeToString(this double latitude)
 		{
 			double absoluteLatitude = Math.Abs(latitude);
 

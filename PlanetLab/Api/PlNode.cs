@@ -26,19 +26,84 @@ namespace PlanetLab.Api
 	/// </summary>
 	public class PlNode
 	{
+		public enum Fields
+		{
+			[PlName("last_updated")]
+			LastUpdated,
+			[PlName("last_boot")]
+			LastBoot,
+			[PlName("last_pcu_reboot")]
+			LastPcuReboot,
+			[PlName("last_contact")]
+			LastContact,
+			[PlName("last_pcu_confirmation")]
+			LastPcuConfirmation,
+			[PlName("last_download")]
+			LastDownload,
+			[PlName("date_created")]
+			DateCreated,
+			[PlName("boot_state")]
+			BootState,
+			[PlName("node_type")]
+			NodeType,
+			[PlName("run_level")]
+			RunLevel,
+			[PlName("ssh_rsa_key")]
+			SshRsaKey,
+			[PlName("hostname")]
+			Hostname,
+			[PlName("version")]
+			Version,
+			[PlName("model")]
+			Model,
+			[PlName("site_id")]
+			SiteId,
+			[PlName("node_id")]
+			NodeId,
+			[PlName("peer_id")]
+			PeerId,
+			[PlName("peer_node_id")]
+			PeerNodeId,
+			[PlName("last_time_spent_offline")]
+			LastTimeSpentOffline,
+			[PlName("last_time_spent_online")]
+			LastTimeSpentOnline,
+			[PlName("verified")]
+			Verified,
+			[PlName("ports")]
+			Ports,
+			[PlName("pcu_ids")]
+			PcuIds,
+			[PlName("interface_ids")]
+			InterfaceIds,
+			[PlName("slice_ids")]
+			SliceIds,
+			[PlName("node_tag_ids")]
+			NodeTagIds,
+			[PlName("nodegroup_ids")]
+			NodeGroupIds,
+			[PlName("slice_ids_whitelist")]
+			SliceIdsWhitelist,
+			[PlName("conf_file_ids")]
+			ConfigurationFileIds
+		}
+
 		/// <summary>
 		/// Creates a new PlanetLab node object from the specified object.
 		/// </summary>
 		/// <param name="obj">The XML-RPC object.</param>
 		public PlNode(XmlRpcStruct obj)
 		{
-			int? lastUpdated = obj["last_updated"].Value.Value.AsInt;
-			int? lastBoot = obj["last_boot"].Value.Value.AsInt;
-			int? lastPcuReboot = obj["last_pcu_reboot"].Value.Value.AsInt;
-			int? lastContact = obj["last_contact"].Value.Value.AsInt;
-			int? lastPcuConfirmation = obj["last_pcu_confirmation"].Value.Value.AsInt;
-			int? lastDownload = obj["last_download"].Value.Value.AsInt;
-			int? dateCreated = obj["date_created"].Value.Value.AsInt;
+			int? lastUpdated = obj[Fields.LastUpdated.GetName()].Value.Value.AsInt;
+			int? lastBoot = obj[Fields.LastBoot.GetName()].Value.Value.AsInt;
+			int? lastPcuReboot = obj[Fields.LastPcuReboot.GetName()].Value.Value.AsInt;
+			int? lastContact = obj[Fields.LastContact.GetName()].Value.Value.AsInt;
+			int? lastPcuConfirmation = obj[Fields.LastPcuConfirmation.GetName()].Value.Value.AsInt;
+			int? lastDownload = obj[Fields.LastDownload.GetName()].Value.Value.AsInt;
+			int? dateCreated = obj[Fields.DateCreated.GetName()].Value.Value.AsInt;
+
+			int? lastTimeSpentOffline = obj[Fields.LastTimeSpentOffline.GetName()].Value.Value.AsInt;
+			int? lastTimeSpentOnline = obj[Fields.LastTimeSpentOnline.GetName()].Value.Value.AsInt;
 
 			this.LastUpdated = lastUpdated.HasValue ? (DateTime?)PlDateTime.FromUnixTimestamp(lastUpdated.Value) : null;
 			this.LastBoot = lastBoot.HasValue ? (DateTime?)PlDateTime.FromUnixTimestamp(lastBoot.Value) : null;
@@ -48,34 +113,36 @@ namespace PlanetLab.Api
 			this.LastDownload = lastDownload.HasValue ? (DateTime?)PlDateTime.FromUnixTimestamp(lastDownload.Value) : null;
 			this.DateCreated = dateCreated.HasValue ? (DateTime?)PlDateTime.FromUnixTimestamp(dateCreated.Value) : null;
 
-			this.BootState = obj["boot_state"].Value.Value.AsString;
-			this.NodeType = obj["node_type"].Value.Value.AsString;
-			this.RunLevel = obj["run_level"].Value.Value.AsString;
-			this.SshRsaKey = obj["ssh_rsa_key"].Value.Value.AsString;
-			this.Hostname = obj["hostname"].Value.Value.AsString;
-			this.Version = obj["version"].Value.Value.AsString;
-			this.Model = obj["model"].Value.Value.AsString;
+			this.BootState = obj[Fields.BootState.GetName()].Value.Value.AsString;
+			this.NodeType = obj[Fields.NodeType.GetName()].Value.Value.AsString;
+			this.RunLevel = obj[Fields.RunLevel.GetName()].Value.Value.AsString;
+			this.SshRsaKey = obj[Fields.SshRsaKey.GetName()].Value.Value.AsString;
+			this.Hostname = obj[Fields.Hostname.GetName()].Value.Value.AsString;
+			this.Version = obj[Fields.Version.GetName()].Value.Value.AsString;
+			this.Model = obj[Fields.Model.GetName()].Value.Value.AsString;
 
-			this.SiteId = obj["site_id"].Value.Value.AsInt;
-			this.NodeId = obj["node_id"].Value.Value.AsInt;
-			this.PeerId = obj["peer_id"].Value.Value.AsInt;
-			this.PeerNodeId = obj["peer_node_id"].Value.Value.AsInt;
+			this.SiteId = obj[Fields.SiteId.GetName()].Value.Value.AsInt;
+			this.NodeId = obj[Fields.NodeId.GetName()].Value.Value.AsInt;
+			this.PeerId = obj[Fields.PeerId.GetName()].Value.Value.AsInt;
+			this.PeerNodeId = obj[Fields.PeerNodeId.GetName()].Value.Value.AsInt;
 
-			this.LastTimeSpentOffline = obj["last_time_spent_offline"].Value.Value.AsInt;
-			this.LastTimeSpentOnline = obj["last_time_spent_online"].Value.Value.AsInt;
+			this.LastTimeSpentOffline = lastTimeSpentOffline.HasValue ? TimeSpan.FromMinutes(lastTimeSpentOffline.Value) as TimeSpan?: null;
+			this.LastTimeSpentOnline = lastTimeSpentOnline.HasValue ? TimeSpan.FromMinutes(lastTimeSpentOnline.Value)  as TimeSpan? : null;
 
-			this.Verified = obj["verified"].Value.Value.AsBoolean;
+			this.Verified = obj[Fields.Verified.GetName()].Value.Value.AsBoolean;
 
-			this.Ports = obj["ports"].Value.Value.AsArray<int>();
+			this.Ports = obj[Fields.Ports.GetName()].Value.Value.AsArray<int>();
 
-			this.PcuIds = obj["pcu_ids"].Value.Value.AsArray<int>();
-			this.InterfaceIds = obj["interface_ids"].Value.Value.AsArray<int>();
-			this.SliceIds = obj["slice_ids"].Value.Value.AsArray<int>();
-			this.NodeTagIds = obj["node_tag_ids"].Value.Value.AsArray<int>();
-			this.NodeGroupIds = obj["nodegroup_ids"].Value.Value.AsArray<int>();
-			this.SliceIdsWhitelist = obj["slice_ids_whitelist"].Value.Value.AsArray<int>();
-			this.ConfigurationFileIds = obj["conf_file_ids"].Value.Value.AsArray<int>();
+			this.PcuIds = obj[Fields.PcuIds.GetName()].Value.Value.AsArray<int>();
+			this.InterfaceIds = obj[Fields.InterfaceIds.GetName()].Value.Value.AsArray<int>();
+			this.SliceIds = obj[Fields.SliceIds.GetName()].Value.Value.AsArray<int>();
+			this.NodeTagIds = obj[Fields.NodeTagIds.GetName()].Value.Value.AsArray<int>();
+			this.NodeGroupIds = obj[Fields.NodeGroupIds.GetName()].Value.Value.AsArray<int>();
+			this.SliceIdsWhitelist = obj[Fields.SliceIdsWhitelist.GetName()].Value.Value.AsArray<int>();
+			this.ConfigurationFileIds = obj[Fields.ConfigurationFileIds.GetName()].Value.Value.AsArray<int>();
 		}
+
+		// Public properties.
 
 		public DateTime? LastUpdated { get; private set; }
 		public DateTime? LastBoot { get; private set; }
@@ -98,8 +165,8 @@ namespace PlanetLab.Api
 		public int? PeerId { get; private set; }
 		public int? PeerNodeId { get; private set; }
 
-		public int? LastTimeSpentOffline { get; private set; }
-		public int? LastTimeSpentOnline { get; private set; }
+		public TimeSpan? LastTimeSpentOffline { get; private set; }
+		public TimeSpan? LastTimeSpentOnline { get; private set; }
 
 		public bool? Verified { get; private set; }
 
@@ -112,5 +179,18 @@ namespace PlanetLab.Api
 		public int[] NodeGroupIds { get; private set; }
 		public int[] SliceIdsWhitelist { get; private set; }
 		public int[] ConfigurationFileIds { get; private set; }
+
+		// Public methods.
+
+		/// <summary>
+		/// Create a filter for the specified field.
+		/// </summary>
+		/// <param name="field">The field.</param>
+		/// <param name="value">The field value.</param>
+		/// <returns>The filter object.</returns>
+		public static XmlRpcObject GetFilter(Fields field, object value)
+		{
+			return new XmlRpcStruct(field.GetName(), value);
+		}
 	}
 }

@@ -27,8 +27,22 @@ namespace PlanetLab.Requests
 	/// <summary>
 	/// A class representing an asynchronous request for PlanetLab data.
 	/// </summary>
-	public abstract class PlRequest : AsyncWebRequest
+	public sealed class PlRequest : AsyncWebRequest
 	{
+		public enum RequestMethod
+		{
+			[PlName("GetSites")]
+			GetSites,
+			[PlName("GetNodes")]
+			GetNodes,
+			[PlName("GetPCUs")]
+			GetPcus,
+			[PlName("GetPersons")]
+			GetPersons,
+			[PlName("GetSlices")]
+			GetSlices
+		};
+
 		/// <summary>
 		/// Conversion class for an asynchronous operation returning a string.
 		/// </summary>
@@ -47,41 +61,35 @@ namespace PlanetLab.Requests
 
 		private Uri url = new Uri("https://www.planet-lab.eu/PLCAPI/");
 		private XmlRpcRequestFunction funcConvert = new XmlRpcRequestFunction();
+		private RequestMethod method;
 
 		/// <summary>
 		/// Creates an asynchronous PlanetLab request with the specified settings.
 		/// </summary>
-		public PlRequest() { }
+		public PlRequest(RequestMethod method)
+		{
+			this.method = method;
+		}
 
 		// Public methods.
 
 		/// <summary>
 		/// Begins an asynchronous request for a PlanetLab method.
 		/// </summary>
-		/// <param name="method">The PlanetLab method.</param>
-		/// <param name="parameters">The list of parameters.</param>
+		/// <param name="username">The PlanetLab username.</param>
+		/// <param name="password">The PlanetLab password.</param>
 		/// <param name="callback">The callback funcion.</param>
 		/// <param name="state">The user state.</param>
 		/// <returns>The result of the asynchronous operation.</returns>
-		public IAsyncResult Begin(string method, object[] parameters, AsyncWebRequestCallback callback, object state = null)
+		public IAsyncResult Begin(string username, SecureString password, AsyncWebRequestCallback callback, object state = null)
 		{
-			// Create the XML request body.
-			byte[] body = XmlRpcRequest.Create(method, parameters);
+			// Create the parameters.
+			object[] parameters = new object[1];
 
-			// Create the asynchronous state.
-			AsyncWebResult asyncState = AsyncWebRequest.Create(this.url, callback, state);
+			parameters[0] = new PlAuthentication(username, password);
 
-			// Set the request method.
-			asyncState.Request.Method = "POST";
-			// Set the user agent.
-			asyncState.Request.UserAgent = "YouTube Analytics App";
-			// Set the content type.
-			asyncState.Request.ContentType = "text/xml";
-			// Set the body.
-			asyncState.SendData.Append(body);
-
-			// Begin the request.
-			return this.Begin(asyncState);
+			// Call the base class method.
+			return this.Begin(parameters, callback, state);
 		}
 
 		/// <summary>
@@ -89,21 +97,21 @@ namespace PlanetLab.Requests
 		/// </summary>
 		/// <param name="username">The PlanetLab username.</param>
 		/// <param name="password">The PlanetLab password.</param>
+		/// <param name="parameter">The request parameter.</param>
 		/// <param name="callback">The callback funcion.</param>
 		/// <param name="state">The user state.</param>
 		/// <returns>The result of the asynchronous operation.</returns>
-		public abstract IAsyncResult Begin(string username, SecureString password, AsyncWebRequestCallback callback, object state = null);
+		public IAsyncResult Begin(string username, SecureString password, object parameter, AsyncWebRequestCallback callback, object state = null)
+		{
+			// Create the parameters.
+			object[] parameters = new object[2];
 
-		/// <summary>
-		/// Begins an asynchronous request for a PlanetLab method.
-		/// </summary>
-		/// <param name="username">The PlanetLab username.</param>
-		/// <param name="password">The PlanetLab password.</param>
-		/// <param name="id">The PlanetLab site identifier.</param>
-		/// <param name="callback">The callback funcion.</param>
-		/// <param name="state">The user state.</param>
-		/// <returns>The result of the asynchronous operation.</returns>
-		public abstract IAsyncResult Begin(string username, SecureString password, int id, AsyncWebRequestCallback callback, object state = null);
+			parameters[0] = new PlAuthentication(username, password);
+			parameters[1] = parameter;
+
+			// Call the base class method.
+			return this.Begin(parameters, callback, state);
+		}
 
 		/// <summary>
 		/// Ends the asynchronus request.
@@ -120,48 +128,34 @@ namespace PlanetLab.Requests
 			return this.End<XmlRpcResponse>(result, this.funcConvert);
 		}
 
-		// Protected methods.
+		// Private methods.
 
 		/// <summary>
 		/// Begins an asynchronous request for a PlanetLab method.
 		/// </summary>
-		/// <param name="method">The PlanetLab method.</param>
-		/// <param name="username">The PlanetLab username.</param>
-		/// <param name="password">The PlanetLab password.</param>
+		/// <param name="parameters">The list of parameters.</param>
 		/// <param name="callback">The callback funcion.</param>
 		/// <param name="state">The user state.</param>
 		/// <returns>The result of the asynchronous operation.</returns>
-		protected IAsyncResult Begin(string method, string username, SecureString password, AsyncWebRequestCallback callback, object state = null)
+		private IAsyncResult Begin(object[] parameters, AsyncWebRequestCallback callback, object state = null)
 		{
-			// Create the parameters.
-			object[] parameters = new object[1];
+			// Create the XML request body.
+			byte[] body = XmlRpcRequest.Create(this.method.GetName(), parameters);
 
-			parameters[0] = new PlAuthentication(username, password);
+			// Create the asynchronous state.
+			AsyncWebResult asyncState = AsyncWebRequest.Create(this.url, callback, state);
 
-			// Call the base class method.
-			return this.Begin(method, parameters, callback, state);
-		}
+			// Set the request method.
+			asyncState.Request.Method = "POST";
+			// Set the user agent.
+			asyncState.Request.UserAgent = "YouTube Analytics App";
+			// Set the content type.
+			asyncState.Request.ContentType = "text/xml";
+			// Set the body.
+			asyncState.SendData.Append(body);
 
-		/// <summary>
-		/// Begins an asynchronous request for a PlanetLab method.
-		/// </summary>
-		/// <param name="method">The PlanetLab method.</param>
-		/// <param name="username">The PlanetLab username.</param>
-		/// <param name="password">The PlanetLab password.</param>
-		/// <param name="id">The PlanetLab site identifier.</param>
-		/// <param name="callback">The callback funcion.</param>
-		/// <param name="state">The user state.</param>
-		/// <returns>The result of the asynchronous operation.</returns>
-		protected IAsyncResult Begin(string method, string username, SecureString password, int id, AsyncWebRequestCallback callback, object state = null)
-		{
-			// Create the parameters.
-			object[] parameters = new object[2];
-
-			parameters[0] = new PlAuthentication(username, password);
-			parameters[1] = id;
-
-			// Call the base class method.
-			return this.Begin(method, parameters, callback, state);
+			// Begin the request.
+			return this.Begin(asyncState);
 		}
 	}
 }

@@ -24,59 +24,59 @@ using DotNetApi.Web.XmlRpc;
 namespace PlanetLab.Api
 {
 	/// <summary>
-	/// A class representing a list of PlanetLab nodes.
+	/// A class representing a list of PlanetLab persons.
 	/// </summary>
-	public class PlNodes : List<PlNode>
+	public class PlPersons : List<PlPerson>
 	{
 		private XmlRpcArray xml = null;
 
 		/// <summary>
-		/// Creates an empty PlanetLab nodes list.
+		/// Creates an empty PlanetLab persons list.
 		/// </summary>
-		public PlNodes()
+		public PlPersons()
 		{
 		}
 
 		/// <summary>
-		/// Creates a PlanetLab nodes list from the specified XML-RPC array.
+		/// Creates a PlanetLab persons list from the specified XML-RPC array.
 		/// </summary>
 		/// <param name="obj">The XML-RPC array.</param>
-		/// <returns>A PlanetLab nodes list.</returns>
-		public static PlNodes Create(XmlRpcArray obj)
+		/// <returns>A PlanetLab persons list.</returns>
+		public static PlPersons Create(XmlRpcArray obj)
 		{
 			// Create the object.
-			PlNodes nodes = new PlNodes();
-			// Update the nodes object.
-			nodes.Update(obj);
+			PlPersons persons = new PlPersons();
+			// Update the persons object.
+			persons.Update(obj);
 			// Return the object.
-			return nodes;
+			return persons;
 		}
 
 		// Public methods.
 
 		/// <summary>
-		/// Updates the list of PlanetLab nodes from the specified array.
+		/// Updates the list of PlanetLab persons from the specified array.
 		/// </summary>
 		/// <param name="obj">The XML-RPC array.</param>
 		public void Update(XmlRpcArray obj)
 		{
 			// Save the XML-RPC object.
 			this.xml = obj;
-			// Clear the nodes list.
+			// Clear the persons list.
 			this.Clear();
 			// If the object is not null.
 			if (null != obj)
 			{
-				// Update the nodes list.
+				// Update the persons list.
 				foreach (XmlRpcValue value in obj.Values)
 				{
-					this.Add(new PlNode(value.Value as XmlRpcStruct));
+					this.Add(new PlPerson(value.Value as XmlRpcStruct));
 				}
 			}
 		}
 
 		/// <summary>
-		/// Loads the list of PlanetLab nodes from the specified file.
+		/// Loads the list of PlanetLab persons from the specified file.
 		/// </summary>
 		/// <param name="fileName">The file name.</param>
 		public void LoadFromFile(string fileName)
@@ -88,7 +88,7 @@ namespace PlanetLab.Api
 		}
 
 		/// <summary>
-		/// Saves the list of PlanetLab nodes to the specified file.
+		/// Saves the list of PlanetLab persons to the specified file.
 		/// </summary>
 		/// <param name="fileName">The file name.</param>
 		public void SaveToFile(string fileName)
