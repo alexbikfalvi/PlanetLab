@@ -24,7 +24,7 @@ namespace PlanetLab.Api
 	/// <summary>
 	/// A class representing a PlanetLab site.
 	/// </summary>
-	public class PlSite
+	public sealed class PlSite : PlObject
 	{
 		public enum Fields
 		{
@@ -75,10 +75,60 @@ namespace PlanetLab.Api
 		}
 
 		/// <summary>
+		/// Creates a default PlanetLab site object.
+		/// </summary>
+		public PlSite()
+		{
+		}
+
+		/// <summary>
 		/// Creates a new PlanetLab site object from the specified object.
 		/// </summary>
 		/// <param name="obj">The XML-RPC object.</param>
 		public PlSite(XmlRpcStruct obj)
+		{
+			this.Parse(obj);
+		}
+
+		// Public properties.
+
+		public override int? Id { get { return this.SiteId; } }
+
+		public DateTime? LastUpdated { get; private set; }
+		public DateTime? DateCreated { get; private set; }
+
+		public int? SiteId { get; private set; }
+		public int? PeerId { get; private set; }
+		public int? ExtConsortiumId { get; private set; }
+		public int? PeerSiteId { get; private set; }
+
+		public bool? IsPublic { get; private set; }
+		public bool? IsEnabled { get; private set; }
+		public int? MaxSlices { get; private set; }
+		public int? MaxSlivers { get; private set; }
+
+		public string AbbreviatedName { get; private set; }
+		public string Name { get; private set; }
+		public string Url { get; private set; }
+		public string LoginBase { get; private set; }
+
+		public int[] NodeIds { get; private set; }
+		public int[] PcuIds { get; private set; }
+		public int[] PersonIds { get; private set; }
+		public int[] SliceIds { get; private set; }
+		public int[] AddressIds { get; private set; }
+		public int[] SiteTagIds { get; private set; }
+
+		public double? Latitude { get; private set; }
+		public double? Longitude { get; private set; }
+
+		// Public methods.
+
+		/// <summary>
+		/// Parses the current PlanetLab object from the specified XML-RPC object.
+		/// </summary>
+		/// <param name="obj">The XML-RPC object.</param>
+		public override void Parse(XmlRpcStruct obj)
 		{
 			int? lastUpdated = obj[Fields.LastUpdated.GetName()].Value.Value.AsInt;
 			int? dateCreated = obj[Fields.DateCreated.GetName()].Value.Value.AsInt;
@@ -111,104 +161,6 @@ namespace PlanetLab.Api
 			this.AddressIds = obj[Fields.AddressIds.GetName()].Value.Value.AsArray<int>();
 			this.SiteTagIds = obj[Fields.SiteTagIds.GetName()].Value.Value.AsArray<int>();
 		}
-
-		// Public properties.
-
-		/// <summary>
-		/// The date when the site entry was last updated.
-		/// </summary>
-		public DateTime? LastUpdated { get; private set; }
-		/// <summary>
-		/// The date when the site was created.
-		/// </summary>
-		public DateTime? DateCreated { get; private set; }
-
-		/// <summary>
-		/// The site identifier.
-		/// </summary>
-		public int? SiteId { get; private set; }
-		/// <summary>
-		/// The peer identifier.
-		/// </summary>
-		public int? PeerId { get; private set; }
-		/// <summary>
-		/// The external consortium identifier.
-		/// </summary>
-		public int? ExtConsortiumId { get; private set; }
-		/// <summary>
-		/// The peer site identifier.
-		/// </summary>
-		public int? PeerSiteId { get; private set; }
-
-		/// <summary>
-		/// Publicly viewable site.
-		/// </summary>
-		public bool? IsPublic { get; private set; }
-		/// <summary>
-		/// The site has been enabled.
-		/// </summary>
-		public bool? IsEnabled { get; private set; }
-		/// <summary>
-		/// The maximum number of slices the site can create.
-		/// </summary>
-		public int? MaxSlices { get; private set; }
-		/// <summary>
-		/// The maximum number of slivers the site can create.
-		/// </summary>
-		public int? MaxSlivers { get; private set; }
-
-		/// <summary>
-		/// The site abbreviated name.
-		/// </summary>
-		public string AbbreviatedName { get; private set; }
-		/// <summary>
-		/// The site name.
-		/// </summary>
-		public string Name { get; private set; }
-		/// <summary>
-		/// The site URL.
-		/// </summary>
-		public string Url { get; private set; }
-		/// <summary>
-		/// The site slice prefix.
-		/// </summary>
-		public string LoginBase { get; private set; }
-
-		/// <summary>
-		/// The list of site node identifiers.
-		/// </summary>
-		public int[] NodeIds { get; private set; }
-		/// <summary>
-		/// The list of site PCU identifiers.
-		/// </summary>
-		public int[] PcuIds { get; private set; }
-		/// <summary>
-		/// The list of site person identifiers.
-		/// </summary>
-		public int[] PersonIds { get; private set; }
-		/// <summary>
-		/// The list of site slice identifiers.
-		/// </summary>
-		public int[] SliceIds { get; private set; }
-		/// <summary>
-		/// The list of site address identifiers.
-		/// </summary>
-		public int[] AddressIds { get; private set; }
-		/// <summary>
-		/// The list of site tag identifiers.
-		/// </summary>
-		public int[] SiteTagIds { get; private set; }
-
-		/// <summary>
-		/// The site latitude.
-		/// </summary>
-		public double? Latitude { get; private set; }
-		/// <summary>
-		/// The site longitude.
-		/// </summary>
-		public double? Longitude { get; private set; }
-
-		// Public methods.
 
 		/// <summary>
 		/// Create a filter for the specified field.

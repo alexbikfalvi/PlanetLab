@@ -24,7 +24,7 @@ namespace PlanetLab.Api
 	/// <summary>
 	/// A class representing a PlanetLab slice.
 	/// </summary>
-	public class PlSlice
+	public sealed class PlSlice : PlObject
 	{
 		public enum Fields
 		{
@@ -59,10 +59,51 @@ namespace PlanetLab.Api
 		}
 
 		/// <summary>
+		/// Creates a default PlanetLab slice object.
+		/// </summary>
+		public PlSlice()
+		{
+		}
+
+		/// <summary>
 		/// Creates a new PlanetLab slice object from the specified object.
 		/// </summary>
 		/// <param name="obj">The XML-RPC object.</param>
 		public PlSlice(XmlRpcStruct obj)
+		{
+			this.Parse(obj);
+		}
+
+		// Public properties.
+
+		public override int? Id { get { return this.SliceId; } }
+
+		public DateTime? Created { get; private set; }
+		public DateTime? Expires { get; private set; }
+
+		public string Name { get; private set; }
+		public string Description { get; private set; }
+		public string Instantiation { get; private set; }
+		public string Url { get; private set; }
+
+		public int? MaxNodes { get; private set; }
+
+		public int? SliceId { get; private set; }
+		public int? SiteId { get; private set; }
+		public int? PeerId { get; private set; }
+		public int? PeerSliceId { get; private set; }
+		public int? CreatorPersonId { get; private set; }
+		
+		public int[] NodeIds { get; private set; }
+		public int[] PersonIds { get; private set; }
+
+		// Public methods.
+
+		/// <summary>
+		/// Parses the current PlanetLab object from the specified XML-RPC object.
+		/// </summary>
+		/// <param name="obj">The XML-RPC object.</param>
+		public override void Parse(XmlRpcStruct obj)
 		{
 			int? created = obj[Fields.Created.GetName()].Value.Value.AsInt;
 			int? expires = obj[Fields.Expires.GetName()].Value.Value.AsInt;
@@ -86,29 +127,6 @@ namespace PlanetLab.Api
 			this.NodeIds = obj[Fields.NodeIds.GetName()].Value.Value.AsArray<int>();
 			this.PersonIds = obj[Fields.PersonIds.GetName()].Value.Value.AsArray<int>();
 		}
-
-		// Public properties.
-
-		public DateTime? Created { get; private set; }
-		public DateTime? Expires { get; private set; }
-
-		public string Name { get; private set; }
-		public string Description { get; private set; }
-		public string Instantiation { get; private set; }
-		public string Url { get; private set; }
-
-		public int? MaxNodes { get; private set; }
-
-		public int? SliceId { get; private set; }
-		public int? SiteId { get; private set; }
-		public int? PeerId { get; private set; }
-		public int? PeerSliceId { get; private set; }
-		public int? CreatorPersonId { get; private set; }
-		
-		public int[] NodeIds { get; private set; }
-		public int[] PersonIds { get; private set; }
-
-		// Public methods.
 
 		/// <summary>
 		/// Create a filter for the specified field.

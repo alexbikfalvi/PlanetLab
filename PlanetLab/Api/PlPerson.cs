@@ -24,7 +24,7 @@ namespace PlanetLab.Api
 	/// <summary>
 	/// A class representing a PlanetLab person.
 	/// </summary>
-	public class PlPerson
+	public sealed class PlPerson : PlObject
 	{
 		public enum Fields
 		{
@@ -69,10 +69,57 @@ namespace PlanetLab.Api
 		}
 
 		/// <summary>
-		/// Creates a new PlanetLab site object from the specified object.
+		/// Creates a default PlanetLab person object.
+		/// </summary>
+		public PlPerson()
+		{
+		}
+
+		/// <summary>
+		/// Creates a new PlanetLab person object from the specified object.
 		/// </summary>
 		/// <param name="obj">The XML-RPC object.</param>
 		public PlPerson(XmlRpcStruct obj)
+		{
+			this.Parse(obj);
+		}
+
+		// Public properties.
+
+		public override int? Id { get { return this.PersonId; } }
+
+		public DateTime? LastUpdated { get; private set; }
+		public DateTime? DateCreated { get; private set; }
+
+		public string FirstName { get; private set; }
+		public string LastName { get; private set; }
+		public string Title { get; private set; }
+		public string Phone { get; private set; }
+		public string Email { get; private set; }
+		public string Url { get; private set; }
+		public string Bio { get; private set; }
+
+		public bool? IsEnabled { get; private set; }
+
+		public int? PersonId { get; private set; }
+		public int? PeerId { get; private set; }
+		public int? PeerPersonId { get; private set; }
+
+		public int[] RoleIds { get; private set; }
+		public int[] KeyIds { get; private set; }
+		public int[] SliceIds { get; private set; }
+		public int[] SiteIds { get; private set; }
+		public int[] PersonTagIds { get; private set; }
+
+		public string[] Roles { get; private set; }
+
+		// Public methods.
+
+		/// <summary>
+		/// Parses the current PlanetLab object from the specified XML-RPC object.
+		/// </summary>
+		/// <param name="obj">The XML-RPC object.</param>
+		public override void Parse(XmlRpcStruct obj)
 		{
 			int? lastUpdated = obj[Fields.LastUpdated.GetName()].Value.Value.AsInt;
 			int? dateCreated = obj[Fields.DateCreated.GetName()].Value.Value.AsInt;
@@ -102,35 +149,6 @@ namespace PlanetLab.Api
 
 			this.Roles = obj[Fields.Roles.GetName()].Value.Value.AsArray<string>();
 		}
-
-		// Public properties.
-
-		public DateTime? LastUpdated { get; private set; }
-		public DateTime? DateCreated { get; private set; }
-
-		public string FirstName { get; private set; }
-		public string LastName { get; private set; }
-		public string Title { get; private set; }
-		public string Phone { get; private set; }
-		public string Email { get; private set; }
-		public string Url { get; private set; }
-		public string Bio { get; private set; }
-
-		public bool? IsEnabled { get; private set; }
-
-		public int? PersonId { get; private set; }
-		public int? PeerId { get; private set; }
-		public int? PeerPersonId { get; private set; }
-
-		public int[] RoleIds { get; private set; }
-		public int[] KeyIds { get; private set; }
-		public int[] SliceIds { get; private set; }
-		public int[] SiteIds { get; private set; }
-		public int[] PersonTagIds { get; private set; }
-
-		public string[] Roles { get; private set; }
-
-		// Public methods.
 
 		/// <summary>
 		/// Create a filter for the specified field.

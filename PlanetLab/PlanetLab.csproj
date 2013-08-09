@@ -40,17 +40,20 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Api\Auth\PlAuthentication.cs" />
+    <Compile Include="Api\PlInterfaceTag.cs" />
+    <Compile Include="Api\PlAddress.cs" />
+    <Compile Include="Api\PlList.cs" />
     <Compile Include="Api\PlNode.cs" />
-    <Compile Include="Api\PlNodes.cs" />
+    <Compile Include="Api\PlNodeTag.cs" />
+    <Compile Include="Api\PlObject.cs" />
     <Compile Include="Api\PlPcu.cs" />
-    <Compile Include="Api\PlPcus.cs" />
     <Compile Include="Api\PlPerson.cs" />
-    <Compile Include="Api\PlPersons.cs" />
+    <Compile Include="Api\PlPersonTag.cs" />
     <Compile Include="Api\PlSite.cs" />
-    <Compile Include="Api\PlDateTime.cs" />
-    <Compile Include="Api\PlSites.cs" />
+    <Compile Include="PlDateTime.cs" />
+    <Compile Include="Api\PlSiteTag.cs" />
     <Compile Include="Api\PlSlice.cs" />
-    <Compile Include="Api\PlSlices.cs" />
+    <Compile Include="Api\PlSliceTag.cs" />
     <Compile Include="PlNameAttribute.cs" />
     <Compile Include="PlUtil.cs" />
     <Compile Include="Requests\PlRequest.cs" />

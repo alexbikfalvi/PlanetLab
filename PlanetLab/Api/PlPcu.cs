@@ -24,7 +24,7 @@ namespace PlanetLab.Api
 	/// <summary>
 	/// A class representing a PlanetLab PCU.
 	/// </summary>
-	public class PlPcu
+	public sealed class PlPcu : PlObject
 	{
 		public enum Fields
 		{
@@ -55,10 +55,49 @@ namespace PlanetLab.Api
 		};
 
 		/// <summary>
+		/// Creates a default PlanetLab PCU object.
+		/// </summary>
+		public PlPcu()
+		{
+		}
+
+		/// <summary>
 		/// Creates a new PlanetLab PCU object from the specified object.
 		/// </summary>
 		/// <param name="obj">The XML-RPC object.</param>
 		public PlPcu(XmlRpcStruct obj)
+		{
+			this.Parse(obj);
+		}
+
+		//  Public properties.
+
+		public override int? Id { get { return this.PcuId; } }
+
+		public DateTime? LastUpdated { get; private set; }
+
+		public string Hostname { get; private set; }
+		public string Model { get; private set; }
+		public string Username { get; private set; }
+		public string Password { get; private set; }
+		public string Protocol { get; private set; }
+		public string Ip { get; private set; }
+		public string Notes { get; private set; }
+
+		public int? PcuId { get; private set; }
+		public int? SiteId { get; private set; }
+
+		public int[] Ports { get; private set; }
+
+		public int[] NodeIds { get; private set; }
+
+		// Public methods.
+
+		/// <summary>
+		/// Parses the current PlanetLab object from the specified XML-RPC object.
+		/// </summary>
+		/// <param name="obj">The XML-RPC object.</param>
+		public override void Parse(XmlRpcStruct obj)
 		{
 			int? lastUpdated = obj[Fields.Hostname.GetName()].Value.Value.AsInt;
 
@@ -79,27 +118,6 @@ namespace PlanetLab.Api
 
 			this.NodeIds = obj[Fields.NodeIds.GetName()].Value.Value.AsArray<int>();
 		}
-
-		//  Public properties.
-
-		public DateTime? LastUpdated { get; private set; }
-
-		public string Hostname { get; private set; }
-		public string Model { get; private set; }
-		public string Username { get; private set; }
-		public string Password { get; private set; }
-		public string Protocol { get; private set; }
-		public string Ip { get; private set; }
-		public string Notes { get; private set; }
-
-		public int? PcuId { get; private set; }
-		public int? SiteId { get; private set; }
-
-		public int[] Ports { get; private set; }
-
-		public int[] NodeIds { get; private set; }
-
-		// Public methods.
 
 		/// <summary>
 		/// Create a filter for the specified field.

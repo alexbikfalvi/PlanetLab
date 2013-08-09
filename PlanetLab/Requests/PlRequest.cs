@@ -40,7 +40,19 @@ namespace PlanetLab.Requests
 			[PlName("GetPersons")]
 			GetPersons,
 			[PlName("GetSlices")]
-			GetSlices
+			GetSlices,
+			[PlName("GetAddresses")]
+			GetAddresses,
+			[PlName("GetInterfaceTags")]
+			GetInterfaceTags,
+			[PlName("GetNodeTags")]
+			GetNodeTags,
+			[PlName("GetPersonTags")]
+			GetPersonTags,
+			[PlName("GetSiteTags")]
+			GetSiteTags,
+			[PlName("GetSliceTags")]
+			GetSliceTags
 		};
 
 		/// <summary>
