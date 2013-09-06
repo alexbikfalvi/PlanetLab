@@ -38,47 +38,5 @@ namespace PlanetLab
 			object[] attributes = member[0].GetCustomAttributes(typeof(PlNameAttribute), false);
 			return (attributes[0] as PlNameAttribute).Name;
 		}
-
-		/// <summary>
-		/// Converts the specified longitude to a string.
-		/// </summary>
-		/// <param name="longitude">The longitude.</param>
-		/// <returns>The display string.</returns>
-		public static string LongitudeToString(this double longitude)
-		{
-			double absoluteLongitude = Math.Abs(longitude);
-			
-			double degrees = Math.Floor(absoluteLongitude);
-			double minutes = (absoluteLongitude - degrees) * 60.0;
-			double seconds = (minutes - Math.Floor(minutes)) * 60.0;
-			double tenths = (seconds - Math.Floor(seconds)) * 10.0;
-
-			minutes = Math.Floor(minutes);
-			seconds = Math.Floor(seconds);
-			tenths = Math.Floor(tenths);
-
-			return string.Format("{0}° {1}ʹ {2}.{3}ʺ {4}", degrees, minutes, seconds, tenths, Math.Sign(longitude) >= 0 ? 'E' : 'W');
-		}
-
-		/// <summary>
-		/// Converts the specified latitude to a string.
-		/// </summary>
-		/// <param name="latitude">The latitude.</param>
-		/// <returns>The display string.</returns>
-		public static string LatitudeToString(this double latitude)
-		{
-			double absoluteLatitude = Math.Abs(latitude);
-
-			double degrees = Math.Floor(absoluteLatitude);
-			double minutes = (absoluteLatitude - degrees) * 60.0;
-			double seconds = (minutes - Math.Floor(minutes)) * 60.0;
-			double tenths = (seconds - Math.Floor(seconds)) * 10.0;
-
-			minutes = Math.Floor(minutes);
-			seconds = Math.Floor(seconds);
-			tenths = Math.Floor(tenths);
-
-			return string.Format("{0}° {1}ʹ {2}.{3}ʺ {4}", degrees, minutes, seconds, tenths, Math.Sign(latitude) >= 0 ? 'N' : 'S');
-		}
 	}
 }

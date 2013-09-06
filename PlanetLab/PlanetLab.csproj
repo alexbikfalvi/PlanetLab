@@ -40,10 +40,15 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Api\Auth\PlAuthentication.cs" />
+    <Compile Include="Api\PlAddressType.cs" />
+    <Compile Include="Api\PlConfigurationFile.cs" />
+    <Compile Include="Api\PlInterface.cs" />
     <Compile Include="Api\PlInterfaceTag.cs" />
     <Compile Include="Api\PlAddress.cs" />
+    <Compile Include="Api\PlKey.cs" />
     <Compile Include="Api\PlList.cs" />
     <Compile Include="Api\PlNode.cs" />
+    <Compile Include="Api\PlNodeGroup.cs" />
     <Compile Include="Api\PlNodeTag.cs" />
     <Compile Include="Api\PlObject.cs" />
     <Compile Include="Api\PlPcu.cs" />

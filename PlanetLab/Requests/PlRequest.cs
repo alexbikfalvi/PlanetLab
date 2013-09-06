@@ -43,6 +43,16 @@ namespace PlanetLab.Requests
 			GetSlices,
 			[PlName("GetAddresses")]
 			GetAddresses,
+			[PlName("GetInterfaces")]
+			GetInterfaces,
+			[PlName("GetNodeGroups")]
+			GetNodeGroups,
+			[PlName("GetConfFiles")]
+			GetConfigurationFiles,
+			[PlName("GetKeys")]
+			GetKeys,
+			[PlName("GetAddressTypes")]
+			GetAddressTypes,
 			[PlName("GetInterfaceTags")]
 			GetInterfaceTags,
 			[PlName("GetNodeTags")]
