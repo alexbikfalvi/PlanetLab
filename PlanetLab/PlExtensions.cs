@@ -24,7 +24,7 @@ namespace PlanetLab
 	/// <summary>
 	/// A class of useful methods for PlanetLab.
 	/// </summary>
-	public static class PlUtil
+	public static class PlExtensions
 	{
 		/// <summary>
 		/// Returns the PlanetLab name for the specified enumration value.

@@ -17,15 +17,17 @@
  */
 
 using System;
-using System.Collections.Generic;
+using System.IO;
+using System.Linq;
 using System.Xml.Linq;
+using DotNetApi.Concurrent.Generic;
 using DotNetApi.Web.XmlRpc;
 
 namespace PlanetLab.Api
 {
-	public class PlList<T> : List<T> where T : PlObject, new()
+	public class PlList<T> : ConcurrentList<T> where T : PlObject, new()
 	{
-		private XmlRpcArray xml = null;
+		private XmlRpcArray array = null;
 
 		/// <summary>
 		/// Creates an empty PlanetLab address list.
@@ -42,34 +44,51 @@ namespace PlanetLab.Api
 		public static PlList<T> Create(XmlRpcArray obj)
 		{
 			// Create the object.
-			PlList<T> addresses = new PlList<T>();
-			// Update the addresses object.
-			addresses.Update(obj);
+			PlList<T> list = new PlList<T>();
+			// Update the list.
+			list.Update(obj);
 			// Return the object.
-			return addresses;
+			return list;
 		}
 
 		// Public methods.
 
 		/// <summary>
-		/// Updates the list of PlanetLab addresses from the specified array.
+		/// Clears the current list and copies all elements from the argument list.
+		/// </summary>
+		/// <param name="list">The list from where to copy.</param>
+		public void CopyFrom(PlList<T> list)
+		{
+			// Validate the argument.
+			if (null == list) throw new ArgumentNullException("list");
+			// If this object and list are the same instance, do nothing.
+			if (this == list) return;
+			// Update all elements from the list.
+			this.Update(list.array);
+		}
+
+		/// <summary>
+		/// Updates the list with all PlanetLab object from the specified array.
 		/// </summary>
 		/// <param name="obj">The XML-RPC array.</param>
 		public void Update(XmlRpcArray obj)
 		{
 			// Save the XML-RPC object.
-			this.xml = obj;
-			// Clear the addresses list.
+			this.array = obj;
+			// Clear the list.
 			this.Clear();
 			// If the object is not null.
 			if (null != obj)
 			{
 				// Update the addresses list.
-				foreach (XmlRpcValue value in obj.Values)
+				foreach (XmlRpcValue element in obj.Values)
 				{
-					T element = new T();
-					element.Parse(value.Value as XmlRpcStruct);
-					this.Add(element);
+					XmlRpcStruct str = element.Value as XmlRpcStruct;
+					if (null == str) continue;
+					
+					T item = new T();
+					item.Parse(element.Value as XmlRpcStruct);
+					this.Add(item);
 				}
 			}
 		}
@@ -80,6 +99,8 @@ namespace PlanetLab.Api
 		/// <param name="fileName">The file name.</param>
 		public void LoadFromFile(string fileName)
 		{
+			// If the file does not exist, do nothing.
+			if (!File.Exists(fileName)) return;
 			// Load the XML document from a file.
 			XDocument document = XDocument.Load(fileName);
 			// Parse the XML into the XML-RPC array object.
@@ -94,10 +115,14 @@ namespace PlanetLab.Api
 		{
 			// Create a new XML document for the current XML object.
 			XDocument document = new XDocument();
-			// If the current XML object is not null, add the object.
-			if (null != this.xml) document.Add(this.xml.GetXml());
-			// Save the XML document to the file.
-			document.Save(fileName);
+			// If the current XML object is not null.
+			if (null != this.array)
+			{
+				// Add the object.
+				document.Add(this.array.GetXml());
+				// Save the XML document to the file.
+				document.Save(fileName);
+			}
 		}
 	}
 }

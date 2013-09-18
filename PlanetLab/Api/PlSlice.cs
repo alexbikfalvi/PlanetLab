@@ -129,7 +129,7 @@ namespace PlanetLab.Api
 		}
 
 		/// <summary>
-		/// Create a filter for the specified field.
+		/// Creates a filter for the specified field.
 		/// </summary>
 		/// <param name="field">The field.</param>
 		/// <param name="value">The field value.</param>

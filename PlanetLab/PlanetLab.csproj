@@ -60,7 +60,7 @@
     <Compile Include="Api\PlSlice.cs" />
     <Compile Include="Api\PlSliceTag.cs" />
     <Compile Include="PlNameAttribute.cs" />
-    <Compile Include="PlUtil.cs" />
+    <Compile Include="PlExtensions.cs" />
     <Compile Include="Requests\PlRequest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
