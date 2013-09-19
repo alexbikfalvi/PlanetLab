@@ -20,15 +20,18 @@ using System;
 using System.IO;
 using System.Linq;
 using System.Xml.Linq;
+using System.Xml.Serialization;
 using DotNetApi.Concurrent.Generic;
 using DotNetApi.Web.XmlRpc;
 
 namespace PlanetLab.Api
 {
+	/// <summary>
+	/// A class representing a PlanetLab list.
+	/// </summary>
+	/// <typeparam name="T">The list item type.</typeparam>
 	public class PlList<T> : ConcurrentList<T> where T : PlObject, new()
 	{
-		private XmlRpcArray array = null;
-
 		/// <summary>
 		/// Creates an empty PlanetLab address list.
 		/// </summary>
@@ -63,8 +66,22 @@ namespace PlanetLab.Api
 			if (null == list) throw new ArgumentNullException("list");
 			// If this object and list are the same instance, do nothing.
 			if (this == list) return;
-			// Update all elements from the list.
-			this.Update(list.array);
+			// Lock the list.
+			list.Lock();
+			try
+			{
+				// Clear the list.
+				this.Clear();
+				// Update the items.
+				foreach (T item in list)
+				{
+					this.Add(item);
+				}
+			}
+			finally
+			{
+				list.Unlock();
+			}
 		}
 
 		/// <summary>
@@ -73,14 +90,12 @@ namespace PlanetLab.Api
 		/// <param name="obj">The XML-RPC array.</param>
 		public void Update(XmlRpcArray obj)
 		{
-			// Save the XML-RPC object.
-			this.array = obj;
 			// Clear the list.
 			this.Clear();
 			// If the object is not null.
 			if (null != obj)
 			{
-				// Update the addresses list.
+				// Update the items.
 				foreach (XmlRpcValue element in obj.Values)
 				{
 					XmlRpcStruct str = element.Value as XmlRpcStruct;
@@ -104,7 +119,8 @@ namespace PlanetLab.Api
 			// Load the XML document from a file.
 			XDocument document = XDocument.Load(fileName);
 			// Parse the XML into the XML-RPC array object.
-			this.Update(XmlRpcArray.Create(document.Root) as XmlRpcArray);
+			this.Clear();
+			document.Root.Deserialize<PlList<T>>(this);
 		}
 
 		/// <summary>
@@ -113,15 +129,18 @@ namespace PlanetLab.Api
 		/// <param name="fileName">The file name.</param>
 		public void SaveToFile(string fileName)
 		{
-			// Create a new XML document for the current XML object.
-			XDocument document = new XDocument();
-			// If the current XML object is not null.
-			if (null != this.array)
+			// Lock the list.
+			this.Lock();
+			try
 			{
-				// Add the object.
-				document.Add(this.array.GetXml());
+				// Create a new XML document for the current serialized XML object.
+				XDocument document = new XDocument(this.Serialize("List"));
 				// Save the XML document to the file.
 				document.Save(fileName);
+			}
+			finally
+			{
+				this.Unlock();
 			}
 		}
 	}
