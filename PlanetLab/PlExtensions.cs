@@ -18,9 +18,22 @@
 
 using System;
 using System.Reflection;
+using PlanetLab.Api;
 
 namespace PlanetLab
 {
+	/// <summary>
+	/// An enumeration representing the boot state.
+	/// </summary>
+	public enum PlBootState
+	{
+		Unknown = 0,
+		Boot = 1,
+		SafeBoot = 2,
+		Disabled = 3,
+		Reinstall = 4
+	}
+
 	/// <summary>
 	/// A class of useful methods for PlanetLab.
 	/// </summary>
@@ -37,6 +50,27 @@ namespace PlanetLab
 			MemberInfo[] member = type.GetMember(value.ToString());
 			object[] attributes = member[0].GetCustomAttributes(typeof(PlNameAttribute), false);
 			return (attributes[0] as PlNameAttribute).Name;
+		}
+
+		/// <summary>
+		/// Returns the boot state for the specified PlanetLab node.
+		/// </summary>
+		/// <param name="node">The PlanetLab node.</param>
+		/// <returns>The boot state.</returns>
+		public static PlBootState GetBootState(this PlNode node)
+		{
+			// If the boot state is null, return unknown.
+			if (node.BootState == null) return PlBootState.Unknown;
+			
+			// Get the lower-case version.
+			string bootState = node.BootState.ToLower();
+
+			// Return the corresponding the boot state.
+			if (bootState.Equals("boot")) return PlBootState.Boot;
+			else if (bootState.Equals("safeboot")) return PlBootState.SafeBoot;
+			else if (bootState.Equals("disabled")) return PlBootState.Disabled;
+			else if (bootState.Equals("reinstall")) return PlBootState.Reinstall;
+			else return PlBootState.Unknown;
 		}
 	}
 }
