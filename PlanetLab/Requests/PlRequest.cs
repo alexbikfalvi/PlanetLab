@@ -62,7 +62,9 @@ namespace PlanetLab.Requests
 			[PlName("GetSiteTags")]
 			GetSiteTags,
 			[PlName("GetSliceTags")]
-			GetSliceTags
+			GetSliceTags,
+			[PlName("AddSliceToNodes")]
+			AddSliceToNodes
 		};
 
 		/// <summary>
@@ -105,6 +107,11 @@ namespace PlanetLab.Requests
 		/// <returns>The result of the asynchronous operation.</returns>
 		public IAsyncResult Begin(string username, SecureString password, AsyncWebRequestCallback callback, object state = null)
 		{
+			// Check the arguments.
+			if (null == username) throw new ArgumentNullException("username");
+			if (null == password) throw new ArgumentNullException("password");
+			if (null == callback) throw new ArgumentNullException("callback");
+
 			// Create the parameters.
 			object[] parameters = new object[1];
 
@@ -125,14 +132,50 @@ namespace PlanetLab.Requests
 		/// <returns>The result of the asynchronous operation.</returns>
 		public IAsyncResult Begin(string username, SecureString password, object parameter, AsyncWebRequestCallback callback, object state = null)
 		{
-			// Create the parameters.
-			object[] parameters = new object[2];
+			// Check the arguments.
+			if (null == username) throw new ArgumentNullException("username");
+			if (null == password) throw new ArgumentNullException("password");
+			if (null == parameter) throw new ArgumentNullException("parameter");
+			if (null == callback) throw new ArgumentNullException("callback");
 
-			parameters[0] = new PlAuthentication(username, password);
-			parameters[1] = parameter;
+			// Create the parameters.
+			object[] param = new object[2];
+
+			param[0] = new PlAuthentication(username, password);
+			param[1] = parameter;
 
 			// Call the base class method.
-			return this.Begin(parameters, callback, state);
+			return this.Begin(param, callback, state);
+		}
+
+		/// <summary>
+		/// Begins an asynchronous request for a PlanetLab method.
+		/// </summary>
+		/// <param name="username">The PlanetLab username.</param>
+		/// <param name="password">The PlanetLab password.</param>
+		/// <param name="parameters">The request parameters.</param>
+		/// <param name="callback">The callback funcion.</param>
+		/// <param name="state">The user state.</param>
+		/// <returns>The result of the asynchronous operation.</returns>
+		public IAsyncResult Begin(string username, SecureString password, object[] parameters, AsyncWebRequestCallback callback, object state = null)
+		{
+			// Check the arguments.
+			if (null == username) throw new ArgumentNullException("username");
+			if (null == password) throw new ArgumentNullException("password");
+			if (null == parameters) throw new ArgumentNullException("parameters");
+			if (null == callback) throw new ArgumentNullException("callback");
+
+			// Create the parameters.
+			object[] param = new object[parameters.Length + 1];
+
+			param[0] = new PlAuthentication(username, password);
+			for (int index = 0; index < parameters.Length; index++)
+			{
+				param[index + 1] = parameters[index];
+			}
+
+			// Call the base class method.
+			return this.Begin(param, callback, state);
 		}
 
 		/// <summary>
