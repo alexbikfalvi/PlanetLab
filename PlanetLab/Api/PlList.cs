@@ -17,6 +17,7 @@
  */
 
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Xml.Linq;
@@ -30,7 +31,7 @@ namespace PlanetLab.Api
 	/// A class representing a PlanetLab list.
 	/// </summary>
 	/// <typeparam name="T">The list item type.</typeparam>
-	public class PlList<T> : ConcurrentList<T> where T : PlObject, new()
+	public class PlList<T> : ConcurrentDictionary<int, T> where T : PlObject, new()
 	{
 		/// <summary>
 		/// Creates an empty PlanetLab address list.
@@ -73,7 +74,7 @@ namespace PlanetLab.Api
 				// Clear the list.
 				this.Clear();
 				// Update the items.
-				foreach (T item in list)
+				foreach (KeyValuePair<int, T> item in list)
 				{
 					this.Add(item);
 				}
@@ -103,7 +104,10 @@ namespace PlanetLab.Api
 					
 					T item = new T();
 					item.Parse(element.Value as XmlRpcStruct);
-					this.Add(item);
+					if (item.Id.HasValue)
+					{
+						this.Add(item.Id.Value, item);
+					}
 				}
 			}
 		}
