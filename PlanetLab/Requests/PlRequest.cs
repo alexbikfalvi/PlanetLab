@@ -17,6 +17,7 @@
  */
 
 using System;
+using System.Globalization;
 using System.Security;
 using DotNetApi.Web;
 using DotNetApi.Web.XmlRpc;
@@ -74,6 +75,17 @@ namespace PlanetLab.Requests
 		/// </summary>
 		public class XmlRpcRequestFunction : IAsyncFunction<XmlRpcResponse>
 		{
+			private IFormatProvider format;
+
+			/// <summary>
+			/// Creates a new conversion instance for the specified format provider.
+			/// </summary>
+			/// <param name="format">The format.</param>
+			public XmlRpcRequestFunction(IFormatProvider format)
+			{
+				this.format = format;
+			}
+
 			/// <summary>
 			/// Returns a string for the received asynchronous data.
 			/// </summary>
@@ -81,12 +93,13 @@ namespace PlanetLab.Requests
 			/// <returns>The XML RPC response.</returns>
 			public XmlRpcResponse GetResult(string data)
 			{
-				return XmlRpcResponse.Create(data);
+				return XmlRpcResponse.Create(data, this.format);
 			}
 		}
 
-		private Uri url = new Uri("https://www.planet-lab.eu/PLCAPI/");
-		private XmlRpcRequestFunction funcConvert = new XmlRpcRequestFunction();
+		private static readonly Uri url = new Uri("https://www.planet-lab.eu/PLCAPI/");
+		private readonly XmlRpcRequestFunction funcConvert;
+		private readonly CultureInfo culture = new CultureInfo("en-US");
 		private RequestMethod method;
 
 		/// <summary>
@@ -95,6 +108,7 @@ namespace PlanetLab.Requests
 		public PlRequest(RequestMethod method)
 		{
 			this.method = method;
+			this.funcConvert = new XmlRpcRequestFunction(this.culture);
 		}
 
 		// Public methods.
@@ -210,7 +224,7 @@ namespace PlanetLab.Requests
 			byte[] body = XmlRpcRequest.Create(this.method.GetName(), parameters);
 
 			// Create the asynchronous state.
-			AsyncWebResult asyncState = AsyncWebRequest.Create(this.url, callback, state);
+			AsyncWebResult asyncState = AsyncWebRequest.Create(PlRequest.url, callback, state);
 
 			// Set the request method.
 			asyncState.Request.Method = "POST";
@@ -218,6 +232,8 @@ namespace PlanetLab.Requests
 			asyncState.Request.UserAgent = "YouTube Analytics App";
 			// Set the content type.
 			asyncState.Request.ContentType = "text/xml";
+			// Set the accepted language.
+			asyncState.Request.Headers["Accept-Language"] = this.culture.Name;
 			// Set the body.
 			asyncState.SendData.Append(body);
 

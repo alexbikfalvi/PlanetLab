@@ -59,6 +59,7 @@
     <Compile Include="Api\PlSiteTag.cs" />
     <Compile Include="Api\PlSlice.cs" />
     <Compile Include="Api\PlSliceTag.cs" />
+    <Compile Include="PlDisplayNameAttribute.cs" />
     <Compile Include="PlNameAttribute.cs" />
     <Compile Include="PlExtensions.cs" />
     <Compile Include="PlSerialization.cs" />

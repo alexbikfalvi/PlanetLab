@@ -27,10 +27,15 @@ namespace PlanetLab
 	/// </summary>
 	public enum PlBootState
 	{
+		[PlDisplayName("Unknown")]
 		Unknown = 0,
+		[PlDisplayName("Boot")]
 		Boot = 1,
+		[PlDisplayName("Safe boot")]
 		SafeBoot = 2,
+		[PlDisplayName("Disabled")]
 		Disabled = 3,
+		[PlDisplayName("Reinstall")]
 		Reinstall = 4
 	}
 
@@ -50,6 +55,19 @@ namespace PlanetLab
 			MemberInfo[] member = type.GetMember(value.ToString());
 			object[] attributes = member[0].GetCustomAttributes(typeof(PlNameAttribute), false);
 			return (attributes[0] as PlNameAttribute).Name;
+		}
+
+		/// <summary>
+		/// Returns the PlanetLab display name for the specified enumration value.
+		/// </summary>
+		/// <param name="value">The enumeration value.</param>
+		/// <returns>The PlanetLab display name.</returns>
+		public static string GetDisplayName(this Enum value)
+		{
+			Type type = value.GetType();
+			MemberInfo[] member = type.GetMember(value.ToString());
+			object[] attributes = member[0].GetCustomAttributes(typeof(PlDisplayNameAttribute), false);
+			return (attributes[0] as PlDisplayNameAttribute).Name;
 		}
 
 		/// <summary>
