@@ -261,7 +261,7 @@ namespace PlanetLab
 		/// <returns>The XML element.</returns>
 		private static XElement Serialize(this bool value, string name)
 		{
-			return new XElement(name, new XAttribute(PlSerialization.nameNull, false), value);
+			return new XElement(name, new XAttribute(PlSerialization.nameNull, false), value.ToString());
 		}
 
 		/// <summary>
@@ -294,7 +294,7 @@ namespace PlanetLab
 		private static int DeserializeInt(this XElement element)
 		{
 			if (null == element.Value) throw new SerializationException("Cannot deserialize the element {0} into an integer because it does not have a value.".FormatWith(element.Name));
-			return int.Parse(element.Value);
+			return int.Parse(element.Value, CultureInfo.InvariantCulture);
 		}
 
 		/// <summary>
@@ -316,7 +316,7 @@ namespace PlanetLab
 		private static double DeserializeDouble(this XElement element)
 		{
 			if (null == element.Value) throw new SerializationException("Cannot deserialize the element {0} into a double because it does not have a value.".FormatWith(element.Name));
-			return double.Parse(element.Value);
+			return double.Parse(element.Value, CultureInfo.InvariantCulture);
 		}
 
 		/// <summary>
@@ -338,7 +338,7 @@ namespace PlanetLab
 		private static DateTime DeserializeDateTime(this XElement element)
 		{
 			if (null == element.Value) throw new SerializationException("Cannot deserialize the element {0} into a date-time because it does not have a value.".FormatWith(element.Name));
-			return new DateTime(long.Parse(element.Value));
+			return new DateTime(long.Parse(element.Value, CultureInfo.InvariantCulture));
 		}
 
 		/// <summary>
@@ -360,7 +360,7 @@ namespace PlanetLab
 		private static TimeSpan DeserializeTimeSpan(this XElement element)
 		{
 			if (null == element.Value) throw new SerializationException("Cannot deserialize the element {0} into a time-span because it does not have a value.".FormatWith(element.Name));
-			return new TimeSpan(long.Parse(element.Value));
+			return new TimeSpan(long.Parse(element.Value, CultureInfo.InvariantCulture));
 		}
 
 		/// <summary>
