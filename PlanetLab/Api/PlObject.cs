@@ -17,6 +17,7 @@
  */
 
 using System;
+using PlanetLab;
 using DotNetApi.Web.XmlRpc;
 
 namespace PlanetLab.Api
@@ -30,6 +31,13 @@ namespace PlanetLab.Api
 
 		public abstract int? Id { get; }
 
+		// Public events.
+
+		/// <summary>
+		/// An event raised when the PlanetLab object has changed.
+		/// </summary>
+		public event PlEventHandler Changed;
+
 		// Public methods.
 
 		/// <summary>
@@ -37,5 +45,23 @@ namespace PlanetLab.Api
 		/// </summary>
 		/// <param name="obj">The XML-RPC object.</param>
 		public abstract void Parse(XmlRpcStruct obj);
+
+		/// <summary>
+		/// Parses the object identifier from the specified XML-RPC object.
+		/// </summary>
+		/// <param name="obj">The XML-RPC object.</param>
+		/// <returns>The object identifier.</returns>
+		public abstract int? ParseId(XmlRpcStruct obj);
+
+		// Protected methods.
+
+		/// <summary>
+		/// An event handler called when the PlanetLab object has changed.
+		/// </summary>
+		protected virtual void OnChanged()
+		{
+			// Raise the event.
+			if (null != this.Changed) this.Changed(this, new PlEventArgs(this));
+		}
 	}
 }

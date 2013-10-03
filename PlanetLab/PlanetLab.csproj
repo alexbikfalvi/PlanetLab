@@ -42,6 +42,7 @@
     <Compile Include="Api\Auth\PlAuthentication.cs" />
     <Compile Include="Api\PlAddressType.cs" />
     <Compile Include="Api\PlConfigurationFile.cs" />
+    <Compile Include="PlEventArgs.cs" />
     <Compile Include="Api\PlInterface.cs" />
     <Compile Include="Api\PlInterfaceTag.cs" />
     <Compile Include="Api\PlAddress.cs" />
@@ -60,6 +61,7 @@
     <Compile Include="Api\PlSlice.cs" />
     <Compile Include="Api\PlSliceTag.cs" />
     <Compile Include="PlDisplayNameAttribute.cs" />
+    <Compile Include="PlException.cs" />
     <Compile Include="PlNameAttribute.cs" />
     <Compile Include="PlExtensions.cs" />
     <Compile Include="PlSerialization.cs" />

@@ -89,6 +89,19 @@ namespace PlanetLab.Api
 			this.TagTypeId = obj[Fields.TagTypeId.GetName()].Value.Value.AsInt;
 			this.NodeIds = obj[Fields.NodeIds.GetName()].Value.Value.AsArray<int>();
 			this.ConfigurationFileIds = obj[Fields.ConfigurationFileIds.GetName()].Value.Value.AsArray<int>();
+
+			// Raise the changed event.
+			base.OnChanged();
+		}
+
+		/// <summary>
+		/// Parses the object identifier from the specified XML-RPC object.
+		/// </summary>
+		/// <param name="obj">The XML-RPC object.</param>
+		/// <returns>The object identifier.</returns>
+		public override int? ParseId(XmlRpcStruct obj)
+		{
+			return obj[Fields.NodeGroupId.GetName()].Value.Value.AsInt;
 		}
 
 		/// <summary>
