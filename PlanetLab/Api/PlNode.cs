@@ -147,6 +147,57 @@ namespace PlanetLab.Api
 		// Public methods.
 
 		/// <summary>
+		/// Copies the data of the current object from the specified object.
+		/// </summary>
+		/// <param name="obj">The object.</param>
+		public override void CopyFrom(PlObject obj)
+		{
+			// Convert the object.
+			PlNode item = obj as PlNode;
+			// Check the object is not null.
+			if (null == item) throw new PlException("The object is null or not of the current type.");
+
+			this.LastUpdated = item.LastUpdated;
+			this.LastBoot = item.LastBoot;
+			this.LastPcuReboot = item.LastPcuReboot;
+			this.LastContact = item.LastContact;
+			this.LastPcuConfirmation = item.LastPcuConfirmation;
+			this.LastDownload = item.LastDownload;
+			this.DateCreated = item.DateCreated;
+
+			this.BootState = item.BootState;
+			this.NodeType = item.NodeType;
+			this.RunLevel = item.RunLevel;
+			this.SshRsaKey = item.SshRsaKey;
+			this.Hostname = item.Hostname;
+			this.Version = item.Version;
+			this.Model = item.Model;
+
+			this.SiteId = item.SiteId;
+			this.NodeId = item.NodeId;
+			this.PeerId = item.PeerId;
+			this.PeerNodeId = item.PeerNodeId;
+
+			this.LastTimeSpentOffline = item.LastTimeSpentOffline;
+			this.LastTimeSpentOnline = item.LastTimeSpentOnline;
+
+			this.Verified = item.Verified;
+
+			this.Ports = item.Ports;
+
+			this.PcuIds = item.PcuIds;
+			this.InterfaceIds = item.InterfaceIds;
+			this.SliceIds = item.SliceIds;
+			this.NodeTagIds = item.NodeTagIds;
+			this.NodeGroupIds = item.NodeGroupIds;
+			this.SliceIdsWhitelist = item.SliceIdsWhitelist;
+			this.ConfigurationFileIds = item.ConfigurationFileIds;
+
+			// Raise the changed event.
+			base.OnChanged();
+		}
+
+		/// <summary>
 		/// Parses the current PlanetLab object from the specified XML-RPC object.
 		/// </summary>
 		/// <param name="obj">The XML-RPC object.</param>

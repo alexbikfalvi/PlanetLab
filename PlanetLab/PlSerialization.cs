@@ -62,14 +62,16 @@ namespace PlanetLab
 			
 			// Serialize the object according to the underlying type.
 			if (type.IsSubclassOf(typeof(PlObject))) return (value as PlObject).Serialize(name);
-			if (type.IsGenericType && type.GetGenericTypeDefinition().Equals(typeof(Nullable<>))) return value.Serialize(type.GetGenericArguments()[0], name);
-			if (typeof(IList).IsAssignableFrom(type)) return (value as IList).Serialize(name);
+			if () return value.Serialize(type.GetGenericArguments()[0], name);
 			if (type.Equals(typeof(bool))) return ((bool)value).Serialize(name);
 			if (type.Equals(typeof(int))) return ((int)value).Serialize(name);
 			if (type.Equals(typeof(double))) return ((double)value).Serialize(name);
 			if (type.Equals(typeof(DateTime))) return ((DateTime)value).Serialize(name);
 			if (type.Equals(typeof(TimeSpan))) return ((TimeSpan)value).Serialize(name);
 			if (type.Equals(typeof(string))) return (value as string).Serialize(name);
+			if (type.IsNullable()) return ((Nullable<>)value)
+			if (type.IsAssignableToGenericInterface(typeof(IList<>))) return (value as IList).Serialize(name);
+			if (type.Equals(typeof(IEnumerable))) return (value as IEnumerable).Serialize(name);
 			
 			// Otherwise, thrown an exception.
 			throw new SerializationException("Cannot serialize the type {0} as an element.".FormatWith(type.FullName));
@@ -93,7 +95,7 @@ namespace PlanetLab
 			if (type.IsSubclassOf(typeof(PlObject))) return element.DeserializePlObject(type, instance as PlObject);
 			if (type.IsGenericType && type.GetGenericTypeDefinition().Equals(typeof(Nullable<>))) return element.Deserialize(type.GetGenericArguments()[0], instance);
 			if (type.IsSubclassOf(typeof(Array))) return element.DeserializeArray(type);
-			if (typeof(IList).IsAssignableFrom(type)) return element.DeserializeList(type, instance as IList);
+			if (type.IsAssignableToGenericInterface(typeof(IList<>)) && type.IsAssignableToInterface(typeof(IList))) return element.DeserializeList(type, instance as IList);
 			if (type.Equals(typeof(bool))) return element.DeserializeBool();
 			if (type.Equals(typeof(int))) return element.DeserializeInt();
 			if (type.Equals(typeof(double))) return element.DeserializeDouble();
@@ -238,8 +240,6 @@ namespace PlanetLab
 		/// <returns>A generic list object.</returns>
 		private static IList DeserializeList(this XElement element, Type type, IList instance = null)
 		{
-			// Check the list type is generic.
-			if (!type.IsGenericType) throw new SerializationException("Cannot deserialize the type {0} because it is not generic.".FormatWith(type.FullName));
 			// Get the item type.
 			Type itemType = type.GetGenericArguments()[0];
 			// Create a list instance.
@@ -383,6 +383,51 @@ namespace PlanetLab
 		{
 			if (null == element.Value) throw new SerializationException("Cannot deserialize the element {0} into a date-time because it does not have a value.".FormatWith(element.Name));
 			return element.Value;
+		}
+
+		private static bool IsAssignableToNullable(this Type type)
+		{
+			return type.IsGenericType && type.GetGenericTypeDefinition().Equals(typeof(Nullable<>));
+		}
+
+		/// <summary>
+		/// Checks whether the given type is assignable from the specified type.
+		/// </summary>
+		/// <param name="type">The given type.</param>
+		/// <param name="otherType">The other type.</param>
+		/// <returns><b>True</b> if the type is assignable to the specified generic type, <b>false</b> otherwise.</returns>
+		private static bool IsAssignableToInterface(this Type type, Type otherType)
+		{
+			// For all interfaces.
+			foreach (Type iface in type.GetInterfaces())
+				if (iface == otherType)
+					return true;
+			// Else, return false.
+			return false;
+		}
+
+		/// <summary>
+		/// Checks whether the given type is assignable from the specified type.
+		/// </summary>
+		/// <param name="type">The given type.</param>
+		/// <param name="otherType">The other type.</param>
+		/// <returns><b>True</b> if the type is assignable to the specified generic type, <b>false</b> otherwise.</returns>
+		private static bool IsAssignableToGenericInterface(this Type type, Type otherType)
+		{
+			// If the generic type is not generic.
+			if (!otherType.IsGenericType)
+			{
+				return otherType.IsAssignableFrom(type);
+			}
+			// Get the number of generic arguments.
+			int count = otherType.GetGenericArguments().Count();
+			// For all interfaces.
+			foreach (Type iface in type.GetInterfaces())
+				if (iface.IsGenericType)
+					if ((iface.GetGenericTypeDefinition() == otherType) && (iface.GetGenericArguments().Count() == count))
+						return true;
+			// Else, return false.
+			return false;
 		}
 	}
 }

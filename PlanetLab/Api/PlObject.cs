@@ -36,9 +36,15 @@ namespace PlanetLab.Api
 		/// <summary>
 		/// An event raised when the PlanetLab object has changed.
 		/// </summary>
-		public event PlEventHandler Changed;
+		public event PlObjectEventHandler Changed;
 
 		// Public methods.
+
+		/// <summary>
+		/// Copies the data of the current object from the specified object.
+		/// </summary>
+		/// <param name="obj">The object.</param>
+		public abstract void CopyFrom(PlObject obj);
 
 		/// <summary>
 		/// Parses the current PlanetLab object from the specified XML-RPC object.
@@ -61,7 +67,7 @@ namespace PlanetLab.Api
 		protected virtual void OnChanged()
 		{
 			// Raise the event.
-			if (null != this.Changed) this.Changed(this, new PlEventArgs(this));
+			if (null != this.Changed) this.Changed(this, new PlObjectEventArgs(this));
 		}
 	}
 }

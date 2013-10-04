@@ -40,9 +40,12 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Api\Auth\PlAuthentication.cs" />
+    <Compile Include="Database\PlDatabase.cs" />
+    <Compile Include="Database\PlDatabaseList.cs" />
     <Compile Include="Api\PlAddressType.cs" />
     <Compile Include="Api\PlConfigurationFile.cs" />
-    <Compile Include="PlEventArgs.cs" />
+    <Compile Include="Database\PlDatabaseListEventArgs.cs" />
+    <Compile Include="PlObjectEventArgs.cs" />
     <Compile Include="Api\PlInterface.cs" />
     <Compile Include="Api\PlInterfaceTag.cs" />
     <Compile Include="Api\PlAddress.cs" />

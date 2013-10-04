@@ -19,36 +19,29 @@
 using System;
 using PlanetLab.Api;
 
-namespace PlanetLab
+namespace PlanetLab.Database
 {
 	/// <summary>
-	/// A delegate representing a PlanetLab object event handler.
+	/// A delegate representing a PlanetLab list event handler.
 	/// </summary>
 	/// <typeparam name="T">The PlanetLab object type.</typeparam>
 	/// <param name="sender">The sender object.</param>
 	/// <param name="e">The event arguments.</param>
-	public delegate void PlEventHandler(object sender, PlEventArgs e);
-
-	/// <summary>
-	/// A delegate representing a PlanetLab object event handler.
-	/// </summary>
-	/// <typeparam name="T">The PlanetLab object type.</typeparam>
-	/// <param name="sender">The sender object.</param>
-	/// <param name="e">The event arguments.</param>
-	public delegate void PlEventHandler<T>(object sender, PlEventArgs<T> e) where T : PlObject;
+	public delegate void PlDatabaseListEventHandler<T>(object sender, PlDatabaseListEventArgs<T> e) where T : PlObject, new();
 
 	/// <summary>
 	/// A class representing a database object selected event argument.
 	/// </summary>
-	public class PlEventArgs : EventArgs
+	/// <typeparam name="T">The PlanetLab object type.</typeparam>
+	public sealed class PlDatabaseListEventArgs<T> : EventArgs where T : PlObject, new()
 	{
 		/// <summary>
 		/// Creates a new event instance.
 		/// </summary>
-		/// <param name="obj">The selected result.</param>
-		public PlEventArgs(PlObject obj)
+		/// <param name="list">The selected result.</param>
+		public PlDatabaseListEventArgs(PlDatabaseList<T> list)
 		{
-			this.Object = obj;
+			this.List = list;
 		}
 
 		// Public properties.
@@ -56,29 +49,6 @@ namespace PlanetLab
 		/// <summary>
 		/// The PlanetLab event object.
 		/// </summary>
-		public PlObject Object { get; private set; }
-	}
-
-	/// <summary>
-	/// A class representing a database object selected event argument.
-	/// </summary>
-	/// <typeparam name="T">The PlanetLab object type.</typeparam>
-	public class PlEventArgs<T> : EventArgs where T : PlObject
-	{
-		/// <summary>
-		/// Creates a new event instance.
-		/// </summary>
-		/// <param name="obj">The selected result.</param>
-		public PlEventArgs(T obj)
-		{
-			this.Object = obj;
-		}
-
-		// Public properties.
-
-		/// <summary>
-		/// The PlanetLab event object.
-		/// </summary>
-		public T Object { get; private set; }
+		public PlDatabaseList<T> List { get; private set; }
 	}
 }

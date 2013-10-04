@@ -87,6 +87,35 @@ namespace PlanetLab.Api
 		// Public methods.
 
 		/// <summary>
+		/// Copies the data of the current object from the specified object.
+		/// </summary>
+		/// <param name="obj">The object.</param>
+		public override void CopyFrom(PlObject obj)
+		{
+			// Convert the object.
+			PlAddress item = obj as PlAddress;
+			// Check the object is not null.
+			if (null == item) throw new PlException("The object is null or not of the current type.");
+
+			this.Line1 = item.Line1;
+			this.Line2 = item.Line2;
+			this.Line3 = item.Line3;
+			this.PostalCode = item.PostalCode;
+			this.City = item.City;
+			this.State = item.State;
+			this.Country = item.Country;
+
+			this.AddressId = item.AddressId;
+
+			this.AddressTypeIds = item.AddressTypeIds;
+
+			this.AddressTypes = item.AddressTypes;
+
+			// Raise the changed event.
+			base.OnChanged();
+		}
+
+		/// <summary>
 		/// Parses the current PlanetLab object from the specified XML-RPC object.
 		/// </summary>
 		/// <param name="obj">The XML-RPC object.</param>
