@@ -62,16 +62,14 @@ namespace PlanetLab
 			
 			// Serialize the object according to the underlying type.
 			if (type.IsSubclassOf(typeof(PlObject))) return (value as PlObject).Serialize(name);
-			if () return value.Serialize(type.GetGenericArguments()[0], name);
 			if (type.Equals(typeof(bool))) return ((bool)value).Serialize(name);
 			if (type.Equals(typeof(int))) return ((int)value).Serialize(name);
 			if (type.Equals(typeof(double))) return ((double)value).Serialize(name);
 			if (type.Equals(typeof(DateTime))) return ((DateTime)value).Serialize(name);
 			if (type.Equals(typeof(TimeSpan))) return ((TimeSpan)value).Serialize(name);
 			if (type.Equals(typeof(string))) return (value as string).Serialize(name);
-			if (type.IsNullable()) return ((Nullable<>)value)
-			if (type.IsAssignableToGenericInterface(typeof(IList<>))) return (value as IList).Serialize(name);
-			if (type.Equals(typeof(IEnumerable))) return (value as IEnumerable).Serialize(name);
+			if (type.IsNullable()) return value.Serialize(type.GetGenericArguments()[0], name);
+			if (type.IsAssignableToInterface(typeof(IEnumerable))) return (value as IEnumerable).Serialize(name);
 			
 			// Otherwise, thrown an exception.
 			throw new SerializationException("Cannot serialize the type {0} as an element.".FormatWith(type.FullName));
@@ -93,15 +91,15 @@ namespace PlanetLab
 
 			// Deserialize the element according to the underlying type.
 			if (type.IsSubclassOf(typeof(PlObject))) return element.DeserializePlObject(type, instance as PlObject);
-			if (type.IsGenericType && type.GetGenericTypeDefinition().Equals(typeof(Nullable<>))) return element.Deserialize(type.GetGenericArguments()[0], instance);
-			if (type.IsSubclassOf(typeof(Array))) return element.DeserializeArray(type);
-			if (type.IsAssignableToGenericInterface(typeof(IList<>)) && type.IsAssignableToInterface(typeof(IList))) return element.DeserializeList(type, instance as IList);
 			if (type.Equals(typeof(bool))) return element.DeserializeBool();
 			if (type.Equals(typeof(int))) return element.DeserializeInt();
 			if (type.Equals(typeof(double))) return element.DeserializeDouble();
 			if (type.Equals(typeof(DateTime))) return element.DeserializeDateTime();
 			if (type.Equals(typeof(TimeSpan))) return element.DeserializeTimeSpan();
 			if (type.Equals(typeof(string))) return element.DeserializeString();
+			if (type.IsNullable()) return element.Deserialize(type.GetGenericArguments()[0], instance);
+			if (type.IsSubclassOf(typeof(Array))) return element.DeserializeArray(type);
+			if (type.IsAssignableToGenericInterface(typeof(IList<>)) && type.IsAssignableToInterface(typeof(IList))) return element.DeserializeList(type, instance as IList);
 
 			// Otherwise, thrown an exception.
 			throw new SerializationException("Cannot deserialize the element {0} of type {1} as an object.".FormatWith(element.Name, type.FullName));
@@ -189,17 +187,17 @@ namespace PlanetLab
 		}
 
 		/// <summary>
-		/// Serialize the current list to an XML element.
+		/// Serialize the current enumerable to an XML element.
 		/// </summary>
-		/// <param name="list">The list.</param>
-		/// <param name="name">The list element name.</param>
+		/// <param name="enumerable">The enumerable.</param>
+		/// <param name="name">The enumerable element name.</param>
 		/// <returns>The XML element.</returns>
-		private static XElement Serialize(this IList list, string name)
+		private static XElement Serialize(this IEnumerable enumerable, string name)
 		{
 			// Create a new element.
 			XElement element = new XElement(name, new XAttribute(PlSerialization.nameNull, false));
 			// Serialize and add all items.
-			foreach (object item in list)
+			foreach (object item in enumerable)
 			{
 				element.Add(item.Serialize(PlSerialization.nameItem));
 			}
@@ -385,7 +383,12 @@ namespace PlanetLab
 			return element.Value;
 		}
 
-		private static bool IsAssignableToNullable(this Type type)
+		/// <summary>
+		/// Checks whether the given type is nullable.
+		/// </summary>
+		/// <param name="type">The given type.</param>
+		/// <returns><b>True</b> if the type is nullable, <b>false</b> otherwise.</returns>
+		private static bool IsNullable(this Type type)
 		{
 			return type.IsGenericType && type.GetGenericTypeDefinition().Equals(typeof(Nullable<>));
 		}

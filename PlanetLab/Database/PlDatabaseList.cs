@@ -54,7 +54,23 @@ namespace PlanetLab.Database
 		/// <summary>
 		/// An event raised when the database list has changed.
 		/// </summary>
-		public event PlDatabaseListEventHandler<T> Changed;
+		public event EventHandler Changed;
+		/// <summary>
+		/// An event raised before the database list has been cleared.
+		/// </summary>
+		public event EventHandler Cleared;
+		/// <summary>
+		/// An event raised after the database list has been updated.
+		/// </summary>
+		public event EventHandler Updated;
+		/// <summary>
+		/// An event raised when an object has been added to the list.
+		/// </summary>
+		public event PlObjectEventHandler<T> Added;
+		/// <summary>
+		/// An event raised when an object has been removed from the list.
+		/// </summary>
+		public event PlObjectEventHandler<T> Removed;
 
 		// Public properties.
 
@@ -98,7 +114,7 @@ namespace PlanetLab.Database
 		public IEnumerator<T> GetEnumerator()
 		{
 			// The thread must first acquire a lock before retrieving the enumerator.
-			if (!this.HasLock()) throw new SynchronizationLockException();
+			if (!this.HasLock()) throw new InvalidOperationException("Thread must own a lock on this concurrent collection.");
 			return this.list.GetEnumerator();
 		}
 
@@ -107,6 +123,8 @@ namespace PlanetLab.Database
 		/// </summary>
 		public void Clear()
 		{
+			// Call the cleared event handler.
+			this.OnCleared();
 			// Acquire a writer lock.
 			LockInfo info = this.AcquireWriterLock();
 			try
@@ -118,6 +136,8 @@ namespace PlanetLab.Database
 				// Release the writer lock.
 				this.ReleaseWriterLock(info);
 			}
+			// Call the changed event handler.
+			this.OnChanged();
 		}
 
 		/// <summary>
@@ -141,6 +161,10 @@ namespace PlanetLab.Database
 				// Release the writer lock.
 				this.ReleaseWriterLock(info);
 			}
+			// Call the added event handler.
+			this.OnAdded(obj);
+			// Call the changed event handler.
+			this.OnChanged();
 		}
 
 		/// <summary>
@@ -164,6 +188,10 @@ namespace PlanetLab.Database
 				// Release the writer lock.
 				this.ReleaseWriterLock(info);
 			}
+			// Call the removed event handler.
+			this.OnRemoved(obj);
+			// Call the changed event handler.
+			this.OnChanged();
 		}
 
 		/// <summary>
@@ -175,6 +203,8 @@ namespace PlanetLab.Database
 			// Check the object is not null.
 			if (null == obj) throw new ArgumentNullException("obj");
 
+			// Call the cleared event handler.
+			this.OnCleared();
 			// Acquire a writer lock.
 			LockInfo info = this.AcquireWriterLock();
 			try
@@ -196,6 +226,10 @@ namespace PlanetLab.Database
 				// Release the writer lock.
 				this.ReleaseWriterLock(info);
 			}
+			// Call the updated event handler.
+			this.OnUpdated();
+			// Call the changed event handler.
+			this.OnChanged();
 		}
 
 		/// <summary>
@@ -207,6 +241,8 @@ namespace PlanetLab.Database
 			// Check the list is not null.
 			if (null == list) throw new ArgumentNullException("list");
 
+			// Call the cleared event handler.
+			this.OnCleared();
 			// Acquire a writer lock.
 			LockInfo info = this.AcquireWriterLock();
 			try
@@ -233,6 +269,10 @@ namespace PlanetLab.Database
 				// Release the writer lock.
 				this.ReleaseWriterLock(info);
 			}
+			// Call the updated event handler.
+			this.OnUpdated();
+			// Call the changed event handler.
+			this.OnChanged();
 		}
 		
 		/// <summary>
@@ -290,6 +330,55 @@ namespace PlanetLab.Database
 				// Release the reader lock.
 				this.ReleaseReaderLock(info);
 			}
+		}
+
+		// Private methods.
+
+		/// <summary>
+		/// An event handler called when the list has changed.
+		/// </summary>
+		private void OnChanged()
+		{
+			// Raise the event.
+			if (null != this.Changed) this.Changed(this, EventArgs.Empty);
+		}
+
+		/// <summary>
+		/// An event handler called before the list has been cleared.
+		/// </summary>
+		private void OnCleared()
+		{
+			// Raise the event.
+			if (null != this.Cleared) this.Cleared(this, EventArgs.Empty);
+		}
+
+		/// <summary>
+		/// An event handler called after the list has been updated.
+		/// </summary>
+		private void OnUpdated()
+		{
+			// Raise the event.
+			if (null != this.Updated) this.Updated(this, EventArgs.Empty);
+		}
+
+		/// <summary>
+		/// An event handler called after an item has been added.
+		/// </summary>
+		/// <param name="obj">The object.</param>
+		private void OnAdded(T obj)
+		{
+			// Raise the event.
+			if (null != this.Added) this.Added(this, new PlObjectEventArgs<T>(obj));
+		}
+
+		/// <summary>
+		/// An event handler called after an item has been removed.
+		/// </summary>
+		/// <param name="obj">The object.</param>
+		private void OnRemoved(T obj)
+		{
+			// Raise the event.
+			if (null != this.Removed) this.Removed(this, new PlObjectEventArgs<T>(obj));
 		}
 	}
 }

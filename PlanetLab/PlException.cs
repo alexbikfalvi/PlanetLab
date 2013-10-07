@@ -23,6 +23,7 @@ namespace PlanetLab
 	/// <summary>
 	/// A class representing a PlanetLab exception.
 	/// </summary>
+	[Serializable]
 	public class PlException : Exception
 	{
 		/// <summary>
