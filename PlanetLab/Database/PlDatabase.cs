@@ -70,7 +70,7 @@ namespace PlanetLab.Database
 			}
 		}
 
-		// Internal methods.
+		// Public methods.
 
 		/// <summary>
 		/// Adds the specified PlanetLab object to the current database. If the object does not exist, the database will add the specified instance.
@@ -78,7 +78,7 @@ namespace PlanetLab.Database
 		/// </summary>
 		/// <param name="obj">The PlanetLab object to add.</param>
 		/// <returns>The object instance that was added/updated to/in the database.</returns>
-		internal T Add(T obj)
+		public T Add(T obj)
 		{
 			// Check the object is not null.
 			if (null == obj) throw new ArgumentNullException("obj");
@@ -114,7 +114,13 @@ namespace PlanetLab.Database
 			}
 		}
 
-		internal T Add(XmlRpcStruct obj)
+		/// <summary>
+		/// Parses and adds the specified PlanetLab object to the current database. If the object does not exist, the database will add the specified instance.
+		/// If the object exists, the database will copy to the existing instance the information of the specified object.
+		/// </summary>
+		/// <param name="obj">The XML-RPC structure to parse.</param>
+		/// <returns>The object instance that was added/updated to/in the database.</returns>
+		public T Add(XmlRpcStruct obj)
 		{
 			// Check the object is not null.
 			if (null == obj) throw new ArgumentNullException("obj");
@@ -148,6 +154,29 @@ namespace PlanetLab.Database
 			{
 				// Release the writer lock.
 				this.ReleaseWriterLock(info);
+			}
+		}
+
+		/// <summary>
+		/// Finds the PlanetLab object with the specified identifier.
+		/// </summary>
+		/// <param name="id">The identifier.</param>
+		/// <returns>The object instance, or <b>null</b> if the object is not found.</returns>
+		public T Find(int id)
+		{
+			// Acquire a reader lock.
+			LockInfo info = this.AcquireReaderLock();
+			try
+			{
+				T obj;
+				// Return the object.
+				if (this.database.TryGetValue(id, out obj)) return obj;
+				else return null;
+			}
+			finally
+			{
+				// Release the reader lock.
+				this.ReleaseReaderLock(info);
 			}
 		}
 	}
