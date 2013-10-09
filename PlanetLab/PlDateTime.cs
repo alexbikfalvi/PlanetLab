@@ -25,7 +25,7 @@ namespace PlanetLab
 	/// </summary>
 	public struct PlDateTime
 	{
-		private static DateTime unixEpoch = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
+		private static readonly DateTime unixEpoch = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
 
 		/// <summary>
 		/// Converts the specified UNIX timestamp into a date-time.
