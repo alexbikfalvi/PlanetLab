@@ -27,7 +27,7 @@ namespace PlanetLab
 	/// <typeparam name="T">The PlanetLab object type.</typeparam>
 	/// <param name="sender">The sender object.</param>
 	/// <param name="e">The event arguments.</param>
-	public delegate void PlObjectEventHandler(object sender, PlObjectEventArgs e);
+	public delegate void PlExceptionEventHandler(object sender, PlExceptionEventArgs e);
 
 	/// <summary>
 	/// A delegate representing a PlanetLab object event handler.
@@ -35,20 +35,22 @@ namespace PlanetLab
 	/// <typeparam name="T">The PlanetLab object type.</typeparam>
 	/// <param name="sender">The sender object.</param>
 	/// <param name="e">The event arguments.</param>
-	public delegate void PlObjectEventHandler<T>(object sender, PlObjectEventArgs<T> e) where T : PlObject;
+	public delegate void PlExceptionEventHandler<T>(object sender, PlExceptionEventArgs<T> e) where T : PlObject;
 
 	/// <summary>
 	/// A class representing a database object selected event argument.
 	/// </summary>
-	public sealed class PlObjectEventArgs : EventArgs
+	public sealed class PlExceptionEventArgs : EventArgs
 	{
 		/// <summary>
 		/// Creates a new event instance.
 		/// </summary>
 		/// <param name="obj">The PlanetLab object.</param>
-		public PlObjectEventArgs(PlObject obj)
+		/// <param name="exception">The exception.</param>
+		public PlExceptionEventArgs(PlObject obj, Exception exception)
 		{
 			this.Object = obj;
+			this.Exception = exception;
 		}
 
 		// Public properties.
@@ -57,21 +59,27 @@ namespace PlanetLab
 		/// The PlanetLab event object.
 		/// </summary>
 		public PlObject Object { get; private set; }
+		/// <summary>
+		/// The exception.
+		/// </summary>
+		public Exception Exception { get; private set; }
 	}
 
 	/// <summary>
 	/// A class representing a database object selected event argument.
 	/// </summary>
 	/// <typeparam name="T">The PlanetLab object type.</typeparam>
-	public sealed class PlObjectEventArgs<T> : EventArgs where T : PlObject
+	public sealed class PlExceptionEventArgs<T> : EventArgs where T : PlObject
 	{
 		/// <summary>
 		/// Creates a new event instance.
 		/// </summary>
 		/// <param name="obj">The PlanetLab object.</param>
-		public PlObjectEventArgs(T obj)
+		/// <param name="exception">The exception.</param>
+		public PlExceptionEventArgs(T obj, Exception exception)
 		{
 			this.Object = obj;
+			this.Exception = exception;
 		}
 
 		// Public properties.
@@ -80,5 +88,9 @@ namespace PlanetLab
 		/// The PlanetLab event object.
 		/// </summary>
 		public T Object { get; private set; }
+		/// <summary>
+		/// The exception.
+		/// </summary>
+		public Exception Exception { get; private set; }
 	}
 }

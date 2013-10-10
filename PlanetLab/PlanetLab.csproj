@@ -45,6 +45,7 @@
     <Compile Include="Api\PlAddressType.cs" />
     <Compile Include="Api\PlConfigurationFile.cs" />
     <Compile Include="Database\PlDatabaseListEventArgs.cs" />
+    <Compile Include="PlExceptionEventArgs.cs" />
     <Compile Include="PlObjectEventArgs.cs" />
     <Compile Include="Api\PlInterface.cs" />
     <Compile Include="Api\PlInterfaceTag.cs" />
