@@ -52,10 +52,6 @@ namespace PlanetLab.Database
 		// Public events.
 
 		/// <summary>
-		/// An event raised when the database list has changed.
-		/// </summary>
-		public event EventHandler Changed;
-		/// <summary>
 		/// An event raised before the database list has been cleared.
 		/// </summary>
 		public event EventHandler Cleared;
@@ -136,8 +132,6 @@ namespace PlanetLab.Database
 				// Release the writer lock.
 				this.ReleaseWriterLock(info);
 			}
-			// Call the changed event handler.
-			this.OnChanged();
 		}
 
 		/// <summary>
@@ -163,8 +157,6 @@ namespace PlanetLab.Database
 			}
 			// Call the added event handler.
 			this.OnAdded(obj);
-			// Call the changed event handler.
-			this.OnChanged();
 		}
 
 		/// <summary>
@@ -190,8 +182,6 @@ namespace PlanetLab.Database
 			}
 			// Call the removed event handler.
 			this.OnRemoved(obj);
-			// Call the changed event handler.
-			this.OnChanged();
 		}
 
 		/// <summary>
@@ -228,8 +218,6 @@ namespace PlanetLab.Database
 			}
 			// Call the updated event handler.
 			this.OnUpdated();
-			// Call the changed event handler.
-			this.OnChanged();
 		}
 
 		/// <summary>
@@ -271,8 +259,6 @@ namespace PlanetLab.Database
 			}
 			// Call the updated event handler.
 			this.OnUpdated();
-			// Call the changed event handler.
-			this.OnChanged();
 		}
 		
 		/// <summary>
@@ -333,15 +319,6 @@ namespace PlanetLab.Database
 		}
 
 		// Private methods.
-
-		/// <summary>
-		/// An event handler called when the list has changed.
-		/// </summary>
-		private void OnChanged()
-		{
-			// Raise the event.
-			if (null != this.Changed) this.Changed(this, EventArgs.Empty);
-		}
 
 		/// <summary>
 		/// An event handler called before the list has been cleared.
