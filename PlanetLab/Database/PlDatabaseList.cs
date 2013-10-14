@@ -38,7 +38,7 @@ namespace PlanetLab.Database
 	public sealed class PlDatabaseList<T> : ConcurrentBase, IEnumerable<T> where T : PlObject, new()
 	{
 		private readonly PlDatabase<T> database;
-		private readonly List<T> list = new List<T>();
+		private readonly Dictionary<int, T> list = new Dictionary<int, T>();
 
 		/// <summary>
 		/// Creates a new PlanetLab list using the specified database.
@@ -111,7 +111,7 @@ namespace PlanetLab.Database
 		{
 			// The thread must first acquire a lock before retrieving the enumerator.
 			if (!this.HasLock()) throw new InvalidOperationException("Thread must own a lock on this concurrent collection.");
-			return this.list.GetEnumerator();
+			return this.list.Values.GetEnumerator();
 		}
 
 		/// <summary>
@@ -138,17 +138,20 @@ namespace PlanetLab.Database
 		/// Adds the specified PlanetLab object to the list.
 		/// </summary>
 		/// <param name="obj">The object to add.</param>
-		public void Add(T obj)
+		/// <returns><b>True</b> if the object was added, <b>false</b> otherwise.</returns>
+		public bool Add(T obj)
 		{
 			// Check the object is not null.
 			if (null == obj) throw new ArgumentNullException("obj");
+
+			bool added = false;
 
 			// Acquire a writer lock.
 			LockInfo info = this.AcquireWriterLock();
 			try
 			{
 				// Add the object.
-				this.list.Add(this.database.Add(obj));
+				added = this.OnAddInternal(this.database.Add(obj));
 			}
 			finally
 			{
@@ -156,24 +159,62 @@ namespace PlanetLab.Database
 				this.ReleaseWriterLock(info);
 			}
 			// Call the added event handler.
-			this.OnAdded(obj);
+			if (added) this.OnAdded(obj);
+			// Return added.
+			return added;
+		}
+
+		/// <summary>
+		/// Adds the specified PlanetLab object to the list.
+		/// </summary>
+		/// <param name="obj">The object to add.</param>
+		/// <returns><b>True</b> if the object was added, <b>false</b> otherwise.</returns>
+		public T Add(XmlRpcStruct obj)
+		{
+			// Check the object is not null.
+			if (null == obj) throw new ArgumentNullException("obj");
+
+			T o = null;
+			bool added = false;
+
+			// Acquire a writer lock.
+			LockInfo info = this.AcquireWriterLock();
+			try
+			{
+				// Add the object to the database.
+				o = this.database.Add(obj);
+				// Add the object to the list.
+				added = this.OnAddInternal(o);
+			}
+			finally
+			{
+				// Release the writer lock.
+				this.ReleaseWriterLock(info);
+			}
+			// Call the added event handler.
+			if (added) this.OnAdded(o);
+			// Return added.
+			return o;
 		}
 
 		/// <summary>
 		/// Removes the specified object from the database list.
 		/// </summary>
 		/// <param name="obj">The object to remove.</param>
-		public void Remove(T obj)
+		/// <returns><b>True</b> if the object was removed, <b>false</b> otherwise.</returns>
+		public bool Remove(T obj)
 		{
 			// Check the object is not null.
 			if (null == obj) throw new ArgumentNullException("obj");
+
+			bool removed = false;
 
 			// Acquire a writer lock.
 			LockInfo info = this.AcquireWriterLock();
 			try
 			{
 				// Remove the item.
-				this.list.Remove(this.database[obj]);
+				removed = this.list.Remove(this.database[obj].Id.Value);
 			}
 			finally
 			{
@@ -181,7 +222,9 @@ namespace PlanetLab.Database
 				this.ReleaseWriterLock(info);
 			}
 			// Call the removed event handler.
-			this.OnRemoved(obj);
+			if (removed) this.OnRemoved(obj);
+			// Returned removed.
+			return removed;
 		}
 
 		/// <summary>
@@ -207,7 +250,7 @@ namespace PlanetLab.Database
 					// Update the items.
 					foreach (XmlRpcValue element in obj.Values)
 					{
-						this.list.Add(this.database.Add(element.Value as XmlRpcStruct));
+						this.OnAddInternal(this.database.Add(element.Value as XmlRpcStruct));
 					}
 				}
 			}
@@ -244,7 +287,7 @@ namespace PlanetLab.Database
 					// Add the item from the list.
 					foreach (T item in list)
 					{
-						this.list.Add(this.database.Add(item));
+						this.OnAddInternal(this.database.Add(item));
 					}
 				}
 				finally
@@ -275,7 +318,7 @@ namespace PlanetLab.Database
 			try
 			{
 				// Copy the elements to the list.
-				list.CopyFrom(this.list);
+				list.CopyFrom(this.list.Values);
 			}
 			finally
 			{
@@ -319,6 +362,31 @@ namespace PlanetLab.Database
 		}
 
 		// Private methods.
+
+		/// <summary>
+		/// Adds the specified object to the list.
+		/// </summary>
+		/// <param name="obj">The PlanetLab object.</param>
+		/// <returns><b>True</b> if the object was added to the list, <b>false</b> if the object already existed.</returns>
+		private bool OnAddInternal(T obj)
+		{
+			// The current object.
+			T curr;
+			// If the object does not exist.
+			if (!this.list.TryGetValue(obj.Id.Value, out curr))
+			{
+				// Add the object.
+				this.list.Add(obj.Id.Value, obj);
+				// Return true.
+				return true;
+			}
+			else if (!object.ReferenceEquals(curr, obj))
+			{
+				throw new PlException("Cannot add object to the list because a different reference already exists.");
+			}
+			// Else, return false.
+			return false;
+		}
 
 		/// <summary>
 		/// An event handler called before the list has been cleared.

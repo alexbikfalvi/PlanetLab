@@ -59,10 +59,10 @@ namespace PlanetLab.Api
 		// Public methods.
 
 		/// <summary>
-		/// Clears the current list and copies all elements from the argument list.
+		/// Clears the current list and copies all elements from the specified enumerable.
 		/// </summary>
 		/// <param name="list">The list from where to copy.</param>
-		public void CopyFrom(List<T> list)
+		public void CopyFrom(IEnumerable<T> list)
 		{
 			// Validate the argument.
 			if (null == list) throw new ArgumentNullException("list");
