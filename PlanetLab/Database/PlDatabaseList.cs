@@ -250,7 +250,9 @@ namespace PlanetLab.Database
 					// Update the items.
 					foreach (XmlRpcValue element in obj.Values)
 					{
-						this.OnAddInternal(this.database.Add(element.Value as XmlRpcStruct));
+						XmlRpcStruct str = element.Value as XmlRpcStruct;
+						if (null == str) continue;
+						this.OnAddInternal(this.database.Add(str));
 					}
 				}
 			}

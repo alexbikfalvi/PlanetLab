@@ -121,7 +121,7 @@ namespace PlanetLab.Api
 					if (null == str) continue;
 
 					T item = new T();
-					item.Parse(element.Value as XmlRpcStruct);
+					item.Parse(str);
 					this.Add(item);
 				}
 			}
