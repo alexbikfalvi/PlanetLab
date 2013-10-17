@@ -29,22 +29,22 @@ namespace PlanetLab.Api
 		public enum Fields
 		{
 			// Standard fields.
-			[PlName("tagname")]
+			[PlName("tagname"), PlDisplayName("Tag name")]
 			TagName,
-			[PlName("description")]
+			[PlName("description"), PlDisplayName("Description")]
 			Description,
-			[PlName("category")]
+			[PlName("category"), PlDisplayName("Category")]
 			Category,
-			[PlName("value")]
+			[PlName("value"), PlDisplayName("Value")]
 			Value,
-			[PlName("tag_type_id")]
+			[PlName("tag_type_id"), PlDisplayName("Tag type ID")]
 			TagTypeId,
 			// Custom fields.
-			[PlName("hostname")]
+			[PlName("hostname"), PlDisplayName("Hostname")]
 			Hostname,
-			[PlName("node_tag_id")]
+			[PlName("node_tag_id"), PlDisplayName("Node tag ID")]
 			NodeTagId,
-			[PlName("node_id")]
+			[PlName("node_id"), PlDisplayName("Node ID")]
 			NodeId
 		}
 

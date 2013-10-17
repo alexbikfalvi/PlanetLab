@@ -28,39 +28,39 @@ namespace PlanetLab.Api
 	{
 		public enum Fields
 		{
-			[PlName("is_primary")]
+			[PlName("is_primary"), PlDisplayName("Is primary")]
 			IsPrimary,
-			[PlName("last_updated")]
+			[PlName("last_updated"), PlDisplayName("Last updated")]
 			LastUpdated,
-			[PlName("type")]
+			[PlName("type"), PlDisplayName("Type")]
 			Type,
-			[PlName("hostname")]
+			[PlName("hostname"), PlDisplayName("Hostname")]
 			Hostname,
-			[PlName("mac")]
+			[PlName("mac"), PlDisplayName("MAC")]
 			Mac,
-			[PlName("ip")]
+			[PlName("ip"), PlDisplayName("IP")]
 			Ip,
-			[PlName("netmask")]
+			[PlName("netmask"), PlDisplayName("Netmask")]
 			Netmask,
-			[PlName("network")]
+			[PlName("network"), PlDisplayName("Network")]
 			Network,
-			[PlName("broadcast")]
+			[PlName("broadcast"), PlDisplayName("Broascast")]
 			Broadcast,
-			[PlName("gateway")]
+			[PlName("gateway"), PlDisplayName("Gateway")]
 			Gateway,
-			[PlName("bwlimit")]
+			[PlName("bwlimit"), PlDisplayName("Bandwidth limit")]
 			BandwidthLimit,
-			[PlName("dns1")]
+			[PlName("dns1"), PlDisplayName("DNS 1")]
 			Dns1,
-			[PlName("dns2")]
+			[PlName("dns2"), PlDisplayName("DNS 2")]
 			Dns2,
-			[PlName("method")]
+			[PlName("method"), PlDisplayName("Method")]
 			Method,
-			[PlName("interface_id")]
+			[PlName("interface_id"), PlDisplayName("Interface ID")]
 			InterfaceId,
-			[PlName("node_id")]
+			[PlName("node_id"), PlDisplayName("Node ID")]
 			NodeId,
-			[PlName("interface_tag_ids")]
+			[PlName("interface_tag_ids"), PlDisplayName("Interface tag IDs")]
 			InterfaceTagIds
 		}
 

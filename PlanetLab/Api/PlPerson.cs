@@ -28,43 +28,43 @@ namespace PlanetLab.Api
 	{
 		public enum Fields
 		{
-			[PlName("last_updated")]
+			[PlName("last_updated"), PlDisplayName("Last updated")]
 			LastUpdated,
-			[PlName("date_created")]
+			[PlName("date_created"), PlDisplayName("Date created")]
 			DateCreated,
-			[PlName("first_name")]
+			[PlName("first_name"), PlDisplayName("First name")]
 			FirstName,
-			[PlName("last_name")]
+			[PlName("last_name"), PlDisplayName("Last name")]
 			LastName,
-			[PlName("title")]
+			[PlName("title"), PlDisplayName("Title")]
 			Title,
-			[PlName("phone")]
+			[PlName("phone"), PlDisplayName("Phone")]
 			Phone,
-			[PlName("email")]
+			[PlName("email"), PlDisplayName("Email")]
 			Email,
-			[PlName("url")]
+			[PlName("url"), PlDisplayName("URL")]
 			Url,
-			[PlName("bio")]
+			[PlName("bio"), PlDisplayName("Biography")]
 			Bio,
-			[PlName("enabled")]
+			[PlName("enabled"), PlDisplayName("Enabled")]
 			IsEnabled,
-			[PlName("person_id")]
+			[PlName("person_id"), PlDisplayName("Person ID")]
 			PersonId,
-			[PlName("peer_id")]
+			[PlName("peer_id"), PlDisplayName("Peer ID")]
 			PeerId,
-			[PlName("peer_person_id")]
+			[PlName("peer_person_id"), PlDisplayName("Peer person ID")]
 			PeerPersonId,
-			[PlName("role_ids")]
+			[PlName("role_ids"), PlDisplayName("Role IDs")]
 			RoleIds,
-			[PlName("key_ids")]
+			[PlName("key_ids"), PlDisplayName("Key IDs")]
 			KeyIds,
-			[PlName("slice_ids")]
+			[PlName("slice_ids"), PlDisplayName("Slice IDs")]
 			SliceIds,
-			[PlName("site_ids")]
+			[PlName("site_ids"), PlDisplayName("Site IDs")]
 			SiteIds,
-			[PlName("person_tag_ids")]
+			[PlName("person_tag_ids"), PlDisplayName("Person tag IDs")]
 			PersonTagIds,
-			[PlName("roles")]
+			[PlName("roles"), PlDisplayName("Roles")]
 			Roles
 		}
 

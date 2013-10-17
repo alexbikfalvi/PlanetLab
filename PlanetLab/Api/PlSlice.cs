@@ -28,33 +28,33 @@ namespace PlanetLab.Api
 	{
 		public enum Fields
 		{
-			[PlName("name")]
+			[PlName("name"), PlDisplayName("Name")]
 			Name,
-			[PlName("description")]
+			[PlName("description"), PlDisplayName("Description")]
 			Description,
-			[PlName("instantiation")]
+			[PlName("instantiation"), PlDisplayName("Instantiation")]
 			Instantiation,
-			[PlName("url")]
+			[PlName("url"), PlDisplayName("URL")]
 			Url,
-			[PlName("created")]
+			[PlName("created"), PlDisplayName("Created")]
 			Created,
-			[PlName("expires")]
+			[PlName("expires"), PlDisplayName("Expires")]
 			Expires,
-			[PlName("max_nodes")]
+			[PlName("max_nodes"), PlDisplayName("Maximum nodes")]
 			MaxNodes,
-			[PlName("slice_id")]
+			[PlName("slice_id"), PlDisplayName("Slice ID")]
 			SliceId,
-			[PlName("site_id")]
+			[PlName("site_id"), PlDisplayName("Site ID")]
 			SiteId,
-			[PlName("peer_id")]
+			[PlName("peer_id"), PlDisplayName("Peer ID")]
 			PeerId,
-			[PlName("peer_slice_id")]
+			[PlName("peer_slice_id"), PlDisplayName("Peer slice ID")]
 			PeerSliceId,
-			[PlName("creator_person_id")]
+			[PlName("creator_person_id"), PlDisplayName("Creator person ID")]
 			CreatorPersonId,
-			[PlName("node_ids")]
+			[PlName("node_ids"), PlDisplayName("Node IDs")]
 			NodeIds,
-			[PlName("person_ids")]
+			[PlName("person_ids"), PlDisplayName("Person IDs")]
 			PersonIds
 		}
 

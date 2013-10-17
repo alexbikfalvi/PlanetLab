@@ -28,29 +28,29 @@ namespace PlanetLab.Api
 	{
 		public enum Fields
 		{
-			[PlName("last_updated")]
+			[PlName("last_updated"), PlDisplayName("Last updated")]
 			LastUpdated,
-			[PlName("hostname")]
+			[PlName("hostname"), PlDisplayName("Hostname")]
 			Hostname,
-			[PlName("model")]
+			[PlName("model"), PlDisplayName("Model")]
 			Model,
-			[PlName("username")]
+			[PlName("username"), PlDisplayName("Username")]
 			Username,
-			[PlName("password")]
+			[PlName("password"), PlDisplayName("Password")]
 			Password,
-			[PlName("protocol")]
+			[PlName("protocol"), PlDisplayName("Protocol")]
 			Protocol,
-			[PlName("ip")]
+			[PlName("ip"), PlDisplayName("IP")]
 			Ip,
-			[PlName("notes")]
+			[PlName("notes"), PlDisplayName("Notes")]
 			Notes,
-			[PlName("pcu_id")]
+			[PlName("pcu_id"), PlDisplayName("PCU ID")]
 			PcuId,
-			[PlName("site_id")]
+			[PlName("site_id"), PlDisplayName("Site ID")]
 			SiteId,
-			[PlName("ports")]
+			[PlName("ports"), PlDisplayName("Ports")]
 			Ports,
-			[PlName("node_ids")]
+			[PlName("node_ids"), PlDisplayName("Node IDs")]
 			NodeIds
 		};
 

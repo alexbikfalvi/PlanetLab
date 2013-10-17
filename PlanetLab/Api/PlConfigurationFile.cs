@@ -28,33 +28,33 @@ namespace PlanetLab.Api
 	{
 		public enum Fields
 		{
-			[PlName("source")]
+			[PlName("source"), PlDisplayName("Source")]
 			Source,
-			[PlName("dest")]
+			[PlName("dest"), PlDisplayName("Destination")]
 			Destination,
-			[PlName("file_permissions")]
+			[PlName("file_permissions"), PlDisplayName("File permissions")]
 			FilePermissions,
-			[PlName("file_group")]
+			[PlName("file_group"), PlDisplayName("File group")]
 			FileGroup,
-			[PlName("file_owner")]
+			[PlName("file_owner"), PlDisplayName("File owner")]
 			FileOwner,
-			[PlName("enabled")]
+			[PlName("enabled"), PlDisplayName("Enabled")]
 			Enabled,
-			[PlName("always_update")]
+			[PlName("always_update"), PlDisplayName("Always update")]
 			AlwaysUpdate,
-			[PlName("ignore_cmd_errors")]
+			[PlName("ignore_cmd_errors"), PlDisplayName("Ignore command errors")]
 			IgnoreCommandErrors,
-			[PlName("preinstall_cmd")]
+			[PlName("preinstall_cmd"), PlDisplayName("Pre-install command")]
 			PreinstallCommand,
-			[PlName("postinstall_cmd")]
+			[PlName("postinstall_cmd"), PlDisplayName("Post-install command")]
 			PostinstallCommand,
-			[PlName("error_cmd")]
+			[PlName("error_cmd"), PlDisplayName("Error command")]
 			ErrorCommand,
-			[PlName("conf_file_id")]
+			[PlName("conf_file_id"), PlDisplayName("Configuration file ID")]
 			ConfigurationFileId,
-			[PlName("node_ids")]
+			[PlName("node_ids"), PlDisplayName("Node IDs")]
 			NodeIds,
-			[PlName("nodegroup_ids")]
+			[PlName("nodegroup_ids"), PlDisplayName("Nodegroup IDs")]
 			NodeGroupIds
 	}
 

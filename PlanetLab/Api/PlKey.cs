@@ -28,17 +28,17 @@ namespace PlanetLab.Api
 	{
 		public enum Fields
 		{
-			[PlName("key")]
+			[PlName("key"), PlDisplayName("Key")]
 			Key,
-			[PlName("key_type")]
+			[PlName("key_type"), PlDisplayName("Key type")]
 			KeyType,
-			[PlName("key_id")]
+			[PlName("key_id"), PlDisplayName("Key ID")]
 			KeyId,
-			[PlName("peer_id")]
+			[PlName("peer_id"), PlDisplayName("Peer ID")]
 			PeerId,
-			[PlName("person_id")]
+			[PlName("person_id"), PlDisplayName("Person ID")]
 			PersonId,
-			[PlName("peer_key_id")]
+			[PlName("peer_key_id"), PlDisplayName("Peer key ID")]
 			PeerKeyId
 		}
 

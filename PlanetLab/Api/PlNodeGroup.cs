@@ -28,19 +28,19 @@ namespace PlanetLab.Api
 	{
 		public enum Fields
 		{
-			[PlName("groupname")]
+			[PlName("groupname"), PlDisplayName("Group name")]
 			GroupName,
-			[PlName("value")]
+			[PlName("value"), PlDisplayName("Value")]
 			Value,
-			[PlName("tagname")]
+			[PlName("tagname"), PlDisplayName("Tag name")]
 			TagName,
-			[PlName("nodegroup_id")]
+			[PlName("nodegroup_id"), PlDisplayName("Node group ID")]
 			NodeGroupId,
-			[PlName("tag_type_id")]
+			[PlName("tag_type_id"), PlDisplayName("Tag type ID")]
 			TagTypeId,
-			[PlName("node_ids")]
+			[PlName("node_ids"), PlDisplayName("Node IDs")]
 			NodeIds,
-			[PlName("conf_file_ids")]
+			[PlName("conf_file_ids"), PlDisplayName("Configuration file IDs")]
 			ConfigurationFileIds
 		}
 

@@ -1,4 +1,21 @@
-﻿
+﻿/* 
+ * Copyright (C) 2013 Alex Bikfalvi
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 3 of the License, or (at
+ * your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful, but
+ * WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
+ */
+
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -68,7 +85,7 @@ namespace PlanetLab
 			if (type.Equals(typeof(DateTime))) return ((DateTime)value).Serialize(name);
 			if (type.Equals(typeof(TimeSpan))) return ((TimeSpan)value).Serialize(name);
 			if (type.Equals(typeof(string))) return (value as string).Serialize(name);
-			if (type.IsNullable()) return value.Serialize(type.GetGenericArguments()[0], name);
+			if (type.IsNullable()) return value.Serialize(type.GetNullable(), name);
 			if (type.IsAssignableToInterface(typeof(IEnumerable))) return (value as IEnumerable).Serialize(name);
 			
 			// Otherwise, thrown an exception.
@@ -97,7 +114,7 @@ namespace PlanetLab
 			if (type.Equals(typeof(DateTime))) return element.DeserializeDateTime();
 			if (type.Equals(typeof(TimeSpan))) return element.DeserializeTimeSpan();
 			if (type.Equals(typeof(string))) return element.DeserializeString();
-			if (type.IsNullable()) return element.Deserialize(type.GetGenericArguments()[0], instance);
+			if (type.IsNullable()) return element.Deserialize(type.GetNullable(), instance);
 			if (type.IsSubclassOf(typeof(Array))) return element.DeserializeArray(type);
 			if (type.IsAssignableToGenericInterface(typeof(IList<>)) && type.IsAssignableToInterface(typeof(IList))) return element.DeserializeList(type, instance as IList);
 
@@ -381,56 +398,6 @@ namespace PlanetLab
 		{
 			if (null == element.Value) throw new SerializationException("Cannot deserialize the element {0} into a date-time because it does not have a value.".FormatWith(element.Name));
 			return element.Value;
-		}
-
-		/// <summary>
-		/// Checks whether the given type is nullable.
-		/// </summary>
-		/// <param name="type">The given type.</param>
-		/// <returns><b>True</b> if the type is nullable, <b>false</b> otherwise.</returns>
-		private static bool IsNullable(this Type type)
-		{
-			return type.IsGenericType && type.GetGenericTypeDefinition().Equals(typeof(Nullable<>));
-		}
-
-		/// <summary>
-		/// Checks whether the given type is assignable from the specified type.
-		/// </summary>
-		/// <param name="type">The given type.</param>
-		/// <param name="otherType">The other type.</param>
-		/// <returns><b>True</b> if the type is assignable to the specified generic type, <b>false</b> otherwise.</returns>
-		private static bool IsAssignableToInterface(this Type type, Type otherType)
-		{
-			// For all interfaces.
-			foreach (Type iface in type.GetInterfaces())
-				if (iface == otherType)
-					return true;
-			// Else, return false.
-			return false;
-		}
-
-		/// <summary>
-		/// Checks whether the given type is assignable from the specified type.
-		/// </summary>
-		/// <param name="type">The given type.</param>
-		/// <param name="otherType">The other type.</param>
-		/// <returns><b>True</b> if the type is assignable to the specified generic type, <b>false</b> otherwise.</returns>
-		private static bool IsAssignableToGenericInterface(this Type type, Type otherType)
-		{
-			// If the generic type is not generic.
-			if (!otherType.IsGenericType)
-			{
-				return otherType.IsAssignableFrom(type);
-			}
-			// Get the number of generic arguments.
-			int count = otherType.GetGenericArguments().Count();
-			// For all interfaces.
-			foreach (Type iface in type.GetInterfaces())
-				if (iface.IsGenericType)
-					if ((iface.GetGenericTypeDefinition() == otherType) && (iface.GetGenericArguments().Count() == count))
-						return true;
-			// Else, return false.
-			return false;
 		}
 	}
 }

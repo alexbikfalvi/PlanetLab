@@ -28,11 +28,11 @@ namespace PlanetLab.Api
 	{
 		public enum Fields
 		{
-			[PlName("name")]
+			[PlName("name"), PlDisplayName("Name")]
 			Name,
-			[PlName("description")]
+			[PlName("description"), PlDisplayName("Description")]
 			Description,
-			[PlName("address_type_id")]
+			[PlName("address_type_id"), PlDisplayName("Address type ID")]
 			AddressTypeId
 		}
 

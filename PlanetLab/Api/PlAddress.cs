@@ -28,25 +28,25 @@ namespace PlanetLab.Api
 	{
 		public enum Fields
 		{
-			[PlName("line1")]
+			[PlName("line1"), PlDisplayName("Line 1")]
 			Line1,
-			[PlName("line2")]
+			[PlName("line2"), PlDisplayName("Line 2")]
 			Line2,
-			[PlName("line3")]
+			[PlName("line3"), PlDisplayName("Line 3")]
 			Line3,
-			[PlName("postalcode")]
+			[PlName("postalcode"), PlDisplayName("Postal code")]
 			PostalCode,
-			[PlName("city")]
+			[PlName("city"), PlDisplayName("City")]
 			City,
-			[PlName("state")]
+			[PlName("state"), PlDisplayName("State")]
 			State,
-			[PlName("country")]
+			[PlName("country"), PlDisplayName("Country")]
 			Country,
-			[PlName("address_id")]
+			[PlName("address_id"), PlDisplayName("Address ID")]
 			AddressId,
-			[PlName("address_type_ids")]
+			[PlName("address_type_ids"), PlDisplayName("Address type IDs")]
 			AddressTypeIds,
-			[PlName("address_types")]
+			[PlName("address_types"), PlDisplayName("Address types")]
 			AddressTypes
 		}
 

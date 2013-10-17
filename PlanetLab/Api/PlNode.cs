@@ -28,63 +28,63 @@ namespace PlanetLab.Api
 	{
 		public enum Fields
 		{
-			[PlName("last_updated")]
+			[PlName("last_updated"), PlDisplayName("Last updated")]
 			LastUpdated,
-			[PlName("last_boot")]
+			[PlName("last_boot"), PlDisplayName("Last boot")]
 			LastBoot,
-			[PlName("last_pcu_reboot")]
+			[PlName("last_pcu_reboot"), PlDisplayName("Last PCU reboot")]
 			LastPcuReboot,
-			[PlName("last_contact")]
+			[PlName("last_contact"), PlDisplayName("Last contact")]
 			LastContact,
-			[PlName("last_pcu_confirmation")]
+			[PlName("last_pcu_confirmation"), PlDisplayName("Last PCU confirmation")]
 			LastPcuConfirmation,
-			[PlName("last_download")]
+			[PlName("last_download"), PlDisplayName("Last download")]
 			LastDownload,
-			[PlName("date_created")]
+			[PlName("date_created"), PlDisplayName("Date created")]
 			DateCreated,
-			[PlName("boot_state")]
+			[PlName("boot_state"), PlDisplayName("Boot state")]
 			BootState,
-			[PlName("node_type")]
+			[PlName("node_type"), PlDisplayName("Node type")]
 			NodeType,
-			[PlName("run_level")]
+			[PlName("run_level"), PlDisplayName("Run level")]
 			RunLevel,
-			[PlName("ssh_rsa_key")]
+			[PlName("ssh_rsa_key"), PlDisplayName("SSH RSA key")]
 			SshRsaKey,
-			[PlName("hostname")]
+			[PlName("hostname"), PlDisplayName("Hostname")]
 			Hostname,
-			[PlName("version")]
+			[PlName("version"), PlDisplayName("Version")]
 			Version,
-			[PlName("model")]
+			[PlName("model"), PlDisplayName("Model")]
 			Model,
-			[PlName("site_id")]
+			[PlName("site_id"), PlDisplayName("Site ID")]
 			SiteId,
-			[PlName("node_id")]
+			[PlName("node_id"), PlDisplayName("Node ID")]
 			NodeId,
-			[PlName("peer_id")]
+			[PlName("peer_id"), PlDisplayName("Peer ID")]
 			PeerId,
-			[PlName("peer_node_id")]
+			[PlName("peer_node_id"), PlDisplayName("Peer node ID")]
 			PeerNodeId,
-			[PlName("last_time_spent_offline")]
+			[PlName("last_time_spent_offline"), PlDisplayName("Last time spent offline")]
 			LastTimeSpentOffline,
-			[PlName("last_time_spent_online")]
+			[PlName("last_time_spent_online"), PlDisplayName("Last time spent online")]
 			LastTimeSpentOnline,
-			[PlName("verified")]
+			[PlName("verified"), PlDisplayName("Verified")]
 			Verified,
-			[PlName("ports")]
+			[PlName("ports"), PlDisplayName("Ports")]
 			Ports,
-			[PlName("pcu_ids")]
+			[PlName("pcu_ids"), PlDisplayName("PCU IDs")]
 			PcuIds,
-			[PlName("interface_ids")]
+			[PlName("interface_ids"), PlDisplayName("Interface IDs")]
 			InterfaceIds,
-			[PlName("slice_ids")]
+			[PlName("slice_ids"), PlDisplayName("Slice IDs")]
 			SliceIds,
-			[PlName("node_tag_ids")]
+			[PlName("node_tag_ids"), PlDisplayName("Node tag IDs")]
 			NodeTagIds,
-			[PlName("nodegroup_ids")]
+			[PlName("nodegroup_ids"), PlDisplayName("Node group IDs")]
 			NodeGroupIds,
-			[PlName("slice_ids_whitelist")]
+			[PlName("slice_ids_whitelist"), PlDisplayName("Slice IDs")]
 			SliceIdsWhitelist,
-			[PlName("conf_file_ids")]
+			[PlName("conf_file_ids"), PlDisplayName("Configuration file IDs")]
 			ConfigurationFileIds
 		}
 

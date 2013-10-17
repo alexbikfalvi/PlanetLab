@@ -28,49 +28,49 @@ namespace PlanetLab.Api
 	{
 		public enum Fields
 		{
-			[PlName("last_updated")]
+			[PlName("last_updated"), PlDisplayName("Last updated")]
 			LastUpdated,
-			[PlName("date_created")]
+			[PlName("date_created"), PlDisplayName("Date created")]
 			DateCreated,
-			[PlName("site_id")]
+			[PlName("site_id"), PlDisplayName("Site ID")]
 			SiteId,
-			[PlName("peer_id")]
+			[PlName("peer_id"), PlDisplayName("Peer ID")]
 			PeerId,
-			[PlName("ext_consortium_id")]
+			[PlName("ext_consortium_id"), PlDisplayName("Ext consortium ID")]
 			ExtConsortiumId,
-			[PlName("peer_site_id")]
+			[PlName("peer_site_id"), PlDisplayName("Peer site ID")]
 			PeerSiteId,
-			[PlName("is_public")]
+			[PlName("is_public"), PlDisplayName("Is public")]
 			IsPublic,
-			[PlName("enabled")]
+			[PlName("enabled"), PlDisplayName("Enabled")]
 			IsEnabled,
-			[PlName("max_slices")]
+			[PlName("max_slices"), PlDisplayName("Maximum slices")]
 			MaxSlices,
-			[PlName("max_slivers")]
+			[PlName("max_slivers"), PlDisplayName("Maximum slivers")]
 			MaxSlivers,
-			[PlName("abbreviated_name")]
+			[PlName("abbreviated_name"), PlDisplayName("Abbreviated name")]
 			AbbreviatedName,
-			[PlName("name")]
+			[PlName("name"), PlDisplayName("Name")]
 			Name,
-			[PlName("url")]
+			[PlName("url"), PlDisplayName("URL")]
 			Url,
-			[PlName("login_base")]
+			[PlName("login_base"), PlDisplayName("Login base")]
 			LoginBase,
-			[PlName("latitude")]
+			[PlName("latitude"), PlDisplayName("Latitude")]
 			Latitude,
-			[PlName("longitude")]
+			[PlName("longitude"), PlDisplayName("Longitude")]
 			Longitude,
-			[PlName("node_ids")]
+			[PlName("node_ids"), PlDisplayName("Node IDs")]
 			NodeIds,
-			[PlName("pcu_ids")]
+			[PlName("pcu_ids"), PlDisplayName("PCU IDs")]
 			PcuIds,
-			[PlName("person_ids")]
+			[PlName("person_ids"), PlDisplayName("Person IDs")]
 			PersonIds,
-			[PlName("slice_ids")]
+			[PlName("slice_ids"), PlDisplayName("Slice IDs")]
 			SliceIds,
-			[PlName("address_ids")]
+			[PlName("address_ids"), PlDisplayName("Address IDs")]
 			AddressIds,
-			[PlName("site_tag_ids")]
+			[PlName("site_tag_ids"), PlDisplayName("Site tag IDs")]
 			SiteTagIds
 		}
 
