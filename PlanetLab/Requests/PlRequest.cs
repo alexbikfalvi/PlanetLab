@@ -67,7 +67,9 @@ namespace PlanetLab.Requests
 			[PlName("AddSliceToNodes")]
 			AddSliceToNodes,
 			[PlName("DeleteSliceFromNodes")]
-			DeleteSliceFromNodes
+			DeleteSliceFromNodes,
+			[PlName("UpdateSlice")]
+			UpdateSlice
 		};
 
 		/// <summary>

@@ -46,5 +46,29 @@ namespace PlanetLab
 		{
 			return (Int64)dateTime.ToUniversalTime().Subtract(PlDateTime.unixEpoch).TotalSeconds;
 		}
+
+		/// <summary>
+		/// Converts the specified date-time into a 32-bit UNIX timestamp.
+		/// </summary>
+		/// <param name="dateTime">The date-time.</param>
+		/// <param name="timestamp">The UNIX timestamp.</param>
+		/// <returns><b>True</b> if the conversion is possible, <b>false</b> otherwise.</returns>
+		public static bool ToUnixTimestamp32(DateTime dateTime, ref Int32 timestamp)
+		{
+			// Get the 64-bit timestamp.
+			Int64 ts = PlDateTime.ToUnixTimestamp(dateTime);
+			// If the higher 32-bits are zero.
+			if (ts >> 32 == 0)
+			{
+				// Set the timestamp.
+				timestamp = (Int32)ts;
+				// Return true.
+				return true;
+			}
+			else
+			{
+				return false;
+			}
+		}
 	}
 }
