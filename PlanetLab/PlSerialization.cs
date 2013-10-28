@@ -38,6 +38,7 @@ namespace PlanetLab
 	{
 		private static readonly string nameItem = "Item";
 		private static readonly string nameNull = "Null";
+		private static readonly string nameTimestamp = "Timestamp";
 
 		/// <summary>
 		/// Serializes the specified value as an XML element.
@@ -131,7 +132,9 @@ namespace PlanetLab
 		private static XElement Serialize(this PlObject obj, string name)
 		{
 			// Create a new XML element with the specified name.
-			XElement element = new XElement(name, new XAttribute(PlSerialization.nameNull, false));
+			XElement element = new XElement(name,
+				new XAttribute(PlSerialization.nameNull, false),
+				new XAttribute(PlSerialization.nameTimestamp, obj.Timestamp));
 			// Get all instance properties for the current object type.
 			PropertyInfo[] properties = obj.GetType().GetProperties(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
 
@@ -171,6 +174,14 @@ namespace PlanetLab
 		{
 			// Create a new object instance.
 			PlObject obj = instance == null ? Activator.CreateInstance(type) as PlObject : instance;
+
+			// Get the object timestamp attribute.
+			XAttribute timestampAttr = element.Attribute(PlSerialization.nameTimestamp);
+			// Check the timestamp attribute is not null.
+			if (null == timestampAttr) throw new SerializationException("Cannot deserialize a PlanetLab object because it does not have a valid timestamp.");
+			// Set the object timestamp.
+			obj.SetTimestamp(DateTime.Parse(timestampAttr.Value));
+
 			// Get all instance properties for the current object type.
 			PropertyInfo[] properties = type.GetProperties(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
 

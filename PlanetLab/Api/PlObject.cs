@@ -27,9 +27,24 @@ namespace PlanetLab.Api
 	/// </summary>
 	public abstract class PlObject
 	{
+		/// <summary>
+		/// Constructor.
+		/// </summary>
+		public PlObject()
+		{
+			this.Timestamp = DateTime.MinValue;
+		}
+
 		// Public properties.
 
+		/// <summary>
+		/// The object identifier.
+		/// </summary>
 		public abstract int? Id { get; }
+		/// <summary>
+		/// The object timestamp.
+		/// </summary>
+		public DateTime Timestamp { get; private set; }
 
 		// Public events.
 
@@ -59,6 +74,17 @@ namespace PlanetLab.Api
 		/// <returns>The object identifier.</returns>
 		public abstract int? ParseId(XmlRpcStruct obj);
 
+		// Internal methods.
+
+		/// <summary>
+		/// Sets the object timestamp.
+		/// </summary>
+		/// <param name="timestamp">The timestamp.</param>
+		internal void SetTimestamp(DateTime timestamp)
+		{
+			this.Timestamp = timestamp;
+		}
+
 		// Protected methods.
 
 		/// <summary>
@@ -66,6 +92,8 @@ namespace PlanetLab.Api
 		/// </summary>
 		protected virtual void OnChanged()
 		{
+			// Set the current timestamp.
+			this.Timestamp = DateTime.Now;
 			// Raise the event.
 			if (null != this.Changed) this.Changed(this, new PlObjectEventArgs(this));
 		}

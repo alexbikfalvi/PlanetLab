@@ -40,6 +40,9 @@ namespace PlanetLab.Database
 		private readonly PlDatabase<T> database;
 		private readonly Dictionary<int, T> list = new Dictionary<int, T>();
 
+		private DateTime lastSaved = DateTime.MinValue;
+		private DateTime lastUpdated = DateTime.Now;
+
 		/// <summary>
 		/// Creates a new PlanetLab list using the specified database.
 		/// </summary>
@@ -91,6 +94,14 @@ namespace PlanetLab.Database
 				}
 			}
 		}
+		/// <summary>
+		/// Gets the date-time when the list was last saved.
+		/// </summary>
+		public DateTime LastSaved { get { return this.lastSaved; } }
+		/// <summary>
+		/// Gets the date-time when the list was last updated.
+		/// </summary>
+		public DateTime LastUpdated { get { return this.lastUpdated; } }
 
 		// Public methods.
 
@@ -125,7 +136,15 @@ namespace PlanetLab.Database
 			LockInfo info = this.AcquireWriterLock();
 			try
 			{
+				// Remove the changed event handlers.
+				foreach (T obj in this.list.Values)
+				{
+					obj.Changed -= this.OnObjectChanged;
+				}
+				// Clear the list.
 				this.list.Clear();
+				// Update the timestamp.
+				this.lastUpdated = DateTime.Now;
 			}
 			finally
 			{
@@ -213,8 +232,12 @@ namespace PlanetLab.Database
 			LockInfo info = this.AcquireWriterLock();
 			try
 			{
-				// Remove the item.
+				// Remove the object event handler.
+				obj.Changed -= this.OnObjectChanged;
+				// Remove the object.
 				removed = this.list.Remove(this.database[obj].Id.Value);
+				// Update the timestamp.
+				this.lastUpdated = DateTime.Now;
 			}
 			finally
 			{
@@ -339,6 +362,8 @@ namespace PlanetLab.Database
 			PlList<T> list = PlList<T>.LoadFromFile(fileName);
 			// Copy the elements from the list to the current database list.
 			this.CopyFrom(list);
+			// Set the timestamp.
+			this.lastUpdated = 
 		}
 
 		/// <summary>
@@ -426,6 +451,17 @@ namespace PlanetLab.Database
 		{
 			// Raise the event.
 			if (null != this.Removed) this.Removed(this, new PlObjectEventArgs<T>(obj));
+		}
+
+		/// <summary>
+		/// An event handler called when a list object has changed.
+		/// </summary>
+		/// <param name="sender">The sender object.</param>
+		/// <param name="e">The event arguments.</param>
+		private void OnObjectChanged(object sender, PlObjectEventArgs e)
+		{
+			// Update the list.
+			this.lastUpdated = DateTime.Now;
 		}
 	}
 }
