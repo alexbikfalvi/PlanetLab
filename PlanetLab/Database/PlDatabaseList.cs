@@ -102,6 +102,10 @@ namespace PlanetLab.Database
 		/// Gets the date-time when the list was last updated.
 		/// </summary>
 		public DateTime LastUpdated { get { return this.lastUpdated; } }
+		/// <summary>
+		/// Indicates whether the list has unsaved changes.
+		/// </summary>
+		public bool IsDirty { get { return this.lastSaved != this.lastUpdated; } }
 
 		// Public methods.
 
@@ -289,13 +293,13 @@ namespace PlanetLab.Database
 		}
 
 		/// <summary>
-		/// Copies the current database list from the specified list.
+		/// Copies the current database list from the specified enumerable object.
 		/// </summary>
-		/// <param name="list">The list.</param>
-		public void CopyFrom(PlList<T> list)
+		/// <param name="enumerable">The list.</param>
+		public void CopyFrom(IEnumerable<T> enumerable)
 		{
 			// Check the list is not null.
-			if (null == list) throw new ArgumentNullException("list");
+			if (null == enumerable) throw new ArgumentNullException("enumerable");
 
 			// Call the cleared event handler.
 			this.OnCleared();
@@ -305,19 +309,10 @@ namespace PlanetLab.Database
 			{
 				// Clear the current list.
 				this.list.Clear();
-				// Acquire a lock on the list.
-				list.Lock();
-				try
+				// Add the item from the list.
+				foreach (T item in enumerable)
 				{
-					// Add the item from the list.
-					foreach (T item in list)
-					{
-						this.OnAddInternal(this.database.Add(item));
-					}
-				}
-				finally
-				{
-					list.Unlock();
+					this.OnAddInternal(this.database.Add(item));
 				}
 			}
 			finally
@@ -358,12 +353,27 @@ namespace PlanetLab.Database
 		/// <param name="fileName">The file name.</param>
 		public void LoadFromFile(string fileName)
 		{
-			// Load the list of object from the specified file.
-			PlList<T> list = PlList<T>.LoadFromFile(fileName);
-			// Copy the elements from the list to the current database list.
-			this.CopyFrom(list);
-			// Set the timestamp.
-			this.lastUpdated = 
+			// If the file does exist.
+			if (File.Exists(fileName))
+			{
+				// Create a new stream for the specified file.
+				using (FileStream stream = new FileStream(fileName, FileMode.Open))
+				{
+					// The object timestamp.
+					DateTime timestamp;
+					// The object.
+					List<T> list;
+					// Deserialize the object.
+					if (null != (list = stream.DeserializeWithTimestamp<List<T>>(out timestamp)))
+					{
+						// Copy the elements from the list to the current database list.
+						this.CopyFrom(list);
+						// Update the timestamps.
+						this.lastUpdated = timestamp;
+						this.lastSaved = timestamp;
+					}
+				}
+			}
 		}
 
 		/// <summary>
@@ -372,19 +382,22 @@ namespace PlanetLab.Database
 		/// <param name="fileName">The file name.</param>
 		public void SaveToFile(string fileName)
 		{
-			// Acquire a reader lock.
-			LockInfo info = this.AcquireReaderLock();
+			// Lock the list.
+			this.Lock();
 			try
 			{
-				// Create a new XML document for the current serialized XML object.
-				XDocument document = new XDocument(this.Serialize("List"));
-				// Save the XML document to the file.
-				document.Save(fileName);
+				// Create a new XML file for the current object.
+				using (FileStream stream = new FileStream(fileName, FileMode.Create))
+				{
+					// Serialize the current object to the stream.
+					this.SerializeWithTimestamp(stream, this.lastUpdated);
+				}
+				// Update the last saved timestamp.
+				this.lastSaved = this.lastUpdated;
 			}
 			finally
 			{
-				// Release the reader lock.
-				this.ReleaseReaderLock(info);
+				this.Unlock();
 			}
 		}
 
@@ -404,6 +417,10 @@ namespace PlanetLab.Database
 			{
 				// Add the object.
 				this.list.Add(obj.Id.Value, obj);
+				// Add the object event handler.
+				obj.Changed += this.OnObjectChanged;
+				// Update the timestamp.
+				this.lastUpdated = DateTime.Now;
 				// Return true.
 				return true;
 			}

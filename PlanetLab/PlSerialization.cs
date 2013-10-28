@@ -20,6 +20,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Globalization;
+using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Runtime.Serialization;
@@ -41,30 +42,87 @@ namespace PlanetLab
 		private static readonly string nameTimestamp = "Timestamp";
 
 		/// <summary>
-		/// Serializes the specified value as an XML element.
+		/// Serializes the specified object in XML format to the specified stream.
 		/// </summary>
-		/// <param name="obj">The value.</param>
-		/// <param name="name">The XML element name.</param>
-		/// <returns>The XML element.</returns>
-		public static XElement Serialize(this object obj, string name)
+		/// <param name="obj">The object.</param>
+		/// <param name="stream">The stream.</param>
+		public static void Serialize(this object obj, Stream stream)
 		{
-			// Serialize the object as the current type.
-			return obj.Serialize(obj.GetType(), name);
+			// Validate the arguments.
+			if (null == obj) throw new ArgumentNullException("obj");
+			if (null == stream) throw new ArgumentNullException("stream");
+			// Create an XML document for the object.
+			XDocument document = new XDocument(obj.Serialize(obj.GetType(), obj.GetType().Name));
+			// Save the document to the specified stream.
+			document.Save(stream, SaveOptions.None);
+		}
+
+		/// <summary>
+		/// Serializes the specified object in XML format to the specified stream.
+		/// </summary>
+		/// <param name="obj">The object.</param>
+		/// <param name="stream">The stream.</param>
+		/// <param name="timestamp">The object timestamp.</param>
+		public static void SerializeWithTimestamp(this object obj, Stream stream, DateTime timestamp)
+		{
+			// Validate the arguments.
+			if (null == obj) throw new ArgumentNullException("obj");
+			if (null == stream) throw new ArgumentNullException("stream");
+			// Create the root XML element.
+			XElement root = obj.Serialize(obj.GetType(), obj.GetType().GetName());
+			// Add the timestamp to the root element.
+			root.Add(new XAttribute(PlSerialization.nameTimestamp, timestamp));
+			// Create an XML document for the object.
+			XDocument document = new XDocument(root);
+			// Save the document to the specified stream.
+			document.Save(stream, SaveOptions.None);
 		}
 
 		/// <summary>
 		/// Deserializes the current object from an XML element.
 		/// </summary>
 		/// <typeparam name="T">The object type.</typeparam>
-		/// <param name="element">The XML element to deserialize.</param>
-		/// <param name="instance">An existing instance or <c>null</c>.</param>
+		/// <param name="stream">The XML stream to deserialize.</param>
+		/// <param name="instance">An existing instance or <c>null</c>. If an existing instance is passed, the method overrides the object. Otherwise, the method creates a new object.</param>
 		/// <returns>An instance of the deserialized object.</returns>
-		public static T Deserialize<T>(this XElement element, T instance = null) where T : class, new()
+		public static T Deserialize<T>(this Stream stream, T instance = null) where T : class, new()
 		{
-			return element.Deserialize(typeof(T), instance) as T;
+			// Create an XML document from the stream.
+			XDocument document = XDocument.Load(stream, LoadOptions.None);
+			// Parse the root XML element and return the object.
+			return document.Root.Deserialize(typeof(T), instance) as T;
+		}
+
+		/// <summary>
+		/// Deserializes the current object from an XML element.
+		/// </summary>
+		/// <typeparam name="T">The object type.</typeparam>
+		/// <param name="stream">The XML stream to deserialize.</param>
+		/// <param name="timestamp">The object timestamp.</param>
+		/// <returns>An instance of the deserialized object.</returns>
+		public static T DeserializeWithTimestamp<T>(this Stream stream, out DateTime timestamp) where T : class, new()
+		{
+			// Create an XML document from the stream.
+			XDocument document = XDocument.Load(stream, LoadOptions.None);
+			// Set the timestamp.
+			timestamp = DateTime.Parse(document.Root.Attribute(PlSerialization.nameTimestamp).Value);
+			// Parse the root XML element and return the object.
+			return document.Root.Deserialize(typeof(T), null) as T;
 		}
 
 		// Private methods.
+
+		/// <summary>
+		/// Serializes the specified value as an XML element.
+		/// </summary>
+		/// <param name="obj">The value.</param>
+		/// <param name="name">The XML element name.</param>
+		/// <returns>The XML element.</returns>
+		private static XElement Serialize(this object obj, string name)
+		{
+			// Serialize the object as the current type.
+			return obj.Serialize(obj.GetType(), name);
+		}
 
 		/// <summary>
 		/// Serializes the specified value as an XML element, where the value is considered having the specified type.

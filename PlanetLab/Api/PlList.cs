@@ -137,10 +137,12 @@ namespace PlanetLab.Api
 			PlList<T> list = new PlList<T>();
 			// If the file does not exist, do nothing.
 			if (!File.Exists(fileName)) return list;
-			// Load the XML document from a file.
-			XDocument document = XDocument.Load(fileName);
-			// Parse the XML into the XML-RPC array object.
-			document.Root.Deserialize<PlList<T>>(list);
+			// Create a new stream for the specified file.
+			using (FileStream stream = new FileStream(fileName, FileMode.Open))
+			{
+				// Deserialize the stream to the list object.
+				stream.Deserialize<PlList<T>>(list);
+			}
 			// Return the list.
 			return list;
 		}
@@ -155,10 +157,12 @@ namespace PlanetLab.Api
 			this.Lock();
 			try
 			{
-				// Create a new XML document for the current serialized XML object.
-				XDocument document = new XDocument(this.Serialize("List"));
-				// Save the XML document to the file.
-				document.Save(fileName);
+				// Create a new XML file for the current object.
+				using (FileStream stream = new FileStream(fileName, FileMode.Create))
+				{
+					// Serialize the current object to the stream.
+					this.Serialize(stream);
+				}
 			}
 			finally
 			{
