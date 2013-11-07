@@ -386,14 +386,18 @@ namespace PlanetLab.Database
 			this.Lock();
 			try
 			{
-				// Create a new XML file for the current object.
-				using (FileStream stream = new FileStream(fileName, FileMode.Create))
+				// Check the file directory exists.
+				if (DotNetApi.IO.Directory.EnsureFileDirectoryExists(fileName))
 				{
-					// Serialize the current object to the stream.
-					this.SerializeWithTimestamp(stream, this.lastUpdated);
+					// Create a new XML file for the current object.
+					using (FileStream stream = new FileStream(fileName, FileMode.Create))
+					{
+						// Serialize the current object to the stream.
+						this.SerializeWithTimestamp(stream, this.lastUpdated);
+					}
+					// Update the last saved timestamp.
+					this.lastSaved = this.lastUpdated;
 				}
-				// Update the last saved timestamp.
-				this.lastSaved = this.lastUpdated;
 			}
 			finally
 			{

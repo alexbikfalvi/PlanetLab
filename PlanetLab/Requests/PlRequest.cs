@@ -231,7 +231,7 @@ namespace PlanetLab.Requests
 			// Set the request method.
 			asyncState.Request.Method = "POST";
 			// Set the user agent.
-			asyncState.Request.UserAgent = "YouTube Analytics App";
+			asyncState.Request.UserAgent = "Internet Analytics App";
 			// Set the content type.
 			asyncState.Request.ContentType = "text/xml";
 			// Set the accepted language.
