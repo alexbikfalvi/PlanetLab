@@ -5,12 +5,12 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("PlanetLab")]
-[assembly: AssemblyDescription("")]
+[assembly: AssemblyTitle("PlanetLab Library")]
+[assembly: AssemblyDescription("A library for PlanetLab.")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("Hewlett-Packard")]
-[assembly: AssemblyProduct("PlanetLab")]
-[assembly: AssemblyCopyright("Copyright © Hewlett-Packard 2013")]
+[assembly: AssemblyCompany("Alex Bikfalvi")]
+[assembly: AssemblyProduct("PlanetLab Library")]
+[assembly: AssemblyCopyright("Copyright © Alex Bikfalvi 2013")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
