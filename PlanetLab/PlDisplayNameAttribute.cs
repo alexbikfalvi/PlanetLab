@@ -23,6 +23,7 @@ namespace PlanetLab
 	/// <summary>
 	/// A class representing a PlanetLab display name attribute.
 	/// </summary>
+	[AttributeUsage(AttributeTargets.Field, AllowMultiple = false)]
 	public class PlDisplayNameAttribute : Attribute
 	{
 		/// <summary>

@@ -17,7 +17,7 @@
  */
 
 using System;
-using System.Reflection;
+using DotNetApi;
 using PlanetLab.Api;
 
 namespace PlanetLab
@@ -51,10 +51,7 @@ namespace PlanetLab
 		/// <returns>The PlanetLab name.</returns>
 		public static string GetName(this Enum value)
 		{
-			Type type = value.GetType();
-			MemberInfo[] member = type.GetMember(value.ToString());
-			object[] attributes = member[0].GetCustomAttributes(typeof(PlNameAttribute), false);
-			return (attributes[0] as PlNameAttribute).Name;
+			return value.GetAttribute<PlNameAttribute>().Name;
 		}
 
 		/// <summary>
@@ -64,10 +61,7 @@ namespace PlanetLab
 		/// <returns>The PlanetLab display name.</returns>
 		public static string GetDisplayName(this Enum value)
 		{
-			Type type = value.GetType();
-			MemberInfo[] member = type.GetMember(value.ToString());
-			object[] attributes = member[0].GetCustomAttributes(typeof(PlDisplayNameAttribute), false);
-			return (attributes[0] as PlDisplayNameAttribute).Name;
+			return value.GetAttribute<PlDisplayNameAttribute>().Name;
 		}
 
 		/// <summary>
