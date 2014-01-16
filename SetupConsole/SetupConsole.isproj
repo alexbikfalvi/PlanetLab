@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<Project ToolsVersion="3.5" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+	<PropertyGroup>
+		<!-- Select a Product Configuration -->
+		<InstallShieldProductConfiguration>Express</InstallShieldProductConfiguration>
+		<!-- Select a Visual Studio Configuration / InstallShield Release -->
+		<Configuration>Debug</Configuration>
+		<InstallShieldRelease>$(Configuration)</InstallShieldRelease>
+	</PropertyGroup>
+	<ItemGroup>
+		<!-- The InstallShieldProject item selects the project to build -->
+		<InstallShieldProject Include="$(MSBuildProjectDirectory)\$(MSBuildProjectName).isl"/>
+		<!-- The InstallShieldReleaseFlags sets Release Flags -->
+		<!--<InstallShieldReleaseFlags Include=""/>-->
+		<!-- The InstallShieldMergeModulePath specifies what directories are
+		searched for Merge Modules -->
+		<!--<InstallShieldMergeModulePath Include=""/>-->
+	</ItemGroup>
+	<ItemGroup>
+		<!-- The ProjectReference items refer to any Visual Studio solutions you want to automatically probe for Project Output Groups.  -->
+	</ItemGroup>
+	<ItemGroup>
+		<!-- The TaggedOutputs items allow you to explicitly add extra files to output groups. Each item must include both Name and OutputGroup, as well as TargetPath metadata values. -->
+		<!--<TaggedOutputs Include="C:\My Test Exe.exe">
+			<Name>My Test Project</Name>
+			<OutputGroup>Primary output</OutputGroup>
+			<TargetPath>My Test Exe.exe</TargetPath>
+		</TaggedOutputs> -->
+	</ItemGroup>
+	<Import Project="$(MSBuildExtensionsPath32)\InstallShield\2013Limited\InstallShield.targets"/>
+	<ItemGroup>
+		<ProjectReference Include="..\..\DotNetApi\DotNetApi\DotNetApi.csproj">
+			<Name>DotNetApi</Name>
+			<Project>{475F767E-2288-4E56-9B90-179A10DCAB49}</Project>
+		</ProjectReference>
+		<ProjectReference Include="..\..\InetAnalytics\InetCommon\InetCommon.csproj">
+			<Name>InetCommon</Name>
+			<Project>{4E3C3A80-85D6-4932-B1D2-E0467B1ABF46}</Project>
+		</ProjectReference>
+		<ProjectReference Include="..\..\DotNetApi\MapApi\MapApi.csproj">
+			<Name>MapApi</Name>
+			<Project>{C5C1839C-4971-4781-B8FA-FF743E257A7E}</Project>
+		</ProjectReference>
+		<ProjectReference Include="..\PlanetLab\PlanetLab.csproj">
+			<Name>PlanetLab</Name>
+			<Project>{8D8A9A27-A8CA-4A27-95E5-C2246BDABC85}</Project>
+		</ProjectReference>
+		<ProjectReference Include="..\PlanetLabConsole\PlanetLabConsole.csproj">
+			<Name>PlanetLabConsole</Name>
+			<Project>{1CE55FD8-AF34-45B2-841E-38912975DA64}</Project>
+		</ProjectReference>
+		<ProjectReference Include="..\..\Renci.SshNet\Renci.SshNet.csproj">
+			<Name>Renci.SshNet</Name>
+			<Project>{2F5F8C90-0BD1-424F-997C-7BC6280919D1}</Project>
+		</ProjectReference>
+	</ItemGroup>
+</Project>
