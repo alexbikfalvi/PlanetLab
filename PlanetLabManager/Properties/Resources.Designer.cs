@@ -81,7 +81,7 @@ namespace PlanetLab {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Software\Alex Bikfalvi\PlanetLab Console.
+        ///   Looks up a localized string similar to Software\Alex Bikfalvi\PlanetLab Manager.
         /// </summary>
         internal static string ConfigRootPath {
             get {
@@ -195,6 +195,16 @@ namespace PlanetLab {
         internal static System.Drawing.Bitmap ConsoleDisconnect_16 {
             get {
                 object obj = ResourceManager.GetObject("ConsoleDisconnect_16", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap Copy_16 {
+            get {
+                object obj = ResourceManager.GetObject("Copy_16", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }

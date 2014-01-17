@@ -49,6 +49,9 @@
 			this.separator1 = new System.Windows.Forms.ToolStripSeparator();
 			this.buttonConnect = new System.Windows.Forms.ToolStripButton();
 			this.buttonDisconnect = new System.Windows.Forms.ToolStripButton();
+			this.separator2 = new System.Windows.Forms.ToolStripSeparator();
+			this.buttonCopy = new System.Windows.Forms.ToolStripButton();
+			this.buttonClear = new System.Windows.Forms.ToolStripButton();
 			this.imageList = new System.Windows.Forms.ImageList(this.components);
 			this.saveFileDialog = new System.Windows.Forms.SaveFileDialog();
 			this.openFileDialog = new System.Windows.Forms.OpenFileDialog();
@@ -87,7 +90,10 @@
             this.labelHostname,
             this.separator1,
             this.buttonConnect,
-            this.buttonDisconnect});
+            this.buttonDisconnect,
+            this.separator2,
+            this.buttonCopy,
+            this.buttonClear});
 			this.toolStrip.Location = new System.Drawing.Point(1, 23);
 			this.toolStrip.Name = "toolStrip";
 			this.toolStrip.Size = new System.Drawing.Size(598, 25);
@@ -123,6 +129,30 @@
 			this.buttonDisconnect.Size = new System.Drawing.Size(86, 22);
 			this.buttonDisconnect.Text = "&Disconnect";
 			this.buttonDisconnect.Click += new System.EventHandler(this.OnDisconnect);
+			// 
+			// separator2
+			// 
+			this.separator2.Name = "separator2";
+			this.separator2.Size = new System.Drawing.Size(6, 25);
+			// 
+			// buttonCopy
+			// 
+			this.buttonCopy.Image = global::PlanetLab.Resources.Copy_16;
+			this.buttonCopy.ImageTransparentColor = System.Drawing.Color.Magenta;
+			this.buttonCopy.Name = "buttonCopy";
+			this.buttonCopy.Size = new System.Drawing.Size(55, 22);
+			this.buttonCopy.Text = "C&opy";
+			this.buttonCopy.Click += new System.EventHandler(this.OnCopy);
+			// 
+			// buttonClear
+			// 
+			this.buttonClear.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
+			this.buttonClear.Image = ((System.Drawing.Image)(resources.GetObject("buttonClear.Image")));
+			this.buttonClear.ImageTransparentColor = System.Drawing.Color.Magenta;
+			this.buttonClear.Name = "buttonClear";
+			this.buttonClear.Size = new System.Drawing.Size(38, 22);
+			this.buttonClear.Text = "Cl&ear";
+			this.buttonClear.Click += new System.EventHandler(this.OnClear);
 			// 
 			// imageList
 			// 
@@ -168,6 +198,9 @@
 		private System.Windows.Forms.ToolStripLabel labelHostname;
 		private System.Windows.Forms.ToolStripSeparator separator1;
 		private DotNetApi.Windows.Controls.ThemeControl panelConsole;
+		private System.Windows.Forms.ToolStripSeparator separator2;
+		private System.Windows.Forms.ToolStripButton buttonClear;
+		private System.Windows.Forms.ToolStripButton buttonCopy;
 
 	}
 }

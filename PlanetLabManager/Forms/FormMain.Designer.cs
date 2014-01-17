@@ -54,7 +54,7 @@
 			this.menuItemExit = new System.Windows.Forms.ToolStripMenuItem();
 			this.menuItemHelp = new System.Windows.Forms.ToolStripMenuItem();
 			this.menuItemAbout = new System.Windows.Forms.ToolStripMenuItem();
-			this.toolTipNetworkStatus = new Controls.NetworkStatusToolTip(this.components);
+			this.toolTipNetworkStatus = new PlanetLab.Controls.NetworkStatusToolTip(this.components);
 			this.toolStripContainer.BottomToolStripPanel.SuspendLayout();
 			this.toolStripContainer.ContentPanel.SuspendLayout();
 			this.toolStripContainer.TopToolStripPanel.SuspendLayout();
@@ -345,7 +345,7 @@
 			this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
 			this.MainMenuStrip = this.menuStrip;
 			this.Name = "FormMain";
-			this.Text = "PlanetLab Console";
+			this.Text = "PlanetLab Manager";
 			this.WindowState = System.Windows.Forms.FormWindowState.Maximized;
 			this.toolStripContainer.BottomToolStripPanel.ResumeLayout(false);
 			this.toolStripContainer.BottomToolStripPanel.PerformLayout();

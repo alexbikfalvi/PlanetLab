@@ -8,7 +8,7 @@
     <OutputType>WinExe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>PlanetLab</RootNamespace>
-    <AssemblyName>PlConsole</AssemblyName>
+    <AssemblyName>PlanetLabManager</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -33,6 +33,9 @@
   </PropertyGroup>
   <PropertyGroup>
     <ApplicationIcon>Globe.ico</ApplicationIcon>
+  </PropertyGroup>
+  <PropertyGroup>
+    <StartupObject>PlanetLab.Program</StartupObject>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />

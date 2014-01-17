@@ -180,8 +180,8 @@ namespace PlanetLab.Forms
 				// Show a message.
 				MessageBox.Show(
 					this,
-					"The PlanetLab Console is running one or more background operations. You must stop them before closing the program.",
-					"PlanetLab Console Background",
+					"The PlanetLab Manager is running one or more background operations. You must stop them before closing the program.",
+					"PlanetLab Manager Background",
 					MessageBoxButtons.OK,
 					MessageBoxIcon.Warning);
 				// Cancel the closing request.

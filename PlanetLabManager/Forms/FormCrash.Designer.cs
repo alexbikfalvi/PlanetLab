@@ -60,7 +60,7 @@
 			this.labelTitle.Name = "labelTitle";
 			this.labelTitle.Size = new System.Drawing.Size(355, 83);
 			this.labelTitle.TabIndex = 1;
-			this.labelTitle.Text = "PlanetLab Console encountered a problem due to an unhandled exception.\r\n\r\nUnfortu" +
+			this.labelTitle.Text = "PlanetLab Manager encountered a problem due to an unhandled exception.\r\n\r\nUnfortu" +
     "nately, your work may be lost, but you can report back to the developer with the" +
     " information below to fix the problem.";
 			// 
@@ -185,7 +185,7 @@
 			this.MaximizeBox = false;
 			this.MinimizeBox = false;
 			this.Name = "FormCrash";
-			this.Text = "PlanetLab Console Error";
+			this.Text = "PlanetLab Manager Error";
 			((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
 			this.ResumeLayout(false);
 			this.PerformLayout();

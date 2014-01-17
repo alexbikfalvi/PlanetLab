@@ -26,7 +26,7 @@ using PlanetLab.Forms;
 namespace PlanetLab
 {
 	/// <summary>
-	/// A class representing the PlanetLab Console program.
+	/// A class representing the PlanetLab Manager program.
 	/// </summary>
 	static class Program
 	{

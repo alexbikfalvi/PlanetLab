@@ -52,10 +52,10 @@
 	<summary>
 		<codepage>1252</codepage>
 		<title>##ID_STRING3##</title>
-		<subject></subject>
+		<subject>##ID_STRING13##</subject>
 		<author>##ID_STRING2##</author>
-		<keywords>Installer,MSI,Database</keywords>
-		<comments>Contact:  Your local administrator</comments>
+		<keywords>PlanetLab</keywords>
+		<comments>##ID_STRING12##</comments>
 		<template>Intel;1033</template>
 		<lastauthor>Administrator</lastauthor>
 		<revnumber>{63349C9E-722B-412A-B30E-5E3C11082269}</revnumber>
@@ -348,7 +348,7 @@
 		<row><td>InetCommon.Primary_output</td><td>{B4E02EED-2E4F-4516-B998-84662F4995F6}</td><td>INSTALLDIR</td><td>2</td><td/><td>inetcommon.primary_output</td><td>17</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
 		<row><td>MapApi.Primary_output</td><td>{06360655-05F0-4BD1-9AB1-B65A79CCB2FC}</td><td>INSTALLDIR</td><td>2</td><td/><td>mapapi.primary_output</td><td>17</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
 		<row><td>PlanetLab.Primary_output</td><td>{87BDB41C-6C8A-4D4F-9FAD-2EE37A6ECD7E}</td><td>INSTALLDIR</td><td>2</td><td/><td>planetlab.primary_output</td><td>17</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
-		<row><td>PlanetLabConsole.Primary_output</td><td>{8621C398-DDE2-40CC-9A6C-3DEAB31FB7B3}</td><td>INSTALLDIR</td><td>2</td><td/><td>planetlabconsole.primary_out</td><td>17</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
+		<row><td>PlanetLabManager.Primary_output</td><td>{1C0CDA14-C094-402B-B82C-26F7C2A47CFA}</td><td>INSTALLDIR</td><td>2</td><td/><td>planetlabmanager.primary_out</td><td>17</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
 		<row><td>Renci.SshNet.Primary_output</td><td>{9BD89331-5CE8-49B9-B31A-45CE7485558F}</td><td>INSTALLDIR</td><td>2</td><td/><td>renci.sshnet.primary_output</td><td>17</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
 	</table>
 
@@ -1151,7 +1151,7 @@
 		<row><td>FavoritesFolder</td><td>TARGETDIR</td><td>.:FAVORI~1|Favorites</td><td/><td>0</td><td/></row>
 		<row><td>FontsFolder</td><td>TARGETDIR</td><td>.:Fonts</td><td/><td>0</td><td/></row>
 		<row><td>GlobalAssemblyCache</td><td>TARGETDIR</td><td>.:Global~1|GlobalAssemblyCache</td><td/><td>0</td><td/></row>
-		<row><td>INSTALLDIR</td><td>PLANETLAB_CONSOLE</td><td>.</td><td/><td>0</td><td/></row>
+		<row><td>INSTALLDIR</td><td>PLANETLAB_MANAGER</td><td>.</td><td/><td>0</td><td/></row>
 		<row><td>ISCommonFilesFolder</td><td>CommonFilesFolder</td><td>Instal~1|InstallShield</td><td/><td>0</td><td/></row>
 		<row><td>ISMyCompanyDir</td><td>ProgramFilesFolder</td><td>MYCOMP~1|My Company Name</td><td/><td>0</td><td/></row>
 		<row><td>ISMyProductDir</td><td>ISMyCompanyDir</td><td>MYPROD~1|My Product Name</td><td/><td>0</td><td/></row>
@@ -1160,6 +1160,7 @@
 		<row><td>MyPicturesFolder</td><td>TARGETDIR</td><td>.:MyPict~1|MyPictures</td><td/><td>0</td><td/></row>
 		<row><td>NetHoodFolder</td><td>TARGETDIR</td><td>.:NetHood</td><td/><td>0</td><td/></row>
 		<row><td>PLANETLAB_CONSOLE</td><td>ALEX_BIKFALVI</td><td>PLANET~1|PlanetLab Console</td><td/><td>0</td><td/></row>
+		<row><td>PLANETLAB_MANAGER</td><td>ALEX_BIKFALVI</td><td>PLANET~1|PlanetLab Manager</td><td/><td>0</td><td/></row>
 		<row><td>PersonalFolder</td><td>TARGETDIR</td><td>.:Personal</td><td/><td>0</td><td/></row>
 		<row><td>PrimaryVolumePath</td><td>TARGETDIR</td><td>.:Primar~1|PrimaryVolumePath</td><td/><td>0</td><td/></row>
 		<row><td>PrintHoodFolder</td><td>TARGETDIR</td><td>.:PRINTH~1|PrintHood</td><td/><td>0</td><td/></row>
@@ -1876,7 +1877,7 @@
 		<row><td>AlwaysInstall</td><td>InetCommon.Primary_output</td></row>
 		<row><td>AlwaysInstall</td><td>MapApi.Primary_output</td></row>
 		<row><td>AlwaysInstall</td><td>PlanetLab.Primary_output</td></row>
-		<row><td>AlwaysInstall</td><td>PlanetLabConsole.Primary_output</td></row>
+		<row><td>AlwaysInstall</td><td>PlanetLabManager.Primary_output</td></row>
 		<row><td>AlwaysInstall</td><td>Renci.SshNet.Primary_output</td></row>
 	</table>
 
@@ -1896,7 +1897,7 @@
 		<row><td>inetcommon.primary_output</td><td>InetCommon.Primary_output</td><td>InetCommon.Primary output</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;InetCommon&gt;|Built</td><td>3</td><td/></row>
 		<row><td>mapapi.primary_output</td><td>MapApi.Primary_output</td><td>MapApi.Primary output</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;MapApi&gt;|Built</td><td>3</td><td/></row>
 		<row><td>planetlab.primary_output</td><td>PlanetLab.Primary_output</td><td>PlanetLab.Primary output</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PlanetLab&gt;|Built</td><td>3</td><td/></row>
-		<row><td>planetlabconsole.primary_out</td><td>PlanetLabConsole.Primary_output</td><td>PlanetLabConsole.Primary output</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PlanetLabConsole&gt;|Built</td><td>3</td><td/></row>
+		<row><td>planetlabmanager.primary_out</td><td>PlanetLabManager.Primary_output</td><td>PlanetLabManager.Primary output</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PlanetLabManager&gt;|Built</td><td>3</td><td/></row>
 		<row><td>renci.sshnet.primary_output</td><td>Renci.SshNet.Primary_output</td><td>Renci.SshNet.Primary output</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;Renci.SshNet&gt;|Built</td><td>3</td><td/></row>
 	</table>
 
@@ -2044,7 +2045,7 @@
 		<row><td>InetCommon.Primary_output</td><td/><td/><td>_DB5615C9_4446_4A57_B4D7_E38E6A37523F_FILTER</td><td/><td/><td/><td/></row>
 		<row><td>MapApi.Primary_output</td><td/><td/><td>_5449C62C_2992_4293_A9A8_117331DFCFD7_FILTER</td><td/><td/><td/><td/></row>
 		<row><td>PlanetLab.Primary_output</td><td/><td/><td>_23DE733C_5ACA_497C_A494_7FC1DEBE0148_FILTER</td><td/><td/><td/><td/></row>
-		<row><td>PlanetLabConsole.Primary_output</td><td/><td/><td>_FF6BD89A_2F7E_4E09_8ABF_EE091AA26A40_FILTER</td><td/><td/><td/><td/></row>
+		<row><td>PlanetLabManager.Primary_output</td><td/><td/><td>_A855D931_E22B_444D_88F7_F8E50EB32D63_FILTER</td><td/><td/><td/><td/></row>
 		<row><td>Renci.SshNet.Primary_output</td><td/><td/><td>_1ED6419A_C7F0_4546_A63E_786D266F9531_FILTER</td><td/><td/><td/><td/></row>
 	</table>
 
@@ -2356,6 +2357,7 @@
 		<row><td>MapApi</td><td>..\DotNetApi\MapApi\MapApi.csproj</td><td/><td>2</td></row>
 		<row><td>PlanetLab</td><td>PlanetLab\PlanetLab.csproj</td><td/><td>2</td></row>
 		<row><td>PlanetLabConsole</td><td>PlanetLabConsole\PlanetLabConsole.csproj</td><td/><td>2</td></row>
+		<row><td>PlanetLabManager</td><td>PlanetLabManager\PlanetLabManager.csproj</td><td/><td>2</td></row>
 		<row><td>ProgramFilesFolder</td><td/><td/><td>1</td></row>
 		<row><td>Renci.SshNet</td><td>..\Renci.SshNet\Renci.SshNet.csproj</td><td/><td>2</td></row>
 		<row><td>SystemFolder</td><td/><td/><td>1</td></row>
@@ -3772,11 +3774,14 @@
 		<row><td>ID_STRING1</td><td>1033</td><td/><td>0</td><td/><td>-2136853679</td></row>
 		<row><td>ID_STRING10</td><td>1033</td><td>A software to access and manage your PlanetLab site.</td><td>0</td><td/><td>-2136855503</td></row>
 		<row><td>ID_STRING11</td><td>1033</td><td>PLANET~1|PlanetLab Console</td><td>0</td><td/><td>-2136855503</td></row>
+		<row><td>ID_STRING12</td><td>1033</td><td>Contact: alex@bikfalvi.com</td><td>0</td><td/><td>-2136820778</td></row>
+		<row><td>ID_STRING13</td><td>1033</td><td>A software to manage the PlanetLab platform.</td><td>0</td><td/><td>-2136843274</td></row>
+		<row><td>ID_STRING14</td><td>1033</td><td>PLANET~1|PlanetLab Manager</td><td>0</td><td/><td>-2136830826</td></row>
 		<row><td>ID_STRING2</td><td>1033</td><td>Alex Bikfalvi</td><td>0</td><td/><td>-2136810639</td></row>
-		<row><td>ID_STRING3</td><td>1033</td><td>PlanetLab Console</td><td>0</td><td/><td>-2136853583</td></row>
+		<row><td>ID_STRING3</td><td>1033</td><td>PlanetLab Manager</td><td>0</td><td/><td>-2136828970</td></row>
 		<row><td>ID_STRING4</td><td>1033</td><td>http://alex.bikfalvi.com</td><td>0</td><td/><td>-2136837199</td></row>
-		<row><td>ID_STRING5</td><td>1033</td><td>A software to access and manage your PlanetLab site.</td><td>0</td><td/><td>-2136853551</td></row>
-		<row><td>ID_STRING6</td><td>1033</td><td>PLANET~1|PlanetLab Console</td><td>0</td><td/><td>-2136837135</td></row>
+		<row><td>ID_STRING5</td><td>1033</td><td>A software to manage the PlanetLab platform.</td><td>0</td><td/><td>-2136837034</td></row>
+		<row><td>ID_STRING6</td><td>1033</td><td>PLANET~1|PlanetLab Manager</td><td>0</td><td/><td>-2136853386</td></row>
 		<row><td>ID_STRING7</td><td>1033</td><td>PLANET~1|PlanetLab Console</td><td>0</td><td/><td>-2136865775</td></row>
 		<row><td>ID_STRING8</td><td>1033</td><td>A software to access and manage your PlanetLab site.</td><td>0</td><td/><td>-2136828911</td></row>
 		<row><td>ID_STRING9</td><td>1033</td><td>UNINST~1|Uninstall PlanetLab Console</td><td>0</td><td/><td>-2136812527</td></row>
@@ -3889,8 +3894,9 @@
 		<col def="I2">ISIconIndex</col>
 		<row><td>ARPPRODUCTICON.exe</td><td/><td>&lt;ISProductFolder&gt;\redist\Language Independent\OS Independent\setupicon.ico</td><td>0</td></row>
 		<row><td>NewShortcut11_08BA7FAD772348EAB13BD89B3B30A5F6.exe</td><td/><td>C:\Users\Alex\Projects\PlanetLab\PlanetLabConsole\Globe.ico</td><td>0</td></row>
+		<row><td>NewShortcut1_7A58F2C5068A4D94B444A589BFE6E18E.exe</td><td/><td>C:\Users\Alex\Projects\PlanetLab\PlanetLabManager\Globe.ico</td><td>0</td></row>
 		<row><td>NewShortcut1_C2F3373B304249818E5B1802CA12C49C.exe</td><td/><td>C:\Users\Alex\Projects\PlanetLab\PlanetLabConsole\Globe.ico</td><td>0</td></row>
-		<row><td>NewShortcut2_471E91F1E9424884AE24CFBA07C4FE9B.exe</td><td/><td>C:\Program Files (x86)\InstallShield\2013LE\Redist\Language Independent\OS Independent\uninstall.ico</td><td>0</td></row>
+		<row><td>NewShortcut2_0B25762FCFB845F3BA5CB7CD57FB1908.exe</td><td/><td>&lt;SystemFolder&gt;\imageres.dll</td><td>82</td></row>
 	</table>
 
 	<table name="IniFile">
@@ -4037,6 +4043,9 @@ UwBpAG4AZwBsAGUASQBtAGEAZwBlAAEARQB4AHAAcgBlAHMAcwA=
 		<row><td>SccPath</td><td/></row>
 		<row><td>SchemaVersion</td><td>774</td></row>
 		<row><td>Type</td><td>MSIE</td></row>
+		<row><td>VSSccAuxPath</td><td/></row>
+		<row><td>VSSccLocalPath</td><td/></row>
+		<row><td>VSSccProvider</td><td/></row>
 	</table>
 
 	<table name="InstallUISequence">
@@ -4402,7 +4411,7 @@ UwBpAG4AZwBsAGUASQBtAGEAZwBlAAEARQB4AHAAcgBlAHMAcwA=
 		<row><td>PROGMSG_IIS_ROLLBACKWEBSERVICEEXTENSIONS</td><td>##IDS_PROGMSG_IIS_ROLLBACKWEBSERVICEEXTENSIONS##</td><td/></row>
 		<row><td>PROGRAMFILETOLAUNCHATEND</td><td>[INSTALLDIR]PlanetLabConsole.Primary output</td><td/></row>
 		<row><td>ProductCode</td><td>{8D39527E-88DD-4AB9-BBDA-7AAABCAC7BE2}</td><td/></row>
-		<row><td>ProductName</td><td>PlanetLab Console</td><td/></row>
+		<row><td>ProductName</td><td>PlanetLab Manager</td><td/></row>
 		<row><td>ProductVersion</td><td>1.00.0000</td><td/></row>
 		<row><td>ProgressType0</td><td>install</td><td/></row>
 		<row><td>ProgressType1</td><td>Installing</td><td/></row>
@@ -4480,7 +4489,7 @@ UwBpAG4AZwBsAGUASQBtAGEAZwBlAAEARQB4AHAAcgBlAHMAcwA=
 		<col def="L255">FileName</col>
 		<col def="s72">DirProperty</col>
 		<col def="i2">InstallMode</col>
-		<row><td>NewShortcut1</td><td>PlanetLabConsole.Primary_output</td><td/><td>newfolder1</td><td>2</td></row>
+		<row><td>NewShortcut1</td><td>PlanetLabManager.Primary_output</td><td/><td>newfolder1</td><td>2</td></row>
 		<row><td>NewShortcut2</td><td>ISX_DEFAULTCOMPONENT1</td><td/><td>newfolder1</td><td>2</td></row>
 	</table>
 
@@ -4567,9 +4576,8 @@ UwBpAG4AZwBsAGUASQBtAGEAZwBlAAEARQB4AHAAcgBlAHMAcwA=
 		<col def="S255">ISComments</col>
 		<col def="S255">ISShortcutName</col>
 		<col def="I4">ISAttributes</col>
-		<row><td>NewShortcut1</td><td>newfolder1</td><td>##ID_STRING7##</td><td>PlanetLabConsole.Primary_output</td><td>AlwaysInstall</td><td/><td>##ID_STRING8##</td><td/><td>NewShortcut1_C2F3373B304249818E5B1802CA12C49C.exe</td><td>0</td><td>1</td><td/><td/><td/><td/><td/><td/><td/><td/></row>
-		<row><td>NewShortcut11</td><td>DesktopFolder</td><td>##ID_STRING11##</td><td>PlanetLabConsole.Primary_output</td><td>AlwaysInstall</td><td/><td>##ID_STRING10##</td><td/><td>NewShortcut11_08BA7FAD772348EAB13BD89B3B30A5F6.exe</td><td>0</td><td>1</td><td/><td/><td/><td/><td/><td/><td/><td/></row>
-		<row><td>NewShortcut2</td><td>newfolder1</td><td>##ID_STRING9##</td><td>ISX_DEFAULTCOMPONENT1</td><td>[SystemFolder]MsiExec.exe</td><td>/x [ProductCode]</td><td/><td/><td>NewShortcut2_471E91F1E9424884AE24CFBA07C4FE9B.exe</td><td>0</td><td>1</td><td/><td/><td/><td/><td/><td/><td/><td/></row>
+		<row><td>NewShortcut1</td><td>newfolder1</td><td>##ID_STRING14##</td><td>PlanetLabManager.Primary_output</td><td>AlwaysInstall</td><td/><td/><td/><td>NewShortcut1_7A58F2C5068A4D94B444A589BFE6E18E.exe</td><td>0</td><td>1</td><td/><td/><td/><td/><td/><td/><td/><td/></row>
+		<row><td>NewShortcut2</td><td>newfolder1</td><td>##ID_STRING9##</td><td>ISX_DEFAULTCOMPONENT1</td><td>[SystemFolder]MsiExec.exe</td><td>/x [ProductCode]</td><td/><td/><td>NewShortcut2_0B25762FCFB845F3BA5CB7CD57FB1908.exe</td><td>1</td><td>1</td><td/><td/><td/><td/><td/><td/><td/><td/></row>
 	</table>
 
 	<table name="Signature">

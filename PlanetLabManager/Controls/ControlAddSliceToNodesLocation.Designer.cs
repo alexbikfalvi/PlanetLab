@@ -54,6 +54,8 @@
 			this.textBoxFilterSite = new System.Windows.Forms.TextBox();
 			this.labelFilterSite = new System.Windows.Forms.Label();
 			this.wizardPageNode = new DotNetApi.Windows.Controls.WizardPage();
+			this.buttonClearAll = new System.Windows.Forms.Button();
+			this.buttonSelectAll = new System.Windows.Forms.Button();
 			this.listViewNodes = new System.Windows.Forms.ListView();
 			this.columnNodeId = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
 			this.columnNodeHostname = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
@@ -66,8 +68,6 @@
 			this.textBoxFilterNode = new System.Windows.Forms.TextBox();
 			this.labelFilterNode = new System.Windows.Forms.Label();
 			this.labelSubtitle = new System.Windows.Forms.Label();
-			this.buttonClearAll = new System.Windows.Forms.Button();
-			this.buttonSelectAll = new System.Windows.Forms.Button();
 			((System.ComponentModel.ISupportInitialize)(this.pictureBox)).BeginInit();
 			this.wizard.SuspendLayout();
 			this.wizardPageSite.SuspendLayout();
@@ -231,14 +231,18 @@
 			// 
 			this.splitContainer.Panel1.Controls.Add(this.mapControl);
 			this.splitContainer.Panel1.RightToLeft = System.Windows.Forms.RightToLeft.No;
+			this.splitContainer.Panel1Border = false;
 			// 
 			// splitContainer.Panel2
 			// 
 			this.splitContainer.Panel2.Controls.Add(this.listViewSites);
 			this.splitContainer.Panel2.RightToLeft = System.Windows.Forms.RightToLeft.No;
+			this.splitContainer.Panel2Border = false;
 			this.splitContainer.Size = new System.Drawing.Size(788, 463);
 			this.splitContainer.SplitterDistance = 317;
+			this.splitContainer.SplitterWidth = 5;
 			this.splitContainer.TabIndex = 10;
+			this.splitContainer.UseTheme = false;
 			// 
 			// mapControl
 			// 
@@ -269,7 +273,7 @@
 			this.listViewSites.HideSelection = false;
 			this.listViewSites.Location = new System.Drawing.Point(0, 0);
 			this.listViewSites.Name = "listViewSites";
-			this.listViewSites.Size = new System.Drawing.Size(786, 140);
+			this.listViewSites.Size = new System.Drawing.Size(786, 139);
 			this.listViewSites.SmallImageList = this.imageList;
 			this.listViewSites.TabIndex = 0;
 			this.listViewSites.UseCompatibleStateImageBehavior = false;
@@ -348,6 +352,28 @@
 			this.wizardPageNode.TabIndex = 1;
 			this.wizardPageNode.Title = "Select node";
 			this.wizardPageNode.Visible = false;
+			// 
+			// buttonClearAll
+			// 
+			this.buttonClearAll.Enabled = false;
+			this.buttonClearAll.Location = new System.Drawing.Point(87, 32);
+			this.buttonClearAll.Name = "buttonClearAll";
+			this.buttonClearAll.Size = new System.Drawing.Size(75, 23);
+			this.buttonClearAll.TabIndex = 7;
+			this.buttonClearAll.Text = "Cl&ear all";
+			this.buttonClearAll.UseVisualStyleBackColor = true;
+			this.buttonClearAll.Click += new System.EventHandler(this.OnClearAll);
+			// 
+			// buttonSelectAll
+			// 
+			this.buttonSelectAll.Enabled = false;
+			this.buttonSelectAll.Location = new System.Drawing.Point(6, 32);
+			this.buttonSelectAll.Name = "buttonSelectAll";
+			this.buttonSelectAll.Size = new System.Drawing.Size(75, 23);
+			this.buttonSelectAll.TabIndex = 6;
+			this.buttonSelectAll.Text = "Select &all";
+			this.buttonSelectAll.UseVisualStyleBackColor = true;
+			this.buttonSelectAll.Click += new System.EventHandler(this.OnSelectAll);
 			// 
 			// listViewNodes
 			// 
@@ -441,31 +467,9 @@
 			this.labelSubtitle.ForeColor = System.Drawing.Color.Gray;
 			this.labelSubtitle.Location = new System.Drawing.Point(76, 48);
 			this.labelSubtitle.Name = "labelSubtitle";
-			this.labelSubtitle.Size = new System.Drawing.Size(122, 13);
+			this.labelSubtitle.Size = new System.Drawing.Size(64, 13);
 			this.labelSubtitle.TabIndex = 9;
-			this.labelSubtitle.Text = "Step 2 of 2: Select node";
-			// 
-			// buttonClearAll
-			// 
-			this.buttonClearAll.Enabled = false;
-			this.buttonClearAll.Location = new System.Drawing.Point(87, 32);
-			this.buttonClearAll.Name = "buttonClearAll";
-			this.buttonClearAll.Size = new System.Drawing.Size(75, 23);
-			this.buttonClearAll.TabIndex = 7;
-			this.buttonClearAll.Text = "Cl&ear all";
-			this.buttonClearAll.UseVisualStyleBackColor = true;
-			this.buttonClearAll.Click += new System.EventHandler(this.OnClearAll);
-			// 
-			// buttonSelectAll
-			// 
-			this.buttonSelectAll.Enabled = false;
-			this.buttonSelectAll.Location = new System.Drawing.Point(6, 32);
-			this.buttonSelectAll.Name = "buttonSelectAll";
-			this.buttonSelectAll.Size = new System.Drawing.Size(75, 23);
-			this.buttonSelectAll.TabIndex = 6;
-			this.buttonSelectAll.Text = "Select &all";
-			this.buttonSelectAll.UseVisualStyleBackColor = true;
-			this.buttonSelectAll.Click += new System.EventHandler(this.OnSelectAll);
+			this.labelSubtitle.Text = "Select node";
 			// 
 			// ControlAddSliceToNodesLocation
 			// 

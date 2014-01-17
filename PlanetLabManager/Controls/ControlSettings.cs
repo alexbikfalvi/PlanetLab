@@ -211,6 +211,9 @@ namespace PlanetLab.Controls
 				// Clear the person.
 				this.OnSetPerson(UserState.Unknown);
 			}
+
+			// Call the changed event handler.
+			this.OnChanged(this, EventArgs.Empty);
 		}
 
 		/// <summary>

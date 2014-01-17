@@ -230,6 +230,7 @@ namespace PlanetLab.Controls
 			this.buttonConnect.Enabled = true;
 			// Update the status bar.
 			this.status.Send(ApplicationStatus.StatusType.Normal, "Connecting to the PlanetLab node \'{0}\' failed.".FormatWith(info.Host), Resources.ServerError_16);
+			this.status.Unlock();
 			// Raise the connect failed event.
 			if (null != this.ConnectFailed) this.ConnectFailed(this, new PlExceptionEventArgs<PlNode>(this.node, exception));
 		}
@@ -257,7 +258,6 @@ namespace PlanetLab.Controls
 			// Update the status bar.
 			this.status.Send(ApplicationStatus.StatusType.Normal, "Disconnected.", Resources.Server_16);
 			this.status.Unlock();
-
 			// Change the buttons enabled state.
 			this.buttonConnect.Enabled = true;
 			// Disable the console.
@@ -438,22 +438,56 @@ namespace PlanetLab.Controls
 		/// <param name="e">The event arguments.</param>
 		private void OnCancelCommand(object sender, EventArgs e)
 		{
-			// Lock the list of commands.
-			this.Commands.Lock();
-			try
-			{
-				// If the number of executing commands is greater than zero.
-				if (this.Commands.Count > 0)
+			// Show the command is being canceled.
+			this.ShowMessage(Resources.ServerBusy_32, "Cancel Command", "Canceling the current SSH command...");
+
+			// Cancel the command on the thread pool.
+			ThreadPool.QueueUserWorkItem((object state) =>
 				{
-					// Cancel the first command.
-					this.Commands.First().CancelAsync();
-				}
-			}
-			catch { }
-			finally
-			{
-				this.Commands.Unlock();
-			}
+					// Lock the list of commands.
+					this.Commands.Lock();
+					try
+					{
+						// If the number of executing commands is greater than zero.
+						if (this.Commands.Count > 0)
+						{
+							// Cancel the first command.
+							this.Commands.First().CancelAsync();
+						}
+
+						// Hide the message.
+						this.HideMessage();
+					}
+					catch (Exception exception)
+					{
+						// Show the error message.
+						this.ShowMessage(Resources.ServerError_32, "Cancel Command", "Canceling the last PlanetLab command failed. {0}".FormatWith(exception.Message), false, (int)Config.Static.ConsoleMessageCloseDelay.TotalMilliseconds);
+					}
+					finally
+					{
+						this.Commands.Unlock();
+					}
+				});
+		}
+
+		/// <summary>
+		/// An event handler called when the user copies the console output.
+		/// </summary>
+		/// <param name="sender">The sender object.</param>
+		/// <param name="e">The event arguments.</param>
+		private void OnCopy(object sender, EventArgs e)
+		{
+			this.console.Copy();
+		}
+
+		/// <summary>
+		/// An event handler called when the user clears the console output.
+		/// </summary>
+		/// <param name="sender">The sender object.</param>
+		/// <param name="e">The event arguments.</param>
+		private void OnClear(object sender, EventArgs e)
+		{
+			this.console.Clear();
 		}
 	}
 }

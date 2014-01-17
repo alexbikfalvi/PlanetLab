@@ -39,7 +39,7 @@ namespace PlanetLab
 		/// </summary>
 		public sealed class StaticConfig
 		{
-			public string ApplicationFolder { get { return Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + @"\Alex Bikfalvi\PlanetLab Console"; } }
+			public string ApplicationFolder { get { return Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + @"\Alex Bikfalvi\PlanetLab Manager"; } }
 			public TimeSpan ConsoleMessageCloseDelay { get; internal set; }
 			public int ConsoleSideMenuVisibleItems { get; internal set; }
 			public int ConsoleSideMenuSelectedItem { get; internal set; }

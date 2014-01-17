@@ -82,7 +82,7 @@
 			this.Name = "FormAbout";
 			this.ShowInTaskbar = false;
 			this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
-			this.Text = "About...";
+			this.Text = "About PlanetLab Manager...";
 			((System.ComponentModel.ISupportInitialize)(this.pictureBox)).EndInit();
 			this.ResumeLayout(false);
 

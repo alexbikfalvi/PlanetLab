@@ -45,8 +45,8 @@
 			<Name>PlanetLab</Name>
 			<Project>{8D8A9A27-A8CA-4A27-95E5-C2246BDABC85}</Project>
 		</ProjectReference>
-		<ProjectReference Include="..\PlanetLabConsole\PlanetLabConsole.csproj">
-			<Name>PlanetLabConsole</Name>
+		<ProjectReference Include="..\PlanetLabManager\PlanetLabManager.csproj">
+			<Name>PlanetLabManager</Name>
 			<Project>{1CE55FD8-AF34-45B2-841E-38912975DA64}</Project>
 		</ProjectReference>
 		<ProjectReference Include="..\..\Renci.SshNet\Renci.SshNet.csproj">
