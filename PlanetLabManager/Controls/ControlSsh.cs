@@ -352,12 +352,10 @@ namespace PlanetLab.Controls
 				// Get the command data.
 				ThreadPool.QueueUserWorkItem((object state) =>
 				{
-					// Get the command output stream.
-					PipeStream stream = command.OutputStream as PipeStream;
 					// Set the stream as blocking.
-					stream.BlockLastReadBuffer = true;
+					command.OutputStream.BlockLastReadBuffer = true;
 					// Read the command data.
-					using (PipeReader reader = new PipeReader(stream))
+					using (PipeReader reader = new PipeReader(command.OutputStream))
 					{
 						// While the command is not completed.
 						while (!asyncResult.IsCompleted)
