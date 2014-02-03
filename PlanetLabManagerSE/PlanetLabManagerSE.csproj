@@ -48,7 +48,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Config.cs" />
-    <Compile Include="ConfigRegistry.cs" />
     <Compile Include="Controls\ControlAddressProperties.cs">
       <SubType>UserControl</SubType>
     </Compile>

@@ -21,6 +21,7 @@ using System.Collections.Generic;
 using System.IO;
 using Microsoft.Win32;
 using DotNetApi;
+using DotNetApi.Security;
 using DotNetApi.Windows;
 using PlanetLab;
 using PlanetLab.Api;
@@ -33,37 +34,27 @@ namespace PlanetLab
 	public sealed class ConfigSlice : IDisposable
 	{
 		private readonly PlSlice slice;
-		private readonly RegistryKey key;
+		private readonly byte[] key;
 
 		/// <summary>
 		/// Creates a new configuration slice instance.
 		/// </summary>
 		/// <param name="slice">The slice.</param>
-		/// <param name="rootKey">The root registry key.</param>
-		public ConfigSlice(PlSlice slice, RegistryKey rootKey)
+		/// <param name="key">The slice key.</param>
+		public ConfigSlice(PlSlice slice, byte[] key)
 		{
 			// Check the arguments.
 			if (null == slice) throw new ArgumentNullException("slice");
+			if (null == key) throw new ArgumentNullException("key");
 
 			// Set the slice.
 			this.slice = slice;
 
+			// Set the slice.
+			this.key = key;
+
 			// Set the slice event handler.
 			this.slice.Changed += this.OnSliceChanged;
-
-			// Open or create the subkey for the current slice.
-			if (null == (this.key = rootKey.OpenSubKey(this.slice.Id.Value.ToString(), RegistryKeyPermissionCheck.ReadWriteSubTree)))
-			{
-				// If the key does not exist, create the key.
-				this.key = rootKey.CreateSubKey(this.slice.Id.Value.ToString());
-			}
-
-			// Check the commands directory exists.
-			if (!Directory.Exists(Config.Static.PlanetLabSlicesFolder))
-			{
-				// If the directory does not exist, create it.
-				Directory.CreateDirectory(Config.Static.PlanetLabSlicesFolder);
-			}
 		}
 
 		// Public event.
@@ -100,32 +91,11 @@ namespace PlanetLab
 		{
 			get
 			{
-				return this.key.GetSecureByteArray("Key", null, Config.cryptoKey, Config.cryptoIV);
-			}
-			set
-			{
-				// Set the key.
-				this.key.SetSecureByteArray("Key", value, Config.cryptoKey, Config.cryptoIV);
-				// Call the changed event handler.
-				this.OnChanged();
+				return this.key.DecryptAes(Config.cryptoKey, Config.cryptoIV);
 			}
 		}
 
 		// Public methods.
-
-		/// <summary>
-		/// Deletes the configuration registry key corresponding to the given slice.
-		/// </summary>
-		/// <param name="config">The slice configuration.</param>
-		/// <param name="rootKey">The root registry key.</param>
-		public static void Delete(ConfigSlice config, RegistryKey rootKey)
-		{
-			// Check the arguments.
-			if (null == config) throw new ArgumentNullException("config");
-
-			// Delete the registry key.
-			rootKey.DeleteSubKeyTree(config.slice.Id.Value.ToString(), false);
-		}
 
 		/// <summary>
 		/// Disposes the current object.
@@ -136,8 +106,6 @@ namespace PlanetLab
 			this.OnDisposed();
 			// Remove the slice event handler.
 			this.slice.Changed -= this.OnSliceChanged;
-			// Close the current key.
-			this.key.Close();
 			// Suppress the finalizer.
 			GC.SuppressFinalize(this);
 		}

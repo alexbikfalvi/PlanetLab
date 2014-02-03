@@ -315,13 +315,8 @@ namespace PlanetLab.Controls
 		/// <param name="person">The selected person.</param>
 		private void OnSaveCredentials(PlList<PlPerson> persons, PlPerson person)
 		{
-			// Save the credentials.
-			this.config.SaveCredentials(
-				this.textBoxUsername.Text,
-				this.textBoxPassword.SecureText,
-				persons,
-				person.Id ?? -1
-				);
+			// Show an error dialog if an exception is thrown.
+			MessageBox.Show("Cannot set the PlanetLab credentials. This option is not available in PlanetLab Manager Student Edition.", "Option Not Available", MessageBoxButtons.OK, MessageBoxIcon.Error);
 		}
 	}
 }

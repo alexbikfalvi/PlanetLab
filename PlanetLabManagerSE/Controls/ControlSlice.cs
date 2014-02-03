@@ -1530,24 +1530,8 @@ namespace PlanetLab.Controls
 		/// <param name="e">The event arguments.</param>
 		private void OnSetKey(object sender, EventArgs e)
 		{
-			// Open the dialog.
-			if (this.openFileDialog.ShowDialog(this) == DialogResult.OK)
-			{
-				try
-				{
-					// Open the file.
-					using (FileStream fileStream = new FileStream(this.openFileDialog.FileName, FileMode.Open))
-					{
-						// Set the key data.
-						this.sliceConfig.Key = fileStream.ReadToEnd();
-					}
-				}
-				catch (Exception exception)
-				{
-					// Show an error dialog if an exception is thrown.
-					MessageBox.Show("Could not open the RSA key file. {0}".FormatWith(exception.Message), "Cannot Open File", MessageBoxButtons.OK, MessageBoxIcon.Error);
-				}
-			}
+			// Show an error dialog if an exception is thrown.
+			MessageBox.Show("Cannot set the slice key. This option is not available in PlanetLab Manager Student Edition.", "Option Not Available", MessageBoxButtons.OK, MessageBoxIcon.Error);
 		}
 
 		/// <summary>

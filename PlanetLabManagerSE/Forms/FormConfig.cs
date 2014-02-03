@@ -17,6 +17,8 @@
  */
 
 using System;
+using System.Threading;
+using Microsoft.Win32;
 using DotNetApi.Windows;
 using DotNetApi.Windows.Forms;
 
@@ -27,6 +29,8 @@ namespace PlanetLab.Forms
 	/// </summary>
 	public partial class FormConfig : ThreadSafeForm
 	{
+		private readonly Config config;
+
 		/// <summary>
 		/// Creates a new form instance.
 		/// </summary>
@@ -37,6 +41,23 @@ namespace PlanetLab.Forms
 
 			// Set the font.
 			Window.SetFont(this);
+
+			// Create the configuration.
+			this.config = new Config(Registry.CurrentUser, Resources.ConfigRootPath, "http://alex.bikfalvi.com/projects/inetanalytics/planetlab/config.xml", () =>
+				{
+					this.Invoke(() =>
+						{
+							// Close the form.
+							this.Close();
+						});
+				});
 		}
+
+		// Public properties.
+
+		/// <summary>
+		/// Gets the configuration.
+		/// </summary>
+		public Config Configuration { get { return this.config; } }
 	}
 }

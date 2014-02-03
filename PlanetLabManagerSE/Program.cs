@@ -51,13 +51,13 @@ namespace PlanetLab
 				{
 					Application.Run(formConfig);
 
-					using (Config config = new Config(Registry.CurrentUser, Resources.ConfigRootPath))
-					{
-						using (FormMain formMain = new FormMain(config))
+					//using (Config config = new Config(Registry.CurrentUser, Resources.ConfigRootPath, "http://alex.bikfalvi.com/projects/inetanalytics/planetlab/config.xml"))
+					//{
+						using (FormMain formMain = new FormMain(formConfig.Configuration))
 						{
 							Application.Run(formMain);
 						}
-					}
+					//}
 				}
 			}
 			catch (Exception exception)

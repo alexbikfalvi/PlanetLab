@@ -19,9 +19,11 @@
 using System;
 using System.Collections.Generic;
 using System.Security;
+using System.Xml.Linq;
 using Microsoft.Win32;
 using DotNetApi;
 using DotNetApi.Security;
+using DotNetApi.Web;
 using InetCommon.Net;
 using InetCommon.Status;
 using PlanetLab.Api;
@@ -47,20 +49,12 @@ namespace PlanetLab
 			public string PlanetLabUsername { get; internal set; }
 			public SecureString PlanetLabPassword { get; internal set; }
 			public int PlanetLabPersonId { get; internal set; }
-			public string PlanetLabSitesFileName { get; internal set; }
-			public string PlanetLabNodesFileName { get; internal set; }
-			public string PlanetLabSlicesFileName { get; internal set; }
-			public string PlanetLabLocalPersonsFileName { get; internal set; }
-			public string PlanetLabLocalSlicesFileName { get; internal set; }
-			public string PlanetLabSlicesFolder { get; internal set; }
-			public string PlanetLabSlicesLogFileName { get; internal set; }
 		}
 
 		internal static readonly byte[] cryptoKey = { 0x7E, 0x31, 0xC9, 0xD9, 0x0F, 0x01, 0x28, 0x11, 0xD4, 0xB3, 0xC4, 0x12, 0x44, 0x0D, 0x4B, 0x8C, 0xEE, 0xDB, 0xF1, 0x4D, 0xCF, 0x01, 0xF8, 0x00, 0xE4, 0x3E, 0x33, 0xF5, 0x02, 0x48, 0xD4, 0x8D };
 		internal static readonly byte[] cryptoIV = { 0x62, 0x36, 0x61, 0x5B, 0xA0, 0xA4, 0xF0, 0x4E, 0xFE, 0x81, 0x2C, 0xA4, 0xD3, 0x16, 0x26, 0xEE };
 
 		private RegistryKey key;
-		private RegistryKey keySlices;
 
 		private string root;
 
@@ -68,6 +62,12 @@ namespace PlanetLab
 		private readonly PlDatabase<PlNode> dbNodes = new PlDatabase<PlNode>();
 		private readonly PlDatabase<PlPerson> dbPersons = new PlDatabase<PlPerson>();
 		private readonly PlDatabase<PlSlice> dbSlices = new PlDatabase<PlSlice>();
+
+		private readonly AsyncWebRequest request = new AsyncWebRequest();
+
+		private string planetLabUsername;
+		private SecureString planetLabPassword;
+		private int planetLabPersonId;
 
 		private readonly PlDatabaseList<PlSite> listSites;
 		private readonly PlDatabaseList<PlNode> listNodes;
@@ -95,18 +95,15 @@ namespace PlanetLab
 		/// Creates a new crawer global object, based on a configuration from the specified root registry key.
 		/// </summary>
 		/// <param name="rootKey">The root registry key.</param>
-		/// <param name="rootPat">The registry key path.</param>
-		public Config(RegistryKey rootKey, string rootPath)
+		/// <param name="rootPath">The registry key path.</param>
+		/// <param name="url">The URL from where to download the configuration.</param>
+		/// <param name="callback">A method called when the configuration has been loaded.</param>
+		public Config(RegistryKey rootKey, string rootPath, string url, Action callback)
 		{
 			// Open the PlanetLab configuration key.
 			if (null == (this.key = rootKey.OpenSubKey(rootPath, RegistryKeyPermissionCheck.ReadWriteSubTree)))
 			{
 				this.key = rootKey.CreateSubKey(rootPath, RegistryKeyPermissionCheck.ReadWriteSubTree);
-			}
-			// Open the PlanetLab slices configuration key.
-			if (null == (this.keySlices = this.key.OpenSubKey("Slices", RegistryKeyPermissionCheck.ReadWriteSubTree)))
-			{
-				this.keySlices = this.key.CreateSubKey("Slices", RegistryKeyPermissionCheck.ReadWriteSubTree);
 			}
 
 			// Set the root path.
@@ -125,46 +122,31 @@ namespace PlanetLab
 			this.listLocalPersons = new PlDatabaseList<PlPerson>(this.dbPersons);
 			this.listLocalSlices = new PlDatabaseList<PlSlice>(this.dbSlices);
 
-			// Set the lists event handlers.
-			this.listLocalSlices.Cleared += this.OnSlicesCleared;
-			this.listLocalSlices.Updated += this.OnSlicesUpdated;
-			this.listLocalSlices.Added += this.OnSlicesAdded;
-			this.listLocalSlices.Removed += this.OnSlicesRemoved;
+			// Load the configuration.
+			this.request.Begin(new Uri(url), (AsyncWebResult asyncResult) =>
+				{
+					try
+					{
+						// Complete the request.
+						XDocument document = this.request.End<XDocument>(asyncResult, (string data) =>
+							{
+								return XDocument.Parse(data);
+							});
+					}
+					catch { }
 
-			// Initialize the static configuration.
-			Config.Static.PlanetLabUsername = this.Username;
-			Config.Static.PlanetLabPassword = this.Password;
-			Config.Static.PlanetLabPersonId = this.PersonId;
-			Config.Static.PlanetLabSitesFileName = this.SitesFileName;
-			Config.Static.PlanetLabNodesFileName = this.NodesFileName;
-			Config.Static.PlanetLabLocalPersonsFileName = this.LocalPersonsFileName;
-			Config.Static.PlanetLabLocalSlicesFileName = this.LocalSlicesFileName;
-			Config.Static.PlanetLabSlicesFolder = this.SlicesFolder;
-			Config.Static.PlanetLabSlicesLogFileName = this.SlicesLogFileName;
-			Config.Static.ConsoleMessageCloseDelay = this.ConsoleMessageCloseDelay;
-			Config.Static.ConsoleSideMenuVisibleItems = this.ConsoleSideMenuVisibleItems;
-			Config.Static.ConsoleSideMenuSelectedItem = this.ConsoleSideMenuSelectedItem;
-			Config.Static.ConsoleSideMenuSelectedNode = this.ConsoleSideMenuSelectedNode;
+					// Initialize the static configuration.
+					Config.Static.PlanetLabUsername = this.Username;
+					Config.Static.PlanetLabPassword = this.Password;
+					Config.Static.PlanetLabPersonId = this.PersonId;
+					Config.Static.ConsoleMessageCloseDelay = this.ConsoleMessageCloseDelay;
+					Config.Static.ConsoleSideMenuVisibleItems = this.ConsoleSideMenuVisibleItems;
+					Config.Static.ConsoleSideMenuSelectedItem = this.ConsoleSideMenuSelectedItem;
+					Config.Static.ConsoleSideMenuSelectedNode = this.ConsoleSideMenuSelectedNode;
 
-			// Load the PlanetLab sites configuration.
-			try { this.listSites.LoadFromFile(this.SitesFileName); }
-			catch { }
-
-			// Load the PlanetLab nodes configuration.
-			try { this.listNodes.LoadFromFile(this.NodesFileName); }
-			catch { }
-
-			// Load the PlanetLab slices configuration.
-			try { this.listSlices.LoadFromFile(this.SlicesFileName); }
-			catch { }
-
-			// Load the PlanetLab local persons configuration.
-			try { this.listLocalPersons.LoadFromFile(this.LocalPersonsFileName); }
-			catch { }
-
-			// Load the PlanetLab local slices configuration.
-			try { this.listLocalSlices.LoadFromFile(this.LocalSlicesFileName); }
-			catch { }
+					// Call the user callback method.
+					if (null != callback) callback();
+				}, null);
 		}
 
 		// Static properties.
@@ -252,138 +234,15 @@ namespace PlanetLab
 		/// <summary>
 		/// Gets or sets the PlanetLab account name.
 		/// </summary>
-		public string Username
-		{
-			get
-			{
-				return DotNetApi.Windows.RegistryExtensions.GetString(this.root, "UserName", string.Empty);
-			}
-		}
+		public string Username { get { return this.planetLabUsername; } }
 		/// <summary>
 		/// Gets or sets the PlanetLab account password.
 		/// </summary>
-		public SecureString Password
-		{
-			get
-			{
-				return DotNetApi.Windows.RegistryExtensions.GetSecureString(this.root, "Password", SecureStringExtensions.Empty, Config.cryptoKey, Config.cryptoIV);
-			}
-		}
+		public SecureString Password { get { return this.planetLabPassword; } }
 		/// <summary>
 		/// Gets or sets the PlanetLab default person ID.
 		/// </summary>
-		public int PersonId
-		{
-			get
-			{
-				return DotNetApi.Windows.RegistryExtensions.GetInteger(this.root, "PersonId", -1);
-			}
-		}
-		/// <summary>
-		/// Gets or sets the PlanetLab sites file name.
-		/// </summary>
-		public string SitesFileName
-		{
-			get
-			{
-				return DotNetApi.Windows.RegistryExtensions.GetString(this.root, "SitesFileName", Config.Static.ApplicationFolder + @"\PlanetLab\Sites.xml");
-			}
-			set
-			{
-				DotNetApi.Windows.RegistryExtensions.SetString(this.root, "SitesFileName", value);
-				Config.Static.PlanetLabSitesFileName = value;
-			}
-		}
-		/// <summary>
-		/// Gets or sets the PlanetLab nodes file name.
-		/// </summary>
-		public string NodesFileName
-		{
-			get
-			{
-				return DotNetApi.Windows.RegistryExtensions.GetString(this.root, "NodesFileName", Config.Static.ApplicationFolder + @"\PlanetLab\Nodes.xml");
-			}
-			set
-			{
-				DotNetApi.Windows.RegistryExtensions.SetString(this.root, "NodesFileName", value);
-				Config.Static.PlanetLabNodesFileName = value;
-			}
-		}
-		/// <summary>
-		/// Gets or sets the PlanetLab slices file name.
-		/// </summary>
-		public string SlicesFileName
-		{
-			get
-			{
-				return DotNetApi.Windows.RegistryExtensions.GetString(this.root, "SlicesFileName", Config.Static.ApplicationFolder + @"\PlanetLab\Slices.xml");
-			}
-			set
-			{
-				DotNetApi.Windows.RegistryExtensions.SetString(this.root, "SlicesFileName", value);
-				Config.Static.PlanetLabSlicesFileName = value;
-			}
-		}
-		/// <summary>
-		/// Gets or sets the local PlanetLab persons file name.
-		/// </summary>
-		public string LocalPersonsFileName
-		{
-			get
-			{
-				return DotNetApi.Windows.RegistryExtensions.GetString(this.root, "LocalPersonsFileName", Config.Static.ApplicationFolder + @"\PlanetLab\LocalPersons.xml");
-			}
-			set
-			{
-				DotNetApi.Windows.RegistryExtensions.SetString(this.root, "LocalPersonsFileName", value);
-				Config.Static.PlanetLabLocalPersonsFileName = value;
-			}
-		}
-		/// <summary>
-		/// Gets or sets the local PlanetLab slices file name.
-		/// </summary>
-		public string LocalSlicesFileName
-		{
-			get
-			{
-				return DotNetApi.Windows.RegistryExtensions.GetString(this.root, "LocalSlicesFileName", Config.Static.ApplicationFolder + @"\PlanetLab\LocalSlices.xml");
-			}
-			set
-			{
-				DotNetApi.Windows.RegistryExtensions.SetString(this.root, "LocalSlicesFileName", value);
-				Config.Static.PlanetLabLocalSlicesFileName = value;
-			}
-		}
-		/// <summary>
-		/// Gets or sets the PlanetLab slices folder.
-		/// </summary>
-		public string SlicesFolder
-		{
-			get
-			{
-				return DotNetApi.Windows.RegistryExtensions.GetString(this.root, "SlicesFolder", Config.Static.ApplicationFolder + @"\PlanetLab\Slices");
-			}
-			set
-			{
-				DotNetApi.Windows.RegistryExtensions.SetString(this.root, "SlicesFolder", value);
-				Config.Static.PlanetLabSlicesFolder = value;
-			}
-		}
-		/// <summary>
-		/// Gets or sets the PlanetLab slices log file name.
-		/// </summary>
-		public string SlicesLogFileName
-		{
-			get
-			{
-				return DotNetApi.Windows.RegistryExtensions.GetString(this.root, "SlicesLogFileName", Config.Static.ApplicationFolder + @"\PlanetLab\Slices\Log-{0}-{1}-{2}-{3}.xml");
-			}
-			set
-			{
-				DotNetApi.Windows.RegistryExtensions.SetString(this.root, "SlicesLogFileName", value);
-				Config.Static.PlanetLabSlicesLogFileName = value;
-			}
-		}
+		public int PersonId { get { return this.planetLabPersonId; } }
 		/// <summary>
 		/// Gets the sites database.
 		/// </summary>
@@ -435,32 +294,6 @@ namespace PlanetLab
 		}
 
 		/// <summary>
-		/// Saves the PlanetLab credentials.
-		/// </summary>
-		/// <param name="username">The PlanetLab username.</param>
-		/// <param name="password">The PlanetLab persons.</param>
-		/// <param name="persons">The list of person accounts associated with the previous credentials.</param>
-		/// <param name="person">The default person account ID.</param>
-		public void SaveCredentials(string username, SecureString password, PlList<PlPerson> persons, int person)
-		{
-			// Save the username.
-			DotNetApi.Windows.RegistryExtensions.SetString(this.root, "UserName", username);
-			Config.Static.PlanetLabUsername = username;
-			// Save the password.
-			DotNetApi.Windows.RegistryExtensions.SetSecureString(this.root, "Password", password, Config.cryptoKey, Config.cryptoIV);
-			Config.Static.PlanetLabPassword = password;
-			// Save the persons.
-			persons.Lock();
-			try { this.LocalPersons.CopyFrom(persons); }
-			finally { persons.Unlock(); }
-			try { this.LocalPersons.SaveToFile(this.LocalPersonsFileName); }
-			catch { }
-			// Save the person.
-			DotNetApi.Windows.RegistryExtensions.SetInteger(this.root, "PersonId", person);
-			Config.Static.PlanetLabPersonId = person;
-		}
-
-		/// <summary>
 		/// Returns the configuration for the specified slice.
 		/// </summary>
 		/// <param name="slice">The slice.</param>
@@ -498,134 +331,15 @@ namespace PlanetLab
 			{
 				// Close the status.
 				this.status.Dispose();
-				
-				// Save the PlanetLab sites.
-				if (this.Sites.IsDirty)
-				{
-					try { this.Sites.SaveToFile(this.SitesFileName); }
-					catch { }
-				}
-				// Save the PlanetLab nodes.
-				if (this.Nodes.IsDirty)
-				{
-					try { this.Nodes.SaveToFile(this.NodesFileName); }
-					catch { }
-				}
-				// Save the PlanetLab slices.
-				if (this.Slices.IsDirty)
-				{
-					try { this.Slices.SaveToFile(this.SlicesFileName); }
-					catch { }
-				}
-				// Save the PlanetLab local slices.
-				if (this.LocalSlices.IsDirty)
-				{
-					try { this.LocalSlices.SaveToFile(this.LocalSlicesFileName); }
-					catch { }
-				}
-				
+
 				// Dispose the slices configuration.
 				foreach (ConfigSlice configSlice in this.configSlices.Values)
 				{
 					configSlice.Dispose();
 				}
-				
+
 				// Close the registry key.
-				this.keySlices.Close();
 				this.key.Close();
-			}
-		}
-
-		// Private methods.
-
-		/// <summary>
-		/// An event handler called when the list of slices is cleared.
-		/// </summary>
-		/// <param name="sender">The sender object.</param>
-		/// <param name="e">The event arguments.</param>
-		private void OnSlicesCleared(object sender, EventArgs e)
-		{
-			// For all slices.
-			foreach (ConfigSlice configSlice in this.configSlices.Values)
-			{
-				// Dispose the configuration.
-				configSlice.Dispose();
-				// Delete the configuration key.
-				ConfigSlice.Delete(configSlice, this.keySlices);
-			}
-			// Clear the slices configurations.
-			this.configSlices.Clear();
-		}
-
-		/// <summary>
-		/// An event handler called when the list of slices is updated.
-		/// </summary>
-		/// <param name="sender">The sender object.</param>
-		/// <param name="e">The event arguments.</param>
-		private void OnSlicesUpdated(object sender, EventArgs e)
-		{
-			// Lock the slices list.
-			this.listLocalSlices.Lock();
-			try
-			{
-				// For each slice.
-				foreach (PlSlice slice in this.listLocalSlices)
-				{
-					// If the slice has a valid identifier.
-					if (slice.Id.HasValue)
-					{
-						// Create a new slice configuration.
-						ConfigSlice configSlice = new ConfigSlice(slice, this.keySlices);
-						// Add the configuration to the dictionary.
-						this.configSlices.Add(slice.Id.Value, configSlice);
-					}
-				}
-			}
-			finally
-			{
-				// Unlock the slices list.
-				this.listLocalSlices.Unlock();
-			}
-		}
-
-		/// <summary>
-		/// An event handler called when a slice is added.
-		/// </summary>
-		/// <param name="sender">The sender object.</param>
-		/// <param name="e">The event arguments.</param>
-		private void OnSlicesAdded(object sender, PlObjectEventArgs<PlSlice> e)
-		{
-			// If the slice has a valid identifier.
-			if (e.Object.Id.HasValue)
-			{
-				// Create a new slice configuration.
-				ConfigSlice configSlice = new ConfigSlice(e.Object, this.keySlices);
-				// Add the configuration to the dictionary.
-				this.configSlices.Add(e.Object.Id.Value, configSlice);
-			}
-		}
-
-		/// <summary>
-		/// An event handler called when a slice is removed.
-		/// </summary>
-		/// <param name="sender">The sender object.</param>
-		/// <param name="e">The event arguments.</param>
-		private void OnSlicesRemoved(object sender, PlObjectEventArgs<PlSlice> e)
-		{
-			// If the slice has a valid identifier.
-			if (e.Object.Id.HasValue)
-			{
-				// Get the current configuration.
-				ConfigSlice configSlice;
-				if (this.configSlices.TryGetValue(e.Object.Id.Value, out configSlice))
-				{
-					// Remove the configuration.
-					this.configSlices.Remove(e.Object.Id.Value);
-					// Dispose the configuration.
-					configSlice.Dispose();
-					// Delete the configuration.
-					ConfigSlice.Delete(configSlice, this.keySlices);
-				}
 			}
 		}
 	}
