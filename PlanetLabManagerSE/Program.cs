@@ -47,17 +47,16 @@ namespace PlanetLab
 
 			try
 			{
-				using (FormConfig formConfig = new FormConfig())
+				// Create the configuration.
+				using (Config config = new Config(Registry.CurrentUser, Resources.ConfigRootPath, "http://alex.bikfalvi.com/projects/inetanalytics/planetlab/config.xml"))
 				{
-					Application.Run(formConfig);
+					// Create the configuration form.
+					using (FormConfig formConfig = new FormConfig())
+					{
+						Application.Run(formConfig);
+					}
 
-					//using (Config config = new Config(Registry.CurrentUser, Resources.ConfigRootPath, "http://alex.bikfalvi.com/projects/inetanalytics/planetlab/config.xml"))
-					//{
-						using (FormMain formMain = new FormMain(formConfig.Configuration))
-						{
-							Application.Run(formMain);
-						}
-					//}
+					// If the configuration has been loaded.
 				}
 			}
 			catch (Exception exception)

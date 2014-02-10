@@ -18,6 +18,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Security;
 using System.Xml.Linq;
 using Microsoft.Win32;
@@ -51,12 +52,14 @@ namespace PlanetLab
 			public int PlanetLabPersonId { get; internal set; }
 		}
 
-		internal static readonly byte[] cryptoKey = { 0x7E, 0x31, 0xC9, 0xD9, 0x0F, 0x01, 0x28, 0x11, 0xD4, 0xB3, 0xC4, 0x12, 0x44, 0x0D, 0x4B, 0x8C, 0xEE, 0xDB, 0xF1, 0x4D, 0xCF, 0x01, 0xF8, 0x00, 0xE4, 0x3E, 0x33, 0xF5, 0x02, 0x48, 0xD4, 0x8D };
-		internal static readonly byte[] cryptoIV = { 0x62, 0x36, 0x61, 0x5B, 0xA0, 0xA4, 0xF0, 0x4E, 0xFE, 0x81, 0x2C, 0xA4, 0xD3, 0x16, 0x26, 0xEE };
+		private static readonly byte[] cryptoKey = { 0x7E, 0x31, 0xC9, 0xD9, 0x0F, 0x01, 0x28, 0x11, 0xD4, 0xB3, 0xC4, 0x12, 0x44, 0x0D, 0x4B, 0x8C, 0xEE, 0xDB, 0xF1, 0x4D, 0xCF, 0x01, 0xF8, 0x00, 0xE4, 0x3E, 0x33, 0xF5, 0x02, 0x48, 0xD4, 0x8D };
+		private static readonly byte[] cryptoIV = { 0x62, 0x36, 0x61, 0x5B, 0xA0, 0xA4, 0xF0, 0x4E, 0xFE, 0x81, 0x2C, 0xA4, 0xD3, 0x16, 0x26, 0xEE };
 
-		private RegistryKey key;
+		private readonly RegistryKey key;
+		private readonly string root;
+		private readonly Uri url;
 
-		private string root;
+		private bool loaded = false;
 
 		private readonly PlDatabase<PlSite> dbSites = new PlDatabase<PlSite>();
 		private readonly PlDatabase<PlNode> dbNodes = new PlDatabase<PlNode>();
@@ -68,6 +71,7 @@ namespace PlanetLab
 		private string planetLabUsername;
 		private SecureString planetLabPassword;
 		private int planetLabPersonId;
+		private readonly Dictionary<int, byte[]> planetLabKeys = new Dictionary<int, byte[]>();
 
 		private readonly PlDatabaseList<PlSite> listSites;
 		private readonly PlDatabaseList<PlNode> listNodes;
@@ -97,8 +101,7 @@ namespace PlanetLab
 		/// <param name="rootKey">The root registry key.</param>
 		/// <param name="rootPath">The registry key path.</param>
 		/// <param name="url">The URL from where to download the configuration.</param>
-		/// <param name="callback">A method called when the configuration has been loaded.</param>
-		public Config(RegistryKey rootKey, string rootPath, string url, Action callback)
+		public Config(RegistryKey rootKey, string rootPath, string url)
 		{
 			// Open the PlanetLab configuration key.
 			if (null == (this.key = rootKey.OpenSubKey(rootPath, RegistryKeyPermissionCheck.ReadWriteSubTree)))
@@ -108,6 +111,9 @@ namespace PlanetLab
 
 			// Set the root path.
 			this.root = @"{0}\{1}".FormatWith(rootKey.Name, rootPath);
+
+			// Set the URL.
+			this.url = new Uri(url);
 
 			// Create the status.
 			this.status = new ApplicationStatus();
@@ -121,32 +127,6 @@ namespace PlanetLab
 			this.listSlices = new PlDatabaseList<PlSlice>(this.dbSlices);
 			this.listLocalPersons = new PlDatabaseList<PlPerson>(this.dbPersons);
 			this.listLocalSlices = new PlDatabaseList<PlSlice>(this.dbSlices);
-
-			// Load the configuration.
-			this.request.Begin(new Uri(url), (AsyncWebResult asyncResult) =>
-				{
-					try
-					{
-						// Complete the request.
-						XDocument document = this.request.End<XDocument>(asyncResult, (string data) =>
-							{
-								return XDocument.Parse(data);
-							});
-					}
-					catch { }
-
-					// Initialize the static configuration.
-					Config.Static.PlanetLabUsername = this.Username;
-					Config.Static.PlanetLabPassword = this.Password;
-					Config.Static.PlanetLabPersonId = this.PersonId;
-					Config.Static.ConsoleMessageCloseDelay = this.ConsoleMessageCloseDelay;
-					Config.Static.ConsoleSideMenuVisibleItems = this.ConsoleSideMenuVisibleItems;
-					Config.Static.ConsoleSideMenuSelectedItem = this.ConsoleSideMenuSelectedItem;
-					Config.Static.ConsoleSideMenuSelectedNode = this.ConsoleSideMenuSelectedNode;
-
-					// Call the user callback method.
-					if (null != callback) callback();
-				}, null);
 		}
 
 		// Static properties.
@@ -162,6 +142,10 @@ namespace PlanetLab
 
 		// Public properties.
 
+		/// <summary>
+		/// Gets whether the configuration has been loaded.
+		/// </summary>
+		public bool Loaded { get { return this.loaded; } }
 		/// <summary>
 		/// Returns the application status.
 		/// </summary>
@@ -232,18 +216,6 @@ namespace PlanetLab
 			}
 		}
 		/// <summary>
-		/// Gets or sets the PlanetLab account name.
-		/// </summary>
-		public string Username { get { return this.planetLabUsername; } }
-		/// <summary>
-		/// Gets or sets the PlanetLab account password.
-		/// </summary>
-		public SecureString Password { get { return this.planetLabPassword; } }
-		/// <summary>
-		/// Gets or sets the PlanetLab default person ID.
-		/// </summary>
-		public int PersonId { get { return this.planetLabPersonId; } }
-		/// <summary>
 		/// Gets the sites database.
 		/// </summary>
 		public PlDatabase<PlSite> DbSites { get { return this.dbSites; } }
@@ -291,6 +263,44 @@ namespace PlanetLab
 			this.Dispose(true);
 			// Suppress the finalizer.
 			GC.SuppressFinalize(this);
+		}
+
+		/// <summary>
+		/// Loads the current configuration.
+		/// </summary>
+		/// <param name="callback">A callback method.</param>
+		public void Load(Action callback)
+		{
+			// Load the configuration.
+			this.request.Begin(this.url, (AsyncWebResult asyncResult) =>
+			{
+				try
+				{
+					// Complete the request.
+					AsyncWebResult result = this.request.End(asyncResult);
+					// Decrypt the received data.
+					byte[] data = result.Buffer.DecryptAes(Config.cryptoKey, Config.cryptoIV);
+					// Create a memory stream from the decrypted data.
+					using (MemoryStream stream = new MemoryStream(data))
+					{
+						// Load the XML document
+						XDocument document = XDocument.Load(stream);
+					}
+				}
+				catch { }
+
+				// Initialize the static configuration.
+				//Config.Static.PlanetLabUsername = this.Username;
+				//Config.Static.PlanetLabPassword = this.Password;
+				//Config.Static.PlanetLabPersonId = this.PersonId;
+				Config.Static.ConsoleMessageCloseDelay = this.ConsoleMessageCloseDelay;
+				Config.Static.ConsoleSideMenuVisibleItems = this.ConsoleSideMenuVisibleItems;
+				Config.Static.ConsoleSideMenuSelectedItem = this.ConsoleSideMenuSelectedItem;
+				Config.Static.ConsoleSideMenuSelectedNode = this.ConsoleSideMenuSelectedNode;
+
+				// Call the user callback method.
+				if (null != callback) callback();
+			}, null);
 		}
 
 		/// <summary>
