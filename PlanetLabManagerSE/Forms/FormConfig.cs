@@ -18,7 +18,9 @@
 
 using System;
 using System.Threading;
+using System.Windows.Forms;
 using Microsoft.Win32;
+using DotNetApi;
 using DotNetApi.Windows;
 using DotNetApi.Windows.Forms;
 
@@ -30,34 +32,125 @@ namespace PlanetLab.Forms
 	public partial class FormConfig : ThreadSafeForm
 	{
 		private readonly Config config;
+		private string url;
+
+		private readonly FormConfigUrl formUrl = new FormConfigUrl();
 
 		/// <summary>
 		/// Creates a new form instance.
 		/// </summary>
-		public FormConfig()
+		/// <param name="config">The PlanetLab configuration.</param>
+		/// <param name="defaultUrl">The default URL.</param>
+		public FormConfig(Config config, string defaultUrl)
 		{
 			// Initialize the component.
 			this.InitializeComponent();
 
+			// Set the configuration.
+			this.config = config;
+			// Set the default URL.
+			this.url = defaultUrl;
+
 			// Set the font.
 			Window.SetFont(this);
+		}
 
-			// Create the configuration.
-			this.config = new Config(Registry.CurrentUser, Resources.ConfigRootPath, "http://alex.bikfalvi.com/projects/inetanalytics/planetlab/config.xml", () =>
+		/// <summary>
+		/// An event handler called when the forms loads.
+		/// </summary>
+		/// <param name="sender">The sender object.</param>
+		/// <param name="e">The event arguments.</param>
+		private void OnLoad(object sender, EventArgs e)
+		{
+			// Start downloading the configuration.
+			this.labelMessage.Text = "Downloading the PlanetLab configuration...";
+
+			// Execute on the thread pool.
+			ThreadPool.QueueUserWorkItem((object status) =>
 				{
-					this.Invoke(() =>
+					try
+					{
+						// Load the configuration.
+						this.config.Load(new Uri(this.url), (bool result, Exception exception) =>
 						{
-							// Close the form.
-							this.Close();
+							this.Invoke(() =>
+							{
+								// If the download was successful.
+								if (result)
+								{
+									// Check whether the configuration did not expire.
+									if (this.config.Expires < DateTime.Now)
+									{
+										// Show an error dialog.
+										MessageBox.Show(
+											this,
+											"The specified configuration file has expired at {0}. Select a different configuration file and try again.".FormatWith(this.config.Expires),
+											"Configuration Expired",
+											MessageBoxButtons.OK,
+											MessageBoxIcon.Error);
+										// Retry.
+										this.OnRetry(sender, e);
+									}
+									else
+									{
+										// Close the form.
+										this.Close();
+									}
+								}
+								else
+								{
+									// Show an error dialog.
+									MessageBox.Show(
+										this,
+										"Downloading the PlanetLab configuration failed.{0}{1}Technical information: {2}".FormatWith(Environment.NewLine, Environment.NewLine, exception.Message),
+										"Configuration Error",
+										MessageBoxButtons.OK,
+										MessageBoxIcon.Error);
+									// Retry.
+									this.OnRetry(sender, e);
+								}
+							});
 						});
+					}
+					catch (Exception exception)
+					{
+						this.Invoke(() =>
+						{
+							// Show an error dialog.
+							MessageBox.Show(
+								this,
+								"Downloading the PlanetLab configuration failed.{0}{1}Technical information: {2}".FormatWith(Environment.NewLine, Environment.NewLine, exception.Message),
+								"Configuration Error",
+								MessageBoxButtons.OK,
+								MessageBoxIcon.Error);
+							// Retry.
+							this.OnRetry(sender, e);
+						});
+					}
 				});
 		}
 
-		// Public properties.
-
 		/// <summary>
-		/// Gets the configuration.
+		/// A method called to ask the user for the configuration file.
 		/// </summary>
-		public Config Configuration { get { return this.config; } }
+		/// <param name="sender">The sender object.</param>
+		/// <param name="e">The event arguments.</param>
+		private void OnRetry(object sender, EventArgs e)
+		{
+			// Show the select URL dialog.
+			if (this.formUrl.ShowDialog(this) == DialogResult.OK)
+			{
+				// Set the URL.
+				this.url = this.formUrl.Url;
+
+				// Load the configuration.
+				this.OnLoad(sender, e);
+			}
+			else
+			{
+				// Close the form.
+				this.Close();
+			}
+		}
 	}
 }

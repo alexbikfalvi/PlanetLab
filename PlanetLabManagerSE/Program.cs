@@ -32,6 +32,8 @@ namespace PlanetLab
 	{
 		private static FormCrash formCrash;
 
+		private static readonly string defaultConfigUrl = "http://alex.bikfalvi.com/projects/inetanalytics/planetlab/config.xml";
+
 		/// <summary>
 		/// The main entry point for the application.
 		/// </summary>
@@ -48,15 +50,23 @@ namespace PlanetLab
 			try
 			{
 				// Create the configuration.
-				using (Config config = new Config(Registry.CurrentUser, Resources.ConfigRootPath, "http://alex.bikfalvi.com/projects/inetanalytics/planetlab/config.xml"))
+				using (Config config = new Config(Registry.CurrentUser, Resources.ConfigRootPath))
 				{
 					// Create the configuration form.
-					using (FormConfig formConfig = new FormConfig())
+					using (FormConfig formConfig = new FormConfig(config, Program.defaultConfigUrl))
 					{
 						Application.Run(formConfig);
 					}
 
 					// If the configuration has been loaded.
+					if (config.Loaded)
+					{
+						// Create the main form.
+						using (FormMain formMain = new FormMain(config))
+						{
+							Application.Run(formMain);
+						}
+					}
 				}
 			}
 			catch (Exception exception)
@@ -64,7 +74,6 @@ namespace PlanetLab
 				Program.formCrash.ShowDialog(exception);
 				Program.formCrash.Dispose();
 			}
-
 		}
 
 		/// <summary>

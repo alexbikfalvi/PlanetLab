@@ -214,8 +214,8 @@ namespace PlanetLab.Controls
 			// Begin the PlanetLab sites request.
 			this.BeginRequest(
 				this.requestSlices,
-				Config.Static.PlanetLabUsername,
-				Config.Static.PlanetLabPassword,
+				Config.Static.Username,
+				Config.Static.Password,
 				null,
 				this.requestStateSlices);
 		}
@@ -247,8 +247,8 @@ namespace PlanetLab.Controls
 			// Begin the PlanetLab nodes request.
 			this.BeginRequest(
 				this.requestNodes,
-				Config.Static.PlanetLabUsername,
-				Config.Static.PlanetLabPassword,
+				Config.Static.Username,
+				Config.Static.Password,
 				PlNode.GetFilter(PlNode.Fields.NodeId, slice.NodeIds),
 				this.requestStateNodes);
 		}

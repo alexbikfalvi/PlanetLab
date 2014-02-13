@@ -44,7 +44,6 @@ namespace PlanetLab.Forms
 			this.control.TabIndex = 0;
 			this.control.RequestStarted += new System.EventHandler(this.OnRequestStarted);
 			this.control.RequestFinished += new System.EventHandler(this.OnRequestFinished);
-			this.control.Renewed += new global::PlanetLab.PlObjectEventHandler<global::PlanetLab.Api.PlSlice>(this.OnRenewed);
 			this.control.Closed += new System.EventHandler(this.OnClosed);
 			// 
 			// FormRenewSlice

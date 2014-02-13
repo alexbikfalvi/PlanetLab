@@ -134,7 +134,7 @@ namespace PlanetLab.Controls
 			this.tabControl.Visible = false;
 
 			// Begin a new pcus request for the specified pcu.
-			this.BeginRequest(this.request, Config.Static.PlanetLabUsername, Config.Static.PlanetLabPassword, PlPcu.GetFilter(PlPcu.Fields.PcuId, id));
+			this.BeginRequest(this.request, Config.Static.Username, Config.Static.Password, PlPcu.GetFilter(PlPcu.Fields.PcuId, id));
 		}
 
 		/// <summary>

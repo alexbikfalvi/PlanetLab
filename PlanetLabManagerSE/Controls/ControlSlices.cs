@@ -404,6 +404,9 @@ namespace PlanetLab.Controls
 		/// <param name="slice">The slice.</param>
 		private void OnAddSlice(PlSlice slice)
 		{
+			// Check whether the slice is allowed.
+			if (!this.config.IsSliceAllowed(slice)) return;
+
 			// Create a new tree node.
 			TreeNode node = new TreeNode("Slice ({0})".FormatWith(slice.Name));
 			node.ImageKey = "GlobeObject";
@@ -445,7 +448,7 @@ namespace PlanetLab.Controls
 		private void OnRefresh(object sender, EventArgs e)
 		{
 			// If there is no validated PlanetLab person account, show a message and return.
-			if (-1 == Config.Static.PlanetLabPersonId)
+			if (-1 == Config.Static.PersonId)
 			{
 				MessageBox.Show(this, "You must set and validate a PlanetLab account in the settings page before configuring the PlanetLab slices.", "PlanetLab Account Not Configured", MessageBoxButtons.OK, MessageBoxIcon.Error);
 				return;
@@ -518,7 +521,7 @@ namespace PlanetLab.Controls
 							XmlRpcArray array = member.Value.Value as XmlRpcArray;
 							if (null == array) return false;
 
-							return array.Contains(Config.Static.PlanetLabPersonId);
+							return array.Contains(Config.Static.PersonId);
 						}));
 
 					// Return.
@@ -608,8 +611,8 @@ namespace PlanetLab.Controls
 			// Show the add slice dialog.
 			if (this.formAddSlice.ShowDialog(this, this.config) == DialogResult.OK)
 			{
-				// Add the slice to the slices list.
-				this.config.LocalSlices.Add(this.formAddSlice.Result);
+				// Show an error dialog.
+				MessageBox.Show("Cannot add the slice. This option is not available in PlanetLab Manager Student Edition.", "Option Not Available", MessageBoxButtons.OK, MessageBoxIcon.Error);
 			}
 		}
 
@@ -622,20 +625,8 @@ namespace PlanetLab.Controls
 		{
 			// If there are no selected slices, do nothing.
 			if (this.listViewSlices.SelectedItems.Count == 0) return;
-			// Get the selected item.
-			ListViewItem item = this.listViewSlices.SelectedItems[0];
-			// Get the slice info.
-			SliceInfo info = (SliceInfo)item.Tag;
-			// Else, ask user confirmation.
-			if (MessageBox.Show(
-				this,
-				"You are removing the slice \'{0}\' from your slices list. Do you want to continue?".FormatWith(info.Slice.Name),
-				"Confirm Removing the Slice",
-				MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button2) == DialogResult.Yes)
-			{
-				// Remove the slice.
-				this.config.LocalSlices.Remove(info.Slice);
-			}
+			// Show an error dialog.
+			MessageBox.Show("Cannot remove the slice. This option is not available in PlanetLab Manager Student Edition.", "Option Not Available", MessageBoxButtons.OK, MessageBoxIcon.Error);
 		}
 
 		/// <summary>
@@ -646,7 +637,7 @@ namespace PlanetLab.Controls
 		private void OnAddToNodesLocation(object sender, EventArgs e)
 		{
 			// If there is no validated PlanetLab person account, show a message and return.
-			if (-1 == Config.Static.PlanetLabPersonId)
+			if (-1 == Config.Static.PersonId)
 			{
 				MessageBox.Show(this, "You must set and validate a PlanetLab account in the settings page before configuring the PlanetLab slices.", "PlanetLab Account Not Configured", MessageBoxButtons.OK, MessageBoxIcon.Error);
 				return;
@@ -661,8 +652,8 @@ namespace PlanetLab.Controls
 			// Show the add slice to nodes by location dialog.
 			if (this.formAddSliceToNodesLocation.ShowDialog(this, this.config) == DialogResult.OK)
 			{
-				// Add the slice to nodes.
-				this.OnAddSliceToNodes(info.Slice, this.formAddSliceToNodesLocation.Result);
+				// Show an error dialog.
+				MessageBox.Show("Cannot add the slice to the selected nodes. This option is not available in PlanetLab Manager Student Edition.", "Option Not Available", MessageBoxButtons.OK, MessageBoxIcon.Error);
 			}
 		}
 
@@ -674,7 +665,7 @@ namespace PlanetLab.Controls
 		private void OnAddToNodesState(object sender, EventArgs e)
 		{
 			// If there is no validated PlanetLab person account, show a message and return.
-			if (-1 == Config.Static.PlanetLabPersonId)
+			if (-1 == Config.Static.PersonId)
 			{
 				MessageBox.Show(this, "You must set and validate a PlanetLab account in the settings page before configuring the PlanetLab slices.", "PlanetLab Account Not Configured", MessageBoxButtons.OK, MessageBoxIcon.Error);
 				return;
@@ -689,8 +680,8 @@ namespace PlanetLab.Controls
 			// Show the add slice to nodes by state dialog.
 			if (this.formAddSliceToNodesState.ShowDialog(this, this.config) == DialogResult.OK)
 			{
-				// Add the slice to nodes.
-				this.OnAddSliceToNodes(info.Slice, this.formAddSliceToNodesState.Result);
+				// Show an error dialog.
+				MessageBox.Show("Cannot add the slice to the selected nodes. This option is not available in PlanetLab Manager Student Edition.", "Option Not Available", MessageBoxButtons.OK, MessageBoxIcon.Error);
 			}
 		}
 
@@ -702,7 +693,7 @@ namespace PlanetLab.Controls
 		private void OnAddToNodesSlice(object sender, EventArgs e)
 		{
 			// If there is no validated PlanetLab person account, show a message and return.
-			if (-1 == Config.Static.PlanetLabPersonId)
+			if (-1 == Config.Static.PersonId)
 			{
 				MessageBox.Show(this, "You must set and validate a PlanetLab account in the settings page before configuring the PlanetLab slices.", "PlanetLab Account Not Configured", MessageBoxButtons.OK, MessageBoxIcon.Error);
 				return;
@@ -717,172 +708,8 @@ namespace PlanetLab.Controls
 			// Show the add slice to nodes by state dialog.
 			if (this.formAddSliceToNodesSlice.ShowDialog(this, this.config) == DialogResult.OK)
 			{
-				// Add the slice to nodes.
-				this.OnAddSliceToNodes(info.Slice, this.formAddSliceToNodesSlice.Result);
-			}
-		}
-
-		/// <summary>
-		/// An event handler called when adding a slice to PlanetLab nodes.
-		/// </summary>
-		/// <param name="slice">The slice.</param>
-		/// <param name="ids">The list of node IDs.</param>
-		private void OnAddSliceToNodes(PlSlice slice, int[] ids)
-		{
-			// If the slice does not have an ID, show an error message and return.
-			if (!slice.Id.HasValue)
-			{
-				MessageBox.Show(this, "The selected slice does not have an identifier.", "Add Slice to Nodes", MessageBoxButtons.OK, MessageBoxIcon.Error);
-				return;
-			}
-
-			// Update the status.
-			this.status.Send(
-				ApplicationStatus.StatusType.Busy,
-				"Showing {0} PlanetLab slices.".FormatWith(this.config.LocalSlices.Count),
-				"Adding slice {0} to {1} PlanetLab node{2}...".FormatWith(slice.Id, ids.Length, ids.Length.PluralSuffix()),
-				Resources.GlobeLab_16,
-				Resources.GlobeClock_16);
-
-			// Create the request state.
-			SliceIdsRequestState requestState = new SliceIdsRequestState(
-				this.OnAddSliceToNodesRequestStarted,
-				this.OnAddSliceToNodesRequestResult,
-				this.OnAddSliceToNodesRequestCanceled,
-				this.OnAddSliceToNodesRequestException,
-				this.OnAddSliceToNodesRequestFinished,
-				slice,
-				ids);
-
-			// Begin an asynchronous PlanetLab request.
-			this.BeginRequest(
-				this.requestAddSliceToNodes,
-				this.config.Username,
-				this.config.Password,
-				new object[] { slice.Id.Value, ids },
-				requestState);
-		}
-
-		/// <summary>
-		/// A method called when the add slice to nodes request started.
-		/// </summary>
-		/// <param name="state">The request state.</param>
-		private void OnAddSliceToNodesRequestStarted(RequestState state)
-		{
-			// Disable the slices list.
-			this.listViewSlices.Enabled = false;
-		}
-
-		/// <summary>
-		/// A method called when receiving the response to an add slice to nodes request.
-		/// </summary>
-		/// <param name="response">The response.</param>
-		/// <param name="state">The request state.</param>
-		private void OnAddSliceToNodesRequestResult(XmlRpcResponse response, RequestState state)
-		{
-			// Convert the request state.
-			SliceIdsRequestState requestState = state as SliceIdsRequestState;
-			// If the request has not failed.
-			if ((null == response.Fault) && (null != response.Value))
-			{
-				// Get the response value.
-				int? code = response.Value.AsInt;
-				if (code.HasValue ? 1 == code.Value : false)
-				{
-					// Update the status.
-					this.status.Send(
-						ApplicationStatus.StatusType.Normal,
-						"Showing {0} PlanetLab slices.".FormatWith(this.config.LocalSlices.Count),
-						"Adding slice {0} to {1} PlanetLab node{2} succeeded.".FormatWith(requestState.Slice.Id, requestState.Ids.Length, requestState.Ids.Length.PluralSuffix()),
-						Resources.GlobeLab_16,
-						Resources.GlobeSuccess_16);
-
-					// Set the request as successful.
-					requestState.Success = true;
-				}
-				else
-				{
-					// Show a dialog.
-					MessageBox.Show(this,
-						"Cannot add the slice {0} to {1} PlanetLab node{2}. The PlanetLab server responded, however the operation was not successful.".FormatWith(requestState.Slice.Id, requestState.Ids.Length, requestState.Ids.Length.PluralSuffix()),
-						"Add Slice to Node",
-						MessageBoxButtons.OK,
-						MessageBoxIcon.Warning);
-					// Update the status.
-					this.status.Send(
-						ApplicationStatus.StatusType.Normal,
-						"Showing {0} PlanetLab slices.".FormatWith(this.config.LocalSlices.Count),
-						"Adding slice {0} to {1} PlanetLab node{2} failed.".FormatWith(requestState.Slice.Id, requestState.Ids.Length, requestState.Ids.Length.PluralSuffix()),
-						Resources.GlobeLab_16,
-						Resources.GlobeWarning_16);
-				}
-			}
-			else
-			{
-				// Update the status.
-				this.status.Send(
-					ApplicationStatus.StatusType.Normal,
-					"Showing {0} PlanetLab slices.".FormatWith(this.config.LocalSlices.Count),
-					"Adding slice {0} to {1} PlanetLab node{2} failed.".FormatWith(requestState.Slice.Id, requestState.Ids.Length, requestState.Ids.Length.PluralSuffix()),
-					Resources.GlobeLab_16,
-					Resources.GlobeError_16);
-			}
-		}
-
-		/// <summary>
-		/// A method called when the add slice to nodes request has been canceled.
-		/// </summary>
-		/// <param name="state">The request state.</param>
-		private void OnAddSliceToNodesRequestCanceled(RequestState state)
-		{
-			// Convert the request state.
-			SliceIdsRequestState requestState = state as SliceIdsRequestState;
-			// Update the status.
-			this.status.Send(
-				ApplicationStatus.StatusType.Normal,
-				"Showing {0} PlanetLab slices.".FormatWith(this.config.LocalSlices.Count),
-				"Adding the slice {0} to {1} PlanetLab node{2} was canceled.".FormatWith(requestState.Slice.Id, requestState.Ids.Length, requestState.Ids.Length.PluralSuffix()),
-				Resources.GlobeLab_16,
-				Resources.GlobeCanceled_16);
-		}
-
-		/// <summary>
-		/// A method called when the get slices request returned an exception.
-		/// </summary>
-		/// <param name="exception">The exception.</param>
-		/// <param name="state">The request state.</param>
-		private void OnAddSliceToNodesRequestException(Exception exception, RequestState state)
-		{
-			// Convert the request state.
-			SliceIdsRequestState requestState = state as SliceIdsRequestState;
-			// Update the status.
-			this.status.Send(
-				ApplicationStatus.StatusType.Normal,
-				"Showing {0} PlanetLab slices.".FormatWith(this.config.LocalSlices.Count),
-				"Adding the slice {0} to {1} PlanetLab node{2} failed.".FormatWith(requestState.Slice.Id, requestState.Ids.Length, requestState.Ids.Length.PluralSuffix()),
-				Resources.GlobeLab_16,
-				Resources.GlobeError_16);
-		}
-
-		/// <summary>
-		/// A method called when the add slice to nodes request has finished.
-		/// </summary>
-		/// <param name="state">The request state.</param>
-		private void OnAddSliceToNodesRequestFinished(RequestState state)
-		{
-			// Enable the slices list.
-			this.listViewSlices.Enabled = true;
-			// Refresh the list selection.
-			this.OnSelectionChanged(this, EventArgs.Empty);
-
-			// If the request is successful.
-			if (state.Success)
-			{
-				// Get the request state.
-				SliceIdsRequestState requestState = state as SliceIdsRequestState;
-
-				// Refresh the slice information.
-				this.OnRefreshSlice(requestState.Slice);
+				// Show an error dialog.
+				MessageBox.Show("Cannot add the slice to the selected nodes. This option is not available in PlanetLab Manager Student Edition.", "Option Not Available", MessageBoxButtons.OK, MessageBoxIcon.Error);
 			}
 		}
 
@@ -967,7 +794,7 @@ namespace PlanetLab.Controls
 		private void OnRemoveFromNodes(object sender, EventArgs e)
 		{
 			// If there is no validated PlanetLab person account, show a message and return.
-			if (-1 == Config.Static.PlanetLabPersonId)
+			if (-1 == Config.Static.PersonId)
 			{
 				MessageBox.Show(this, "You must set and validate a PlanetLab account in the settings page before configuring the PlanetLab slices.", "PlanetLab Account Not Configured", MessageBoxButtons.OK, MessageBoxIcon.Error);
 				return;
@@ -989,157 +816,8 @@ namespace PlanetLab.Controls
 			// Show the remove slice from node dialog.
 			if (this.formRemoveSliceFromNodes.ShowDialog(this, info.Slice) == DialogResult.OK)
 			{
-				// Get the PlanetLab node IDs.
-				int[] ids = this.formRemoveSliceFromNodes.Result;
-
-				// Update the status.
-				this.status.Send(
-					ApplicationStatus.StatusType.Busy,
-					"Showing {0} PlanetLab slices.".FormatWith(this.config.LocalSlices.Count),
-					"Removing slice {0} from {1} PlanetLab node{2}...".FormatWith(info.Slice.Id, ids.Length, ids.Length.PluralSuffix()),
-					Resources.GlobeLab_16,
-					Resources.GlobeClock_16);
-
-				// Create the request state.
-				SliceIdsRequestState requestState = new SliceIdsRequestState(
-					this.OnRemoveSliceFromNodesRequestStarted,
-					this.OnRemoveSliceFromNodesRequestResult,
-					this.OnRemoveSliceFromNodesRequestCanceled,
-					this.OnRemoveSliceFromNodesRequestException,
-					this.OnRemoveSliceFromNodesRequestFinished,
-					info.Slice,
-					ids);
-
-				// Begin an asynchronous PlanetLab request.
-				this.BeginRequest(
-					this.requestRemoveSliceFromNodes,
-					this.config.Username,
-					this.config.Password,
-					new object[] { info.Slice.Id.Value, ids },
-					requestState);
-			}
-		}
-
-		/// <summary>
-		/// A method called when the add slice to nodes request started.
-		/// </summary>
-		/// <param name="state">The request state.</param>
-		private void OnRemoveSliceFromNodesRequestStarted(RequestState state)
-		{
-			// Disable the slices list.
-			this.listViewSlices.Enabled = false;
-		}
-
-		/// <summary>
-		/// A method called when receiving the response to a remove slice to nodes request.
-		/// </summary>
-		/// <param name="response">The response.</param>
-		/// <param name="state">The request state.</param>
-		private void OnRemoveSliceFromNodesRequestResult(XmlRpcResponse response, RequestState state)
-		{
-			// Convert the request state.
-			SliceIdsRequestState requestState = state as SliceIdsRequestState;
-			// If the request has not failed.
-			if ((null == response.Fault) && (null != response.Value))
-			{
-				// Get the response value.
-				int? code = response.Value.AsInt;
-				if (code.HasValue ? 1 == code.Value : false)
-				{
-					// Update the status.
-					this.status.Send(
-						ApplicationStatus.StatusType.Normal,
-						"Showing {0} PlanetLab slices.".FormatWith(this.config.LocalSlices.Count),
-						"Removing slice {0} from {1} PlanetLab node{2} succeeded.".FormatWith(requestState.Slice.Id, requestState.Ids.Length, requestState.Ids.Length.PluralSuffix()),
-						Resources.GlobeLab_16,
-						Resources.GlobeSuccess_16);
-
-					// Set the request as successful.
-					requestState.Success = true;
-				}
-				else
-				{
-					// Show a dialog.
-					MessageBox.Show(this,
-						"Cannot remove the slice {0} from {1} PlanetLab node{2}. The PlanetLab server responded, however the operation was not successful.".FormatWith(requestState.Slice.Id, requestState.Ids.Length, requestState.Ids.Length.PluralSuffix()),
-						"Remove Slice from Node",
-						MessageBoxButtons.OK,
-						MessageBoxIcon.Warning);
-					// Update the status.
-					this.status.Send(
-						ApplicationStatus.StatusType.Normal,
-						"Showing {0} PlanetLab slices.".FormatWith(this.config.LocalSlices.Count),
-						"Removing slice {0} from {1} PlanetLab node{2} failed.".FormatWith(requestState.Slice.Id, requestState.Ids.Length, requestState.Ids.Length.PluralSuffix()),
-						Resources.GlobeLab_16,
-						Resources.GlobeWarning_16);
-				}
-			}
-			else
-			{
-				// Update the status.
-				this.status.Send(
-					ApplicationStatus.StatusType.Normal,
-					"Showing {0} PlanetLab slices.".FormatWith(this.config.LocalSlices.Count),
-					"Removing slice {0} from {1} PlanetLab node{2} failed.".FormatWith(requestState.Slice.Id, requestState.Ids.Length, requestState.Ids.Length.PluralSuffix()),
-					Resources.GlobeLab_16,
-					Resources.GlobeError_16);
-			}
-		}
-
-		/// <summary>
-		/// A method called when the add slice to nodes request has been canceled.
-		/// </summary>
-		/// <param name="state">The request state.</param>
-		private void OnRemoveSliceFromNodesRequestCanceled(RequestState state)
-		{
-			// Convert the request state.
-			SliceIdsRequestState requestState = state as SliceIdsRequestState;
-			// Update the status.
-			this.status.Send(
-				ApplicationStatus.StatusType.Normal,
-				"Showing {0} PlanetLab slices.".FormatWith(this.config.LocalSlices.Count),
-				"Removing the slice {0} from {1} PlanetLab node{2} was canceled.".FormatWith(requestState.Slice.Id, requestState.Ids.Length, requestState.Ids.Length.PluralSuffix()),
-				Resources.GlobeLab_16,
-				Resources.GlobeCanceled_16);
-		}
-
-		/// <summary>
-		/// A method called when the get slices request returned an exception.
-		/// </summary>
-		/// <param name="exception">The exception.</param>
-		/// <param name="state">The request state.</param>
-		private void OnRemoveSliceFromNodesRequestException(Exception exception, RequestState state)
-		{
-			// Convert the request state.
-			SliceIdsRequestState requestState = state as SliceIdsRequestState;
-			// Update the status.
-			this.status.Send(
-				ApplicationStatus.StatusType.Normal,
-				"Showing {0} PlanetLab slices.".FormatWith(this.config.LocalSlices.Count),
-				"Removing the slice {0} from {1} PlanetLab node{2} failed.".FormatWith(requestState.Slice.Id, requestState.Ids.Length, requestState.Ids.Length.PluralSuffix()),
-				Resources.GlobeLab_16,
-				Resources.GlobeError_16);
-		}
-
-		/// <summary>
-		/// A method called when the add slice to nodes request has finished.
-		/// </summary>
-		/// <param name="state">The request state.</param>
-		private void OnRemoveSliceFromNodesRequestFinished(RequestState state)
-		{
-			// Enable the slices list.
-			this.listViewSlices.Enabled = true;
-			// Refresh the list selection.
-			this.OnSelectionChanged(this, EventArgs.Empty);
-
-			// If the request is successful.
-			if (state.Success)
-			{
-				// Get the request state.
-				SliceRequestState requestState = state as SliceRequestState;
-
-				// Refresh the slice information.
-				this.OnRefreshSlice(requestState.Slice);
+				// Show an error dialog.
+				MessageBox.Show("Cannot remove the slice from the selected nodes. This option is not available in PlanetLab Manager Student Edition.", "Option Not Available", MessageBoxButtons.OK, MessageBoxIcon.Error);
 			}
 		}
 

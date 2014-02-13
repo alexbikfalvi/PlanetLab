@@ -47,17 +47,16 @@ namespace PlanetLab
 			public int ConsoleSideMenuVisibleItems { get; internal set; }
 			public int ConsoleSideMenuSelectedItem { get; internal set; }
 			public int[] ConsoleSideMenuSelectedNode { get; internal set; }
-			public string PlanetLabUsername { get; internal set; }
-			public SecureString PlanetLabPassword { get; internal set; }
-			public int PlanetLabPersonId { get; internal set; }
+			public string Username { get; internal set; }
+			public SecureString Password { get; internal set; }
+			public int PersonId { get; internal set; }
 		}
 
-		private static readonly byte[] cryptoKey = { 0x7E, 0x31, 0xC9, 0xD9, 0x0F, 0x01, 0x28, 0x11, 0xD4, 0xB3, 0xC4, 0x12, 0x44, 0x0D, 0x4B, 0x8C, 0xEE, 0xDB, 0xF1, 0x4D, 0xCF, 0x01, 0xF8, 0x00, 0xE4, 0x3E, 0x33, 0xF5, 0x02, 0x48, 0xD4, 0x8D };
-		private static readonly byte[] cryptoIV = { 0x62, 0x36, 0x61, 0x5B, 0xA0, 0xA4, 0xF0, 0x4E, 0xFE, 0x81, 0x2C, 0xA4, 0xD3, 0x16, 0x26, 0xEE };
+		internal static readonly byte[] cryptoKey = { 0x7E, 0x31, 0xC9, 0xD9, 0x0F, 0x01, 0x28, 0x11, 0xD4, 0xB3, 0xC4, 0x12, 0x44, 0x0D, 0x4B, 0x8C, 0xEE, 0xDB, 0xF1, 0x4D, 0xCF, 0x01, 0xF8, 0x00, 0xE4, 0x3E, 0x33, 0xF5, 0x02, 0x48, 0xD4, 0x8D };
+		internal static readonly byte[] cryptoIV = { 0x62, 0x36, 0x61, 0x5B, 0xA0, 0xA4, 0xF0, 0x4E, 0xFE, 0x81, 0x2C, 0xA4, 0xD3, 0x16, 0x26, 0xEE };
 
 		private readonly RegistryKey key;
 		private readonly string root;
-		private readonly Uri url;
 
 		private bool loaded = false;
 
@@ -68,10 +67,11 @@ namespace PlanetLab
 
 		private readonly AsyncWebRequest request = new AsyncWebRequest();
 
-		private string planetLabUsername;
-		private SecureString planetLabPassword;
-		private int planetLabPersonId;
-		private readonly Dictionary<int, byte[]> planetLabKeys = new Dictionary<int, byte[]>();
+		private string username;
+		private SecureString password;
+		private int personId;
+		private readonly Dictionary<int, byte[]> slices = new Dictionary<int, byte[]>();
+		private readonly HashSet<string> commands = new HashSet<string>();
 
 		private readonly PlDatabaseList<PlSite> listSites;
 		private readonly PlDatabaseList<PlNode> listNodes;
@@ -100,8 +100,7 @@ namespace PlanetLab
 		/// </summary>
 		/// <param name="rootKey">The root registry key.</param>
 		/// <param name="rootPath">The registry key path.</param>
-		/// <param name="url">The URL from where to download the configuration.</param>
-		public Config(RegistryKey rootKey, string rootPath, string url)
+		public Config(RegistryKey rootKey, string rootPath)
 		{
 			// Open the PlanetLab configuration key.
 			if (null == (this.key = rootKey.OpenSubKey(rootPath, RegistryKeyPermissionCheck.ReadWriteSubTree)))
@@ -111,9 +110,6 @@ namespace PlanetLab
 
 			// Set the root path.
 			this.root = @"{0}\{1}".FormatWith(rootKey.Name, rootPath);
-
-			// Set the URL.
-			this.url = new Uri(url);
 
 			// Create the status.
 			this.status = new ApplicationStatus();
@@ -127,6 +123,12 @@ namespace PlanetLab
 			this.listSlices = new PlDatabaseList<PlSlice>(this.dbSlices);
 			this.listLocalPersons = new PlDatabaseList<PlPerson>(this.dbPersons);
 			this.listLocalSlices = new PlDatabaseList<PlSlice>(this.dbSlices);
+
+			// Initialize the static configuration.
+			Config.Static.ConsoleMessageCloseDelay = this.ConsoleMessageCloseDelay;
+			Config.Static.ConsoleSideMenuVisibleItems = this.ConsoleSideMenuVisibleItems;
+			Config.Static.ConsoleSideMenuSelectedItem = this.ConsoleSideMenuSelectedItem;
+			Config.Static.ConsoleSideMenuSelectedNode = this.ConsoleSideMenuSelectedNode;
 		}
 
 		// Static properties.
@@ -216,6 +218,50 @@ namespace PlanetLab
 			}
 		}
 		/// <summary>
+		/// Gets the PlanetLab username.
+		/// </summary>
+		public string Username
+		{
+			get { return this.username; }
+			private set
+			{
+				this.username = value;
+				Config.Static.Username = value;
+			}
+		}
+		/// <summary>
+		/// Gets the PlanetLab password.
+		/// </summary>
+		public SecureString Password
+		{
+			get { return this.password; }
+			private set
+			{
+				this.password = value;
+				Config.Static.Password = value;
+			}
+		}
+		/// <summary>
+		/// Gets the PlanetLab person identifier.
+		/// </summary>
+		public int PersonId
+		{
+			get { return this.personId; }
+			private set
+			{
+				this.personId = value;
+				Config.Static.PersonId = value;
+			}
+		}
+		/// <summary>
+		/// Gets the date when the configuration expires.
+		/// </summary>
+		public DateTime Expires { get; private set; }
+		/// <summary>
+		/// Gets the set of allowed commands.
+		/// </summary>
+		public ISet<string> Commands { get { return this.commands; } }
+		/// <summary>
 		/// Gets the sites database.
 		/// </summary>
 		public PlDatabase<PlSite> DbSites { get { return this.dbSites; } }
@@ -268,39 +314,41 @@ namespace PlanetLab
 		/// <summary>
 		/// Loads the current configuration.
 		/// </summary>
+		/// <param name="url">The URL.</param>
 		/// <param name="callback">A callback method.</param>
-		public void Load(Action callback)
+		public void Load(Uri url, Action<bool, Exception> callback)
 		{
 			// Load the configuration.
-			this.request.Begin(this.url, (AsyncWebResult asyncResult) =>
-			{
-				try
+			this.request.Begin(url, (AsyncWebResult asyncResult) =>
 				{
-					// Complete the request.
-					AsyncWebResult result = this.request.End(asyncResult);
-					// Decrypt the received data.
-					byte[] data = result.Buffer.DecryptAes(Config.cryptoKey, Config.cryptoIV);
-					// Create a memory stream from the decrypted data.
-					using (MemoryStream stream = new MemoryStream(data))
+					try
 					{
-						// Load the XML document
-						XDocument document = XDocument.Load(stream);
+						string xml;
+						// Complete the request.
+						this.request.End(asyncResult, out xml);
+
+						// Parse the encrypted XML file.
+						this.ParseEncryptedConfig(xml);
+
+						// Call the user callback method.
+						if (null != callback) callback(true, null);
 					}
-				}
-				catch { }
+					catch (Exception exception)
+					{
+						// Call the user callback method.
+						if (null != callback) callback(false, exception);
+					}
+				}, null);
+		}
 
-				// Initialize the static configuration.
-				//Config.Static.PlanetLabUsername = this.Username;
-				//Config.Static.PlanetLabPassword = this.Password;
-				//Config.Static.PlanetLabPersonId = this.PersonId;
-				Config.Static.ConsoleMessageCloseDelay = this.ConsoleMessageCloseDelay;
-				Config.Static.ConsoleSideMenuVisibleItems = this.ConsoleSideMenuVisibleItems;
-				Config.Static.ConsoleSideMenuSelectedItem = this.ConsoleSideMenuSelectedItem;
-				Config.Static.ConsoleSideMenuSelectedNode = this.ConsoleSideMenuSelectedNode;
-
-				// Call the user callback method.
-				if (null != callback) callback();
-			}, null);
+		/// <summary>
+		/// Returns whether the specified slice is allowed.
+		/// </summary>
+		/// <param name="slice">The slice.</param>
+		/// <returns><b>True</b> if the slice is allowed, <b>false</b> otherwise.</returns>
+		public bool IsSliceAllowed(PlSlice slice)
+		{
+			return this.slices.ContainsKey(slice.Id.Value);
 		}
 
 		/// <summary>
@@ -320,13 +368,23 @@ namespace PlanetLab
 			// Try and get the configuration.
 			if (!this.configSlices.TryGetValue(slice.Id.Value, out configSlice))
 			{
-				// If the configuration does not exist, throw an exception.
-				throw new ConfigException("The specified slice does not have a configuration.");
+				// If the configuration does not exist, check whether the user is allowed to create the configuration.
+				if (this.slices.ContainsKey(slice.Id.Value))
+				{
+					// Create the configuration.
+					configSlice = new ConfigSlice(slice, this.slices[slice.Id.Value]);
+					// Add the configuration.
+					this.configSlices.Add(slice.Id.Value, configSlice);
+				}
+				else
+				{
+					// Throw an exception.
+					throw new ConfigException("You do not have permissions to add the slice {0}.".FormatWith(slice.Id.Value));
+				}
 			}
 
 			return configSlice;
 		}
-
 
 		// Private methods.
 
@@ -351,6 +409,76 @@ namespace PlanetLab
 				// Close the registry key.
 				this.key.Close();
 			}
+		}
+
+		/// <summary>
+		/// Parses the specified encrypted configuration.
+		/// </summary>
+		/// <param name="xml">The XML file.</param>
+		private void ParseEncryptedConfig(string xml)
+		{
+			// Parse the XML document.
+			XDocument document = XDocument.Parse(xml);
+
+			// Validate the XML element.
+			if (document.Root.Name != "EncryptedPlanetLabConfig") throw new ConfigException("The downloaded encrypted PlanetLab configuration configuration does not have a valid format.");
+
+			try
+			{
+				// Decode and decrypt the root element.
+				byte[] data = Convert.FromBase64String(document.Root.Value).DecryptAes(Config.cryptoKey, Config.cryptoIV);
+				// Create a memory stream for the decrypted data.
+				using (MemoryStream stream = new MemoryStream(data))
+				{
+					// Parse the configuration.
+					this.ParseConfig(stream);
+				}
+			}
+			catch
+			{
+				throw new ConfigException("The downloaded PlanetLab configuration configuration does not have a valid format.");
+			}
+		}
+
+		/// <summary>
+		/// Parses the specified stream configuration.
+		/// </summary>
+		/// <param name="stream">The stream.</param>
+		private void ParseConfig(Stream stream)
+		{
+			// Parse the XML document.
+			XDocument document = XDocument.Load(stream);
+
+			// Validate the XML element.
+			if (document.Root.Name != "PlanetLabManager") throw new ConfigException("The downloaded PlanetLab configuration configuration does not have a valid format.");
+
+			// Get the Expires field.
+			this.Expires = DateTime.Parse(document.Root.Element("Expires").Value);
+
+			// If the configuration has expired, do nothing.
+			if (this.Expires < DateTime.Now) return;
+
+			// Get the PlanetLab configuration.
+			this.Username = document.Root.Element("UserName").Value;
+			this.Password = Convert.FromBase64String(document.Root.Element("Password").Value).DecryptSecureStringAes(Config.cryptoKey, Config.cryptoIV);
+			this.PersonId = int.Parse(document.Root.Element("PersonId").Value);
+
+			// Add the allowed slices.
+			this.slices.Clear();
+			foreach (XElement slice in document.Root.Element("Slices").Elements("Slice"))
+			{
+				this.slices.Add(int.Parse(slice.Attribute("Id").Value), Convert.FromBase64String(slice.Element("Key").Value));
+			}
+
+			// Add the allowed commands.
+			this.commands.Clear();
+			foreach (XElement command in document.Root.Element("Commands").Elements("Command"))
+			{
+				this.commands.Add(command.Value.ToLowerInvariant());
+			}
+
+			// Set the configuration as loaded if did not expire.
+			this.loaded = true;
 		}
 	}
 }

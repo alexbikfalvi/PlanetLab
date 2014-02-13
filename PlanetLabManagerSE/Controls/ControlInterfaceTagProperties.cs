@@ -109,7 +109,7 @@ namespace PlanetLab.Controls
 			this.tabControl.Visible = false;
 
 			// Begin a new tags request for the specified tag.
-			this.BeginRequest(this.request, Config.Static.PlanetLabUsername, Config.Static.PlanetLabPassword, PlInterfaceTag.GetFilter(PlInterfaceTag.Fields.InterfaceTagId, id));
+			this.BeginRequest(this.request, Config.Static.Username, Config.Static.Password, PlInterfaceTag.GetFilter(PlInterfaceTag.Fields.InterfaceTagId, id));
 		}
 
 		/// <summary>

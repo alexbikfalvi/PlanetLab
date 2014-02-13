@@ -63,7 +63,7 @@
 			this.label1.Name = "label1";
 			this.label1.Size = new System.Drawing.Size(253, 59);
 			this.label1.TabIndex = 2;
-			this.label1.Text = "Alex Bikfalvi\r\n\r\n2014";
+			this.label1.Text = "Alex Bikfalvi • Simon Oechsner\r\n\r\n2014";
 			this.label1.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
 			// 
 			// FormAbout

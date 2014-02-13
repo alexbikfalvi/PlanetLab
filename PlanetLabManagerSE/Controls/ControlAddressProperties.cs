@@ -121,7 +121,7 @@ namespace PlanetLab.Controls
 			this.tabControl.Visible = false;
 
 			// Begin a new addresses request for the specified address.
-			this.BeginRequest(this.request, Config.Static.PlanetLabUsername, Config.Static.PlanetLabPassword, PlAddress.GetFilter(PlAddress.Fields.AddressId, id));
+			this.BeginRequest(this.request, Config.Static.Username, Config.Static.Password, PlAddress.GetFilter(PlAddress.Fields.AddressId, id));
 		}
 
 		/// <summary>

@@ -47,6 +47,8 @@ namespace PlanetLab.Controls
 
 		private ApplicationStatusHandler status = null;
 
+		private static readonly char[] commandTokenSeparators = { ' ', '\t', '\n', '\r', '|', '>', ';' };
+
 		// Public declarations
 
 		/// <summary>
@@ -416,8 +418,41 @@ namespace PlanetLab.Controls
 			string text = this.console.Command;
 			try
 			{
-				// Begin the command.
-				this.BeginCommand(text);
+				// Get the commands tokens.
+				string[] tokens = text.Split(ControlSession.commandTokenSeparators, StringSplitOptions.RemoveEmptyEntries);
+
+				// If the command does not have a token.
+				if (tokens.Length > 0)
+				{
+					// Validate the command.
+					if (this.config.Commands.Contains(tokens[0]))
+					{
+						// Begin the command.
+						this.BeginCommand(text);
+					}
+					else
+					{
+						// Call the command begin event handler.
+						this.console.BeginCommand(text);
+						// Show an error message.
+						this.console.AppendText("FAIL", Color.Red);
+						this.console.AppendText(" You are not allowed to execute this command.");
+						this.console.AppendText(Environment.NewLine);
+						// Call the command complete event handler.
+						this.console.EndCommand();
+					}
+				}
+				else
+				{
+					// Call the command begin event handler.
+					this.console.BeginCommand(text);
+					// Show an error message.
+					this.console.AppendText("FAIL", Color.Red);
+					this.console.AppendText(" The commands is missing.");
+					this.console.AppendText(Environment.NewLine);
+					// Call the command complete event handler.
+					this.console.EndCommand();
+				}
 			}
 			catch (Exception exception)
 			{

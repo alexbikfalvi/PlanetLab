@@ -137,7 +137,7 @@ namespace PlanetLab.Controls
 			this.tabControl.Visible = false;
 
 			// Begin a new nodes request for the specified slice.
-			this.BeginRequest(this.request, Config.Static.PlanetLabUsername, Config.Static.PlanetLabPassword, PlSlice.GetFilter(PlSlice.Fields.SliceId, id));
+			this.BeginRequest(this.request, Config.Static.Username, Config.Static.Password, PlSlice.GetFilter(PlSlice.Fields.SliceId, id));
 		}
 
 		/// <summary>

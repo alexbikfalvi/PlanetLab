@@ -145,19 +145,6 @@ namespace PlanetLab.Forms
 		}
 
 		/// <summary>
-		/// An event handler called when the user renewes a PlanetLab slice.
-		/// </summary>
-		/// <param name="sender">The sender object.</param>
-		/// <param name="e">The event arguments.</param>
-		private void OnRenewed(object sender, PlObjectEventArgs<PlSlice> e)
-		{
-			// Set the result.
-			this.Result = e.Object;
-			// Set the dialog result.
-			this.DialogResult = DialogResult.OK;
-		}
-
-		/// <summary>
 		/// An event handler called when the user closes the dialog.
 		/// </summary>
 		/// <param name="sender">The sender object.</param>

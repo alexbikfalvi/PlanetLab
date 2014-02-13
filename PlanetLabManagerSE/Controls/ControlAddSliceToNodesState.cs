@@ -211,7 +211,7 @@ namespace PlanetLab.Controls
 			// Clear the slices list.
 			this.listView.Items.Clear();
 			// Begin the PlanetLab request.
-			this.BeginRequest(this.request, Config.Static.PlanetLabUsername, Config.Static.PlanetLabPassword);
+			this.BeginRequest(this.request, Config.Static.Username, Config.Static.Password);
 		}
 
 		/// <summary>

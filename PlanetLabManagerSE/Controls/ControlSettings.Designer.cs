@@ -37,13 +37,10 @@
 		private void InitializeComponent()
 		{
 			this.components = new System.ComponentModel.Container();
-			System.Security.SecureString secureString1 = new System.Security.SecureString();
 			System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ControlSettings));
 			this.textBoxUsername = new System.Windows.Forms.TextBox();
 			this.labelUsername = new System.Windows.Forms.Label();
-			this.labelPassword = new System.Windows.Forms.Label();
-			this.buttonSave = new System.Windows.Forms.Button();
-			this.textBoxPassword = new DotNetApi.Windows.Controls.SecureTextBox();
+			this.buttonValidate = new System.Windows.Forms.Button();
 			this.imageList = new System.Windows.Forms.ImageList(this.components);
 			this.labelPerson = new System.Windows.Forms.Label();
 			this.buttonProperties = new System.Windows.Forms.Button();
@@ -72,9 +69,9 @@
 			// 
 			this.textBoxUsername.Location = new System.Drawing.Point(91, 5);
 			this.textBoxUsername.Name = "textBoxUsername";
+			this.textBoxUsername.ReadOnly = true;
 			this.textBoxUsername.Size = new System.Drawing.Size(200, 20);
 			this.textBoxUsername.TabIndex = 1;
-			this.textBoxUsername.TextChanged += new System.EventHandler(this.OnChanged);
 			// 
 			// labelUsername
 			// 
@@ -85,34 +82,15 @@
 			this.labelUsername.TabIndex = 0;
 			this.labelUsername.Text = "&Username:";
 			// 
-			// labelPassword
+			// buttonValidate
 			// 
-			this.labelPassword.AutoSize = true;
-			this.labelPassword.Location = new System.Drawing.Point(3, 34);
-			this.labelPassword.Name = "labelPassword";
-			this.labelPassword.Size = new System.Drawing.Size(56, 13);
-			this.labelPassword.TabIndex = 2;
-			this.labelPassword.Text = "&Password:";
-			// 
-			// buttonSave
-			// 
-			this.buttonSave.Location = new System.Drawing.Point(297, 3);
-			this.buttonSave.Name = "buttonSave";
-			this.buttonSave.Size = new System.Drawing.Size(85, 23);
-			this.buttonSave.TabIndex = 4;
-			this.buttonSave.Text = "&Save";
-			this.buttonSave.UseVisualStyleBackColor = true;
-			this.buttonSave.Click += new System.EventHandler(this.OnSave);
-			// 
-			// textBoxPassword
-			// 
-			this.textBoxPassword.Location = new System.Drawing.Point(91, 31);
-			this.textBoxPassword.Name = "textBoxPassword";
-			this.textBoxPassword.SecureText = secureString1;
-			this.textBoxPassword.Size = new System.Drawing.Size(200, 20);
-			this.textBoxPassword.TabIndex = 3;
-			this.textBoxPassword.UseSystemPasswordChar = true;
-			this.textBoxPassword.TextChanged += new System.EventHandler(this.OnChanged);
+			this.buttonValidate.Location = new System.Drawing.Point(297, 3);
+			this.buttonValidate.Name = "buttonValidate";
+			this.buttonValidate.Size = new System.Drawing.Size(85, 23);
+			this.buttonValidate.TabIndex = 4;
+			this.buttonValidate.Text = "&Validate";
+			this.buttonValidate.UseVisualStyleBackColor = true;
+			this.buttonValidate.Click += new System.EventHandler(this.OnValidate);
 			// 
 			// imageList
 			// 
@@ -125,7 +103,7 @@
 			// 
 			this.labelPerson.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-			this.labelPerson.Location = new System.Drawing.Point(60, 57);
+			this.labelPerson.Location = new System.Drawing.Point(60, 29);
 			this.labelPerson.Name = "labelPerson";
 			this.labelPerson.Size = new System.Drawing.Size(437, 48);
 			this.labelPerson.TabIndex = 5;
@@ -164,7 +142,7 @@
 			this.pictureUser.ErrorImage = null;
 			this.pictureUser.Image = global::PlanetLab.Resources.UserQuestion_48;
 			this.pictureUser.InitialImage = null;
-			this.pictureUser.Location = new System.Drawing.Point(6, 57);
+			this.pictureUser.Location = new System.Drawing.Point(6, 29);
 			this.pictureUser.Name = "pictureUser";
 			this.pictureUser.Size = new System.Drawing.Size(48, 48);
 			this.pictureUser.TabIndex = 9;
@@ -188,9 +166,9 @@
 			this.panelPerson.Controls.Add(this.textBoxLastName);
 			this.panelPerson.Controls.Add(this.labelFirstName);
 			this.panelPerson.Controls.Add(this.textBoxFirstName);
-			this.panelPerson.Location = new System.Drawing.Point(0, 108);
+			this.panelPerson.Location = new System.Drawing.Point(0, 83);
 			this.panelPerson.Name = "panelPerson";
-			this.panelPerson.Size = new System.Drawing.Size(497, 189);
+			this.panelPerson.Size = new System.Drawing.Size(497, 214);
 			this.panelPerson.TabIndex = 10;
 			this.panelPerson.Visible = false;
 			// 
@@ -305,18 +283,14 @@
 			this.Controls.Add(this.pictureUser);
 			this.Controls.Add(this.buttonProperties);
 			this.Controls.Add(this.labelPerson);
-			this.Controls.Add(this.textBoxPassword);
-			this.Controls.Add(this.buttonSave);
-			this.Controls.Add(this.labelPassword);
+			this.Controls.Add(this.buttonValidate);
 			this.Controls.Add(this.labelUsername);
 			this.Controls.Add(this.textBoxUsername);
 			this.Name = "ControlSettings";
 			this.Size = new System.Drawing.Size(500, 300);
 			this.Controls.SetChildIndex(this.textBoxUsername, 0);
 			this.Controls.SetChildIndex(this.labelUsername, 0);
-			this.Controls.SetChildIndex(this.labelPassword, 0);
-			this.Controls.SetChildIndex(this.buttonSave, 0);
-			this.Controls.SetChildIndex(this.textBoxPassword, 0);
+			this.Controls.SetChildIndex(this.buttonValidate, 0);
 			this.Controls.SetChildIndex(this.labelPerson, 0);
 			this.Controls.SetChildIndex(this.buttonProperties, 0);
 			this.Controls.SetChildIndex(this.pictureUser, 0);
@@ -334,9 +308,7 @@
 
 		private System.Windows.Forms.TextBox textBoxUsername;
 		private System.Windows.Forms.Label labelUsername;
-		private System.Windows.Forms.Label labelPassword;
-		private System.Windows.Forms.Button buttonSave;
-		private DotNetApi.Windows.Controls.SecureTextBox textBoxPassword;
+		private System.Windows.Forms.Button buttonValidate;
 		private System.Windows.Forms.Label labelPerson;
 		private System.Windows.Forms.ImageList imageList;
 		private System.Windows.Forms.Button buttonProperties;

@@ -163,7 +163,7 @@ namespace PlanetLab.Controls
 			this.tabControl.Visible = false;
 
 			// Begin a new nodes request for the specified person.
-			this.BeginRequest(this.request, Config.Static.PlanetLabUsername, Config.Static.PlanetLabPassword, PlPerson.GetFilter(PlPerson.Fields.PersonId, id));
+			this.BeginRequest(this.request, Config.Static.Username, Config.Static.Password, PlPerson.GetFilter(PlPerson.Fields.PersonId, id));
 		}
 
 		/// <summary>

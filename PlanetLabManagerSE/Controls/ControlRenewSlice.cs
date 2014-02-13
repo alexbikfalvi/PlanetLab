@@ -39,9 +39,6 @@ namespace PlanetLab.Controls
 		private PlSlice slice = null;
 
 		private readonly RequestState refreshRequestState;
-		private readonly RequestState renewRequestState;
-
-		private bool renewSuccess = false;
 		
 		/// <summary>
 		/// Creates a new control instance.
@@ -57,13 +54,6 @@ namespace PlanetLab.Controls
 				this.OnRefreshCanceled,
 				this.OnRefreshException,
 				null);
-			// Create the renew request state.
-			this.renewRequestState = new RequestState(
-				this.OnRenewStarted,
-				this.OnRenewResult,
-				this.OnRenewCanceled,
-				this.OnRenewException,
-				this.OnRenewFinished);
 		}
 
 		// Public events.
@@ -76,10 +66,6 @@ namespace PlanetLab.Controls
 		/// An event raised when a PlanetLab operation has finished.
 		/// </summary>
 		public event EventHandler RequestFinished;
-		/// <summary>
-		/// An event raised when a PlanetLab slice was renewed.
-		/// </summary>
-		public event PlObjectEventHandler<PlSlice> Renewed;
 		/// <summary>
 		/// An event raised when user closes the selection.
 		/// </summary>
@@ -128,8 +114,6 @@ namespace PlanetLab.Controls
 			this.comboBoxRenew.Enabled = false;
 			// Raise the PlanetLab request started event.
 			if (this.RequestStarted != null) this.RequestStarted(this, EventArgs.Empty);
-			// Set renew success to false.
-			this.renewSuccess = false;
 			// Call the base class method.
 			base.OnRequestStarted(state);
 		}
@@ -164,8 +148,8 @@ namespace PlanetLab.Controls
 			// Begin the PlanetLab request.
 			this.BeginRequest(
 				this.requestRefresh,
-				Config.Static.PlanetLabUsername,
-				Config.Static.PlanetLabPassword,
+				Config.Static.Username,
+				Config.Static.Password,
 				PlSlice.GetFilter(PlSlice.Fields.SliceId, this.slice.Id),
 				this.refreshRequestState);
 		}
@@ -242,102 +226,9 @@ namespace PlanetLab.Controls
 		/// <param name="e">The event arguments.</param>
 		private void OnRenew(object sender, EventArgs e)
 		{
-			// Compute the new expiration date.
-			DateTime expiresDate = this.slice.Expires.Value.AddDays(7.0 * (this.comboBoxRenew.SelectedIndex + 1));
-			// The expiration timestamp.
-			int expiresTimestamp = 0;
-
-			// Convert the expiration date to a timestamp.
-			if (PlDateTime.ToUnixTimestamp32(expiresDate, ref expiresTimestamp))
-			{
-				// Begin the PlanetLab request.
-				this.BeginRequest(
-					this.requestRenew,
-					Config.Static.PlanetLabUsername,
-					Config.Static.PlanetLabPassword,
-					new object[] { this.slice.Id, PlSlice.GetFilter(PlSlice.Fields.Expires, expiresTimestamp) },
-					this.renewRequestState);
-			}
-			else
-			{
-				// Show an error message.
-				MessageBox.Show(this, "Cannot renew the slice because the expiration date exceeds the limit for 32-bit UNIX timestamps.", "Cannot Renew Slice", MessageBoxButtons.OK, MessageBoxIcon.Error);
-			}
+			// Show an error dialog.
+			MessageBox.Show("Cannot renew the expiration date of the selected nodes. This option is not available in PlanetLab Manager Student Edition.", "Option Not Available", MessageBoxButtons.OK, MessageBoxIcon.Error);
 		}
-
-		/// <summary>
-		/// An event handler called when the renewing the current slice.
-		/// </summary>
-		/// <param name="state">The request state.</param>
-		private void OnRenewStarted(RequestState state)
-		{
-			// Update the status.
-			this.labelStatus.Text = "Renewing slice...";
-		}
-
-		/// <summary>
-		/// An event handler called when the control completes an asynchronous request for renewing the slice.
-		/// </summary>
-		/// <param name="response">The XML-RPC response.</param>
-		/// <param name="state">The request state.</param>
-		private void OnRenewResult(XmlRpcResponse response, RequestState state)
-		{
-			// If the request has not failed.
-			if ((null == response.Fault) && (null != response.Value))
-			{
-				// Get the response value.
-				int? code = response.Value.AsInt;
-				if (code.HasValue ? 1 == code.Value : false)
-				{
-					this.labelStatus.Text = "Renew succeeded.";
-					this.renewSuccess = true;
-				}
-				else
-				{
-					this.labelStatus.Text = "Renew failed.";
-				}
-			}
-			else
-			{
-				this.labelStatus.Text = "Renew failed.";
-			}
-		}
-
-		/// <summary>
-		/// An event handler called when an asynchronous request for renewing the slice was canceled.
-		/// </summary>
-		/// <param name="state">The request state.</param>
-		private void OnRenewCanceled(RequestState state)
-		{
-			// Update the status.
-			this.labelStatus.Text = "Renew canceled.";
-		}
-
-		/// <summary>
-		/// An event handler called when the current request for renewing the slice throws an exception.
-		/// </summary>
-		/// <param name="exception">The exception.</param>
-		/// <param name="state">The request state.</param>
-		private void OnRenewException(Exception exception, RequestState state)
-		{
-			// Update the status.
-			this.labelStatus.Text = "Renew failed.";
-		}
-
-		/// <summary>
-		/// An event handler called when the current request for renewing the slice has finished.
-		/// </summary>
-		/// <param name="state">The request state.</param>
-		private void OnRenewFinished(RequestState state)
-		{
-			// If the renewal was successful.
-			if (this.renewSuccess)
-			{
-				// Raise the event.
-				if (this.Renewed != null) this.Renewed(this, new PlObjectEventArgs<PlSlice>(this.slice));
-			}
-		}
-
 
 		/// <summary>
 		/// An event handler called when the user selects the close button.

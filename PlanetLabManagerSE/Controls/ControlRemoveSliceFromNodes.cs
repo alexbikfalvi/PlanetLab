@@ -260,8 +260,8 @@ namespace PlanetLab.Controls
 			// Begin the PlanetLab request.
 			this.BeginRequest(
 				this.request,
-				Config.Static.PlanetLabUsername,
-				Config.Static.PlanetLabPassword,
+				Config.Static.Username,
+				Config.Static.Password,
 				PlSlice.GetFilter(PlSlice.Fields.SliceId, this.slice.Id));
 		}
 

@@ -58,10 +58,10 @@
 			// 
 			this.progressBar.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-			this.progressBar.Location = new System.Drawing.Point(69, 63);
+			this.progressBar.Location = new System.Drawing.Point(12, 85);
 			this.progressBar.MarqueeAnimationSpeed = 25;
 			this.progressBar.Name = "progressBar";
-			this.progressBar.Size = new System.Drawing.Size(253, 15);
+			this.progressBar.Size = new System.Drawing.Size(310, 15);
 			this.progressBar.Style = System.Windows.Forms.ProgressBarStyle.Marquee;
 			this.progressBar.TabIndex = 2;
 			// 
@@ -79,9 +79,9 @@
 			this.MaximizeBox = false;
 			this.MinimizeBox = false;
 			this.Name = "FormConfig";
-			this.ShowInTaskbar = false;
 			this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
 			this.Text = "PlanetLab Configuration";
+			this.Shown += new System.EventHandler(this.OnLoad);
 			((System.ComponentModel.ISupportInitialize)(this.pictureBox)).EndInit();
 			this.ResumeLayout(false);
 

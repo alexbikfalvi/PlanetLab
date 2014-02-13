@@ -100,9 +100,8 @@ namespace PlanetLab.Controls
 		protected override void OnRequestStarted(RequestState state)
 		{
 			// Disable the controls.
-			this.buttonSave.Enabled = false;
+			this.buttonValidate.Enabled = false;
 			this.textBoxUsername.Enabled = false;
-			this.textBoxPassword.Enabled = false;
 			// Clear the person.
 			this.OnSetPerson(UserState.Unknown);
 			// Call the base class method.
@@ -116,8 +115,6 @@ namespace PlanetLab.Controls
 		/// <param name="state">The request state.</param>
 		protected override void OnRequestResult(XmlRpcResponse response, RequestState state)
 		{
-			// Enable the validation button.
-			this.OnChanged(this, EventArgs.Empty);
 			// If the request has not failed.
 			if ((null == response.Fault) && (null != response.Value))
 			{
@@ -133,8 +130,6 @@ namespace PlanetLab.Controls
 					{
 						// If the number of persons is one, set it as the current person.
 						this.OnSetPerson(persons[0]);
-						// Save the credentials.
-						this.OnSaveCredentials(persons, persons[0]);
 					}
 					else if (persons.Count > 1)
 					{
@@ -143,8 +138,6 @@ namespace PlanetLab.Controls
 						{
 							// Set the selected person as the current person.
 							this.OnSetPerson(this.formSelectPerson.Result);
-							// Save the credentials.
-							this.OnSaveCredentials(persons, this.formSelectPerson.Result);
 						}
 						else
 						{
@@ -175,9 +168,8 @@ namespace PlanetLab.Controls
 		protected override void OnRequestFinished(RequestState state)
 		{
 			// Enable the controls.
-			this.buttonSave.Enabled = true;
+			this.buttonValidate.Enabled = true;
 			this.textBoxUsername.Enabled = true;
-			this.textBoxPassword.Enabled = true;
 			// Call the base class method.
 			base.OnRequestFinished(state);
 		}
@@ -194,8 +186,6 @@ namespace PlanetLab.Controls
 
 			// Set the username.
 			this.textBoxUsername.Text = this.config.Username;
-			// Set the password.
-			this.textBoxPassword.SecureText = this.config.Password;
 			
 			// Get the account.
 			PlPerson person = this.config.DbPersons.Find(this.config.PersonId);
@@ -211,9 +201,6 @@ namespace PlanetLab.Controls
 				// Clear the person.
 				this.OnSetPerson(UserState.Unknown);
 			}
-
-			// Call the changed event handler.
-			this.OnChanged(this, EventArgs.Empty);
 		}
 
 		/// <summary>
@@ -221,7 +208,7 @@ namespace PlanetLab.Controls
 		/// </summary>
 		/// <param name="sender">The sender object.</param>
 		/// <param name="e">The event arguments.</param>
-		private void OnSave(object sender, EventArgs e)
+		private void OnValidate(object sender, EventArgs e)
 		{
 			if (null == this.config) return;
 
@@ -229,25 +216,9 @@ namespace PlanetLab.Controls
 			try
 			{
 				// Begin a new nodes request for the specified person.
-				this.BeginRequest(this.request, this.textBoxUsername.Text, this.textBoxPassword.SecureText, PlPerson.GetFilter(PlPerson.Fields.Email, this.textBoxUsername.Text));
+				this.BeginRequest(this.request, this.config.Username, this.config.Password, PlPerson.GetFilter(PlPerson.Fields.Email, this.textBoxUsername.Text));
 			}
-			catch
-			{
-				// Change the state of the validation button.
-				this.OnChanged(this, EventArgs.Empty);
-			}
-		}
-
-		/// <summary>
-		/// An event handler called when configuration changes.
-		/// </summary>
-		/// <param name="sender">The sender object.</param>
-		/// <param name="e">The event arguments.</param>
-		private void OnChanged(object sender, EventArgs e)
-		{
-			this.buttonSave.Enabled =
-				(!string.IsNullOrWhiteSpace(this.textBoxUsername.Text)) &&
-				(!this.textBoxPassword.SecureText.IsEmpty());
+			catch { }
 		}
 
 		/// <summary>
@@ -306,17 +277,6 @@ namespace PlanetLab.Controls
 			this.pictureUser.Image = ControlSettings.personIcons[(int)state];
 			// Set the text.
 			this.labelPerson.Text = ControlSettings.personMessage[(int)state];
-		}
-
-		/// <summary>
-		/// Saves the current credentials.
-		/// </summary>
-		/// <param name="persons">The list of persons corresponding to the current credentials.</param>
-		/// <param name="person">The selected person.</param>
-		private void OnSaveCredentials(PlList<PlPerson> persons, PlPerson person)
-		{
-			// Show an error dialog if an exception is thrown.
-			MessageBox.Show("Cannot set the PlanetLab credentials. This option is not available in PlanetLab Manager Student Edition.", "Option Not Available", MessageBoxButtons.OK, MessageBoxIcon.Error);
 		}
 	}
 }

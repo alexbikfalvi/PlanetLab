@@ -40,6 +40,7 @@
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Data" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Drawing" />
@@ -290,6 +291,12 @@
     <Compile Include="Forms\FormAddSliceToNodesState.Designer.cs">
       <DependentUpon>FormAddSliceToNodesState.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\FormConfigUrl.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\FormConfigUrl.Designer.cs">
+      <DependentUpon>FormConfigUrl.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\FormCrash.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -473,6 +480,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\FormAddSliceToNodesState.resx">
       <DependentUpon>FormAddSliceToNodesState.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\FormConfigUrl.resx">
+      <DependentUpon>FormConfigUrl.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\FormCrash.resx">
       <DependentUpon>FormCrash.cs</DependentUpon>

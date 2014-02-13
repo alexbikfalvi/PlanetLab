@@ -19,6 +19,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PlanetLabManagerSE", "Plane
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PlanetLab", "PlanetLab\PlanetLab.csproj", "{8D8A9A27-A8CA-4A27-95E5-C2246BDABC85}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PlanetLabConfig", "PlanetLabConfig\PlanetLabConfig.csproj", "{D30170EA-CB8A-414C-A43C-36DD7F763A83}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -49,11 +51,17 @@ Global
 		{103446CD-7B7A-4ABB-91D5-5C010E454FBB}.Release|Any CPU.ActiveCfg = SingleImage
 		{103446CD-7B7A-4ABB-91D5-5C010E454FBB}.Release|Any CPU.Build.0 = SingleImage
 		{B0BE73BD-84F0-4D79-8369-A2CA6E98BC75}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B0BE73BD-84F0-4D79-8369-A2CA6E98BC75}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B0BE73BD-84F0-4D79-8369-A2CA6E98BC75}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B0BE73BD-84F0-4D79-8369-A2CA6E98BC75}.Release|Any CPU.Build.0 = Release|Any CPU
 		{8D8A9A27-A8CA-4A27-95E5-C2246BDABC85}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{8D8A9A27-A8CA-4A27-95E5-C2246BDABC85}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8D8A9A27-A8CA-4A27-95E5-C2246BDABC85}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8D8A9A27-A8CA-4A27-95E5-C2246BDABC85}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D30170EA-CB8A-414C-A43C-36DD7F763A83}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D30170EA-CB8A-414C-A43C-36DD7F763A83}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D30170EA-CB8A-414C-A43C-36DD7F763A83}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D30170EA-CB8A-414C-A43C-36DD7F763A83}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

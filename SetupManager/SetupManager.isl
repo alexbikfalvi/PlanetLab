@@ -3784,7 +3784,7 @@
 		<row><td>ID_STRING6</td><td>1033</td><td>PLANET~1|PlanetLab Manager</td><td>0</td><td/><td>-2136853386</td></row>
 		<row><td>ID_STRING7</td><td>1033</td><td>PLANET~1|PlanetLab Console</td><td>0</td><td/><td>-2136865775</td></row>
 		<row><td>ID_STRING8</td><td>1033</td><td>A software to access and manage your PlanetLab site.</td><td>0</td><td/><td>-2136828911</td></row>
-		<row><td>ID_STRING9</td><td>1033</td><td>UNINST~1|Uninstall PlanetLab Console</td><td>0</td><td/><td>-2136812527</td></row>
+		<row><td>ID_STRING9</td><td>1033</td><td>UNINST~1|Uninstall PlanetLab Manager</td><td>0</td><td/><td>1763884107</td></row>
 		<row><td>IIDS_UITEXT_FeatureUninstalled</td><td>1033</td><td>This feature will remain uninstalled.</td><td>0</td><td/><td>-2136855727</td></row>
 	</table>
 
@@ -4029,7 +4029,7 @@ UwBpAG4AZwBsAGUASQBtAGEAZwBlAAEARQB4AHAAcgBlAHMAcwA=
 		<row><td>ISTheme</td><td>InstallShield Blue.theme</td></row>
 		<row><td>ISUSLock</td><td>{B89ED752-DDA2-44AC-A123-450CE376CDF4}</td></row>
 		<row><td>ISUSSignature</td><td>{4AA6EEFA-2AB3-4E4C-8F81-4BD2D132AB6B}</td></row>
-		<row><td>ISVisitedViews</td><td>viewAssistant,viewISToday,viewProject,viewRealSetupDesign,viewUpgradePaths,viewAppFiles,viewObjects,viewShortcuts,viewUI,viewSystemSearch,viewCustomActions,viewRelease</td></row>
+		<row><td>ISVisitedViews</td><td>viewAssistant,viewISToday,viewProject,viewRealSetupDesign,viewUpgradePaths,viewAppFiles,viewObjects,viewShortcuts,viewUI,viewSystemSearch,viewCustomActions,viewRelease,viewRegistry</td></row>
 		<row><td>Limited</td><td>1</td></row>
 		<row><td>LockPermissionMode</td><td>1</td></row>
 		<row><td>MsiExecCmdLineOptions</td><td/></row>

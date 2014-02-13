@@ -140,7 +140,7 @@ namespace PlanetLab.Controls
 			this.tabControl.Visible = false;
 
 			// Begin a new nodes request for the specified node.
-			this.BeginRequest(this.request, Config.Static.PlanetLabUsername, Config.Static.PlanetLabPassword, PlConfigurationFile.GetFilter(PlConfigurationFile.Fields.ConfigurationFileId, id));
+			this.BeginRequest(this.request, Config.Static.Username, Config.Static.Password, PlConfigurationFile.GetFilter(PlConfigurationFile.Fields.ConfigurationFileId, id));
 		}
 
 		/// <summary>
