@@ -14,6 +14,9 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PlanetLabManager", "PlanetLabManager\PlanetLabManager.csproj", "{1CE55FD8-AF34-45B2-841E-38912975DA64}"
 EndProject
 Project("{6141683F-8A12-4E36-9623-2EB02B2C2303}") = "SetupManager", "SetupManager\SetupManager.isproj", "{103446CD-7B7A-4ABB-91D5-5C010E454FBB}"
+	ProjectSection(ProjectDependencies) = postProject
+		{1CE55FD8-AF34-45B2-841E-38912975DA64} = {1CE55FD8-AF34-45B2-841E-38912975DA64}
+	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PlanetLabManagerSE", "PlanetLabManagerSE\PlanetLabManagerSE.csproj", "{B0BE73BD-84F0-4D79-8369-A2CA6E98BC75}"
 EndProject
