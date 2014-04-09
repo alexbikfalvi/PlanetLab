@@ -157,8 +157,8 @@ namespace PlanetLab.Forms
 			this.actionNetworkStatusChanged = new EventHandler(this.OnNetworkStatusChanged);
 			this.actionNetworkStatusChecked = new EventHandler(this.OnNetworkStatusChecked);
 			// Set the network availability event handler.
-			Config.Network.NetworkChanged += this.actionNetworkStatusChanged;
-			Config.Network.NetworkChecked += this.actionNetworkStatusChecked;
+			NetworkStatus.NetworkChanged += this.actionNetworkStatusChanged;
+			NetworkStatus.NetworkChecked += this.actionNetworkStatusChecked;
 			// Update the network status.
 			this.OnNetworkStatusChanged(this, EventArgs.Empty);
 
@@ -405,7 +405,7 @@ namespace PlanetLab.Forms
 			else
 			{
 				// Update the connecton status label.
-				switch (Config.Network.IsInternetAvailable)
+				switch (NetworkStatus.IsInternetAvailable)
 				{
 					case NetworkStatus.AvailabilityStatus.Unknown:
 						this.statusLabelConnection.Image = Resources.ConnectionQuestion_16;

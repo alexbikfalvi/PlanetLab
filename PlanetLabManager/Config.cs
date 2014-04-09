@@ -77,8 +77,6 @@ namespace PlanetLab
 
 		private readonly Dictionary<int, ConfigSlice> configSlices = new Dictionary<int, ConfigSlice>();
 
-		private readonly static NetworkStatus network = new NetworkStatus();
-
 		private readonly ApplicationStatus status;
 		private readonly ApplicationEvents events;
 
@@ -167,18 +165,16 @@ namespace PlanetLab
 			catch { }
 		}
 
-		// Static properties.
+		#region Static properties
 
 		/// <summary>
 		/// Gets the static configuration.
 		/// </summary>
 		public static StaticConfig Static { get; private set; }
-		/// <summary>
-		/// Gets the network information.
-		/// </summary>
-		public static NetworkStatus Network { get { return Config.network; } }
 
-		// Public properties.
+		#endregion
+
+		#region Public properties
 
 		/// <summary>
 		/// Returns the application status.
@@ -421,7 +417,9 @@ namespace PlanetLab
 		/// </summary>
 		public PlDatabaseList<PlSlice> LocalSlices { get { return this.listLocalSlices; } }
 
-		// Public methods.
+		#endregion
+
+		#region Public methods
 
 		/// <summary>
 		/// A method called when the object is disposed.
@@ -484,8 +482,9 @@ namespace PlanetLab
 			return configSlice;
 		}
 
+		#endregion
 
-		// Private methods.
+		#region Private methods
 
 		/// <summary>
 		/// Disposes the current object.
@@ -535,8 +534,6 @@ namespace PlanetLab
 				this.key.Close();
 			}
 		}
-
-		// Private methods.
 
 		/// <summary>
 		/// An event handler called when the list of slices is cleared.
@@ -628,5 +625,7 @@ namespace PlanetLab
 				}
 			}
 		}
+
+		#endregion
 	}
 }

@@ -1,4 +1,6 @@
-﻿namespace PlanetLab.Forms
+﻿using InetCommon.Net;
+
+namespace PlanetLab.Forms
 {
 	partial class FormMain
 	{
@@ -15,6 +17,9 @@
 		{
 			if (disposing)
 			{
+				// Remove the network availability event handler.
+				NetworkStatus.NetworkChanged -= this.actionNetworkStatusChanged;
+				NetworkStatus.NetworkChecked -= this.actionNetworkStatusChecked;
 				// Dispose the forms.
 				this.formAbout.Dispose();
 				// Dispose the components.

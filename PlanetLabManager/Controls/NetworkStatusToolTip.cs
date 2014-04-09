@@ -24,6 +24,7 @@ using DotNetApi;
 using DotNetApi.Drawing;
 using DotNetApi.Windows;
 using DotNetApi.Windows.Themes;
+using InetCommon.Net;
 
 namespace PlanetLab.Controls
 {
@@ -109,11 +110,11 @@ namespace PlanetLab.Controls
 			using (Font font = new Font(Window.DefaultFont, FontStyle.Bold))
 			{
 				// Compute the tooltip strings.
-				this.messageTitle = NetworkStatusToolTip.message[(int)Config.Network.IsInternetAvailable];
-				this.messageIcmp = "ICMP connectivity: {0}".FormatWith(Config.Network.IsInternetIcmpAvailable ? "Yes" : "No");
-				this.messageHttp = "HTTP connectivity: {0}".FormatWith(Config.Network.IsInternetHttpAvailable ? "Yes" : "No");
-				this.messageHttps = "HTTPS connectivity: {0}".FormatWith(Config.Network.IsInternetHttpsAvailable ? "Yes" : "No");
-				this.messageUpdated = "Connectivity last checked at {0}".FormatWith(Config.Network.InternetAvailableLastUpdated.ToLongTimeString());
+				this.messageTitle = NetworkStatusToolTip.message[(int)NetworkStatus.IsInternetAvailable];
+				this.messageIcmp = "ICMP connectivity: {0}".FormatWith(NetworkStatus.IsInternetIcmpAvailable ? "Yes" : "No");
+				this.messageHttp = "HTTP connectivity: {0}".FormatWith(NetworkStatus.IsInternetHttpAvailable ? "Yes" : "No");
+				this.messageHttps = "HTTPS connectivity: {0}".FormatWith(NetworkStatus.IsInternetHttpsAvailable ? "Yes" : "No");
+				this.messageUpdated = "Connectivity last checked at {0}".FormatWith(NetworkStatus.InternetAvailableLastUpdated.ToLongTimeString());
 
 				// Compute the strings size.
 				Size sizeTitle = TextRenderer.MeasureText(messageTitle, font);
@@ -127,7 +128,7 @@ namespace PlanetLab.Controls
 				int spacing = (int)(Window.DefaultFont.SizeInPoints * spacingFactor);
 
 				// Get the icon.
-				this.icon = NetworkStatusToolTip.icons[(int)Config.Network.IsInternetAvailable];
+				this.icon = NetworkStatusToolTip.icons[(int)NetworkStatus.IsInternetAvailable];
 
 				// Compute the bounds.
 				this.boundsIcon = new Rectangle(new Point(spacing << 1, spacing << 1), this.icon.Size);
